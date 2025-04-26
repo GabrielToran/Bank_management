@@ -1,0 +1,313 @@
+/*
+ * Copyright (c) 2023, Oracle and/or its affiliates.
+ * All rights reserved.
+ */
+
+:root {
+	--container-paddding: 20px;
+	--input-padding-vertical: 6px;
+	--input-padding-horizontal: 4px;
+}
+
+body {
+	background-color: transparent;
+}
+
+.ConnectionContainer-connectionElement-port,
+.ConnectionContainer-connectionElement-port.is-disabled,
+.ConnectionContainer-connectionElement-fileInput {
+	display: block;
+	font-family: var(--vscode-font-family);
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	color: var(--vscode-input-foreground);
+	background-color: var(--vscode-input-background);
+	max-width: inherit;
+	min-width: inherit;
+	border: solid 1px var(--vscode-dropdown-border);
+	letter-spacing: 0.25px;
+	height: calc(var(--input-height) * 1px);
+	border-radius: 2px;
+}
+
+vscode-text-field::part(root) {
+    border-radius: 2px;
+}
+
+vscode-dropdown::part(control){
+	border-radius: 2px;
+}
+
+vscode-panels {
+	overflow-x: visible;
+}
+.ConnectionContainer-connectionElement-port:disabled,
+.ConnectionContainer-connectionElement-fileInput:disabled {
+	opacity: var(--disabled-opacity);
+}
+
+.ConnectionContainer-connectionElement-port:focus,
+.ConnectionContainer-connectionElement-fileInput:focus {
+	outline-color: var(--vscode-focusBorder);
+	outline-width: 1px;
+	outline-offset: -1px;
+	outline-style: solid;
+}
+
+.ConnectionContainer-connectionElement-fileInput {
+	display: flex;
+	justify-content: center;
+	align-content: flex-start;
+	align-items: center;
+	border-style: dashed;
+	border-width: 1px;
+	margin-top: 2px;
+}
+
+.ConnectionContainer-connectionElement-fileInput:hover {
+	cursor: pointer;
+	background: var(--vscode-button-secondaryBackground);
+	color: var(--vscode-button-secondaryForeground);
+}
+
+input[type="checkbox"] {
+	margin-left: 0px;
+	outline-color: var(--vscode-input-border);
+	background-color: var(--vscode-input-background);
+}
+
+input::placeholder,
+textarea::placeholder {
+	color: var(--vscode-input-placeholderForeground);
+}
+
+.ConnectionContainer-connectionElement-port,
+.ConnectionContainer-connectionElement-port.is-disabled {
+	margin-top: 2px;
+}
+
+.ConnectionForm-deleteButton {
+	color: var(--vscode-button-foreground);
+}
+
+.ConnectionForm-deleteButton:hover {
+	background-color: var(--vscode-inputValidation-errorBackground);
+	border-color: var(--vscode-inputValidation-errorBorder);
+	color: var(--vscode-inputValidation-errorForeground);
+}
+
+.ConnectionForm-deleteButton,
+.ConnectionForm-deleteButton.is-disabled {
+	background-color: var(--vscode-inputValidation-errorBorder);
+	border-color: var(--vscode-inputValidation-errorBackground);
+}
+
+.save-connection-button,
+.update-connection-button {
+	display: none;
+}
+.ConnectionContainer-connectionElement-label,
+.ConnectionContainer--fullWidth-connectionElement-label {
+	letter-spacing: 0.25px;
+	color: var(--vscode-editor-foreground);
+	font-family: var(--vscode-font-family);
+}
+
+.ConnectionForm-buttonsBox {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin: 0 5px;
+	margin-bottom: 6px;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.ConnectionForm-buttonsChildBox {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: start;
+	justify-content: space-between;
+	gap: 4px;
+}
+
+.tab-panel-badge {
+	margin-left: 5px;
+}
+
+vscode-panel-view {
+	flex-wrap: wrap;
+	justify-content: space-between;
+	border-top: 1px solid var(--vscode-tree-tableColumnsBorder);
+	margin-left: -1px;
+	padding-bottom: 6px;
+}
+
+.ConnectionForm {
+	margin: 10px auto;
+	max-width: 800px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.ConnectionContainer--fullWidth-connectionElement.is-disabled,
+.ConnectionContainer-connectionElement.is-disabled {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	opacity: var(--disabled-opacity);
+}
+
+.ConnectionContainer--fullWidth-connectionElement,
+.ConnectionContainer-connectionElement {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+.ConnectionContainer {
+	margin: 0 5px;
+	margin-top: 6px;
+	flex: calc(50% - 10px);
+	min-width: 150px;
+}
+
+.ConnectionForm-title {
+	margin: 0 5px;
+	font-weight: initial;
+	letter-spacing: 0.25px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid var(--vscode-input-foreground);
+	width: 100%;
+}
+
+.ConnectionContainer--fullWidth {
+	width: 100%;
+	margin-top: 10px;
+	flex: auto;
+}
+
+.PanelBox,
+.PanelBox.is-disabled {
+	width: 100%;
+	margin-top: 3px;
+}
+
+.PanelBox::before,
+.PanelBox.is-disabled::before {
+	content: "";
+	height: calc(100% - 10px);
+	background-color: var(--panel-tab-active-foreground);
+	width: 2.5px;
+	float: left;
+	margin: 0 6px;
+	margin-top: 10px;
+	cursor: not-allowed
+}
+
+.PanelBox.is-disabled::before,
+.PanelBox.is-disabled {
+	opacity: var(--disabled-opacity);
+}
+
+.AdvancedView-grid {
+	display: flex;
+	flex-direction: column
+}
+
+.AdvancedView {
+	display: flex;
+	flex-direction: column-reverse;
+	/* align-items: flex-end; */
+	padding-top: 6px;
+	width: 100%;
+	padding-left: 4px;
+}
+
+.grid-view {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.ActionsGridBox {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+}
+
+vscode-data-grid-cell {
+	display: flex;
+	justify-content: space-between;
+	height: 27px;
+	align-items: center;
+	padding-left: 4px;
+}
+
+vscode-data-grid-cell:focus,
+vscode-data-grid-cell:active,
+vscode-data-grid-cell:focus-visible {
+	background: var(--vscode-settings-rowHoverBackground);
+	border: none;
+}
+
+vscode-data-grid-row {
+	height: fit-content;
+}
+
+vscode-data-grid-row:hover {
+	height: fit-content;
+}
+
+.GridInputContainer-gridInput:focus {
+	outline-color: var(--vscode-focusBorder);
+	outline-width: 1px;
+	outline-offset: -1px;
+	outline-style: solid;
+}
+
+.GridInputContainer-gridInput {
+	height: calc(var(--input-height) * 1px);
+	width: 100%;
+	font-family: var(--vscode-font-family);
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	color: var(--vscode-input-foreground);
+	background-color: var(--vscode-input-background);
+	border: solid 1px var(--vscode-dropdown-border);
+	letter-spacing: 0.25px;
+	border-radius: 2px;
+}
+
+.GridInputContainer {
+	flex: calc(100% - 10px);
+	margin: 0;
+	margin-right: 5px;
+	min-width: 150px;
+	margin-left: -4px;
+	width: 100%;
+}
+
+.AdvancedView-header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.grid-header-span {
+	font-style: oblique;
+	padding: 1rem 0;
+	align-self: center;
+	color: var(--panel-tab-foreground);
+}
+
+.ConnectionForm-notificationContainer {
+	width: 100%;
+	margin: 0 5px;
+}
+
+.warning {
+	background-color: var(--vscode-inputValidation-warningBackground);
+	padding: 6px 4px;
+	border-radius: 2px;
+	border: 1px solid var(--vscode-inputValidation-warningBorder);
+	color: var(--vscode-input-foreground)
+}

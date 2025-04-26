@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="line" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <path d="M.98,5H5.47l.35-.15,.86-.86h6.32v.01h1V1.5l-.51-.5H6.7l-.85-.85-.35-.15H.5L0,.5V11.5l.5,.5H3v-1H.98V5Zm.01-3.99H5.28l.85,.85,.36,.15,6.51-.01v1H6.48l-.35,.15-.86,.86H.99V1.01Z" fill="#c5c5c5"/>
+  <path d="M16,8v-3h-3v1h-2.5l-.5,.5v3.5h-2v-2.5l-.5-.5h-3l-.5,.5v6l.5,.5h3l.5-.5v-2.5h2v3.5l.5,.5h2.5v1h3v-3h-3v1h-2v-3h2v1h3v-3h-3v1h-2v-3h2v1h3ZM7,13h-2v-5h2v5Z" fill="#c5c5c5"/>
+</svg>

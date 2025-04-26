@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="line" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <path d="M15.5,7H7.5l-.5,.5V15.5l.5,.5H15.5l.5-.5V7.5l-.5-.5Zm-.5,8h-7v-7h7v7ZM5,6H13V.5l-.5-.5H.5L0,.5V11.5l.5,.5H6v-1h-1v-2h1v-1h-1v-2Zm3-1h-3V3h3v2Zm4,0h-3V3h3v2ZM4,11H1v-2h3v2Zm0-3H1v-2h3v2Zm0-3H1V3h3v2ZM1,2V1H12v1H1ZM10,10h-1v-1h1v1Zm0,2h-1v-1h1v1Zm0,2h-1v-1h1v1Zm3-4h-2v-1h2v1Zm1,2h-3v-1h3v1Zm-1,2h-2v-1h2v1Z" fill="#424242"/>
+</svg>

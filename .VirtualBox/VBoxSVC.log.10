@@ -1,0 +1,166 @@
+00:00:00.008357 main     VirtualBox COM Server 7.0.14 r161095 win.amd64 (Jan 15 2024 14:59:30) release log
+00:00:00.008360 main     Log opened 2024-03-12T13:35:23.737940800Z
+00:00:00.008361 main     Build Type: release
+00:00:00.008369 main     OS Product: Windows 11
+00:00:00.008370 main     OS Release: 10.0.22621
+00:00:00.008371 main     OS Service Pack: 
+00:00:00.066141 main     DMI Product Name: Vostro 15 3530
+00:00:00.086353 main     DMI Product Version: 
+00:00:00.086376 main     Firmware type: UEFI
+00:00:00.086964 main     Secure Boot: VERR_PRIVILEGE_NOT_HELD
+00:00:00.089744 main     Host RAM: 16068MB (15.6GB) total, 7575MB (7.3GB) available
+00:00:00.089754 main     Executable: C:\Program Files\Oracle\VirtualBox\VBoxSVC.exe
+00:00:00.089756 main     Process ID: 34048
+00:00:00.089756 main     Package type: WINDOWS_64BITS_GENERIC
+00:00:00.290416          VirtualBox: object creation starts
+00:00:00.291886          Home directory: 'C:\Users\pisti\.VirtualBox'
+00:00:00.292318          Installed Drivers:
+00:00:00.301412            C:\Windows\system32\DRIVERS\VBoxNetLwf.sys (Version: 7.0.14.11095)
+00:00:00.304729            C:\Windows\system32\DRIVERS\VBoxUSBMon.sys (Version: 7.0.14.11095)
+00:00:00.307857            C:\Windows\system32\DRIVERS\VBoxSup.sys (Version: 7.0.14.11095)
+00:00:00.309775            C:\Windows\system32\DRIVERS\VBoxNetAdp6.sys (Version: 7.0.14.11095)
+00:00:00.317838          Loading settings file "C:\Users\pisti\.VirtualBox\VirtualBox.xml" with version "1.12-windows"
+00:00:00.323771          usbLibGetDevices: Starting USB device enumeration
+00:00:00.325140          Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+00:00:00.325221          Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+00:00:00.325306          Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+00:00:00.328022          usbLibGetDevices: Found 4 USB devices, 0 captured
+00:00:00.330650          USB: Unknown USB device detected (idVendor: 0x0bda, idProduct: 0xc829)
+00:00:00.331070          USB: Unknown USB device detected (idVendor: 0x0c45, idProduct: 0x6739)
+00:00:00.331290          USB: Unknown USB device detected (idVendor: 0x1ea7, idProduct: 0x0064)
+00:00:00.331461          USB: Unknown USB device detected (idVendor: 0x27c6, idProduct: 0x639c)
+00:00:00.494734          HostDnsMonitor: initializing
+00:00:00.502952          HostDnsMonitor: updating information
+00:00:00.503302          HostDnsMonitor: old information
+00:00:00.503303            no server entries
+00:00:00.503304            no domain set
+00:00:00.503305            no search string entries
+00:00:00.503305          HostDnsMonitor: new information
+00:00:00.503306            server 1: 8.8.8.8
+00:00:00.503306            server 2: 1.1.1.1
+00:00:00.503307            no domain set
+00:00:00.503307            no search string entries
+00:00:00.517393          VD: VDInit finished with VINF_SUCCESS
+00:00:00.531987          Loading settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+00:00:00.538965          VirtualBox: object created
+00:00:00.618691          Saving settings file "C:\Users\pisti\.VirtualBox\VirtualBox.xml" with version "1.12-windows"
+00:00:00.622013          Finished saving settings file "C:\Users\pisti\.VirtualBox\VirtualBox.xml"
+00:00:00.622186          Saving settings file "C:\Users\pisti\.VirtualBox\VirtualBox.xml" with version "1.12-windows"
+00:00:00.625852          Finished saving settings file "C:\Users\pisti\.VirtualBox\VirtualBox.xml"
+00:00:00.626048          Saving settings file "C:\Users\pisti\.VirtualBox\VirtualBox.xml" with version "1.12-windows"
+00:00:00.629779          Finished saving settings file "C:\Users\pisti\.VirtualBox\VirtualBox.xml"
+00:00:02.106699          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is PoweredOff)}, preserve=false aResultDetail=0
+00:02:27.455160          Launched VM: 3875452512 pid: 30940 (0x78dc) frontend: GUI/Qt name: Centos 7
+00:02:27.493406          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is PoweredOff)}, preserve=false aResultDetail=0
+00:02:32.371834          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is PoweredOff)}, preserve=false aResultDetail=0
+00:02:33.358378          ERROR [COM]: aRC=VBOX_E_OBJECT_NOT_FOUND (0x80bb0001) aIID={70401eef-c8e9-466b-9660-45cb3e9979e4} aComponent={ExtPackManagerWrap} aText={No extension pack by the name 'Oracle VM VirtualBox Extension Pack' was found}, preserve=false aResultDetail=0
+00:02:41.340320          ERROR [COM]: aRC=VBOX_E_IPRT_ERROR (0x80bb0005) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={SessionMachine} aText={Saved screenshot data is not available (VERR_NOT_SUPPORTED)}, preserve=false aResultDetail=-37
+00:02:41.828482          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={SessionMachine} aText={The machine is not mutable or saved (state is Starting)}, preserve=false aResultDetail=0
+00:02:41.829739          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Starting)}, preserve=false aResultDetail=0
+00:02:42.673230          ERROR [COM]: aRC=VBOX_E_OBJECT_NOT_FOUND (0x80bb0001) aIID={ad47ad09-787b-44ab-b343-a082a3f2dfb1} aComponent={MediumWrap} aText={Property 'CRYPT/KeyId' does not exist}, preserve=false aResultDetail=0
+00:02:42.702379          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+00:03:26.295850 USBPROXY usbLibGetDevices: Starting USB device enumeration
+00:03:26.297053 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+00:03:26.297170 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+00:03:26.297253 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+00:03:26.297439 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+00:25:14.053674 dns-monitor HostDnsMonitor: updating information
+00:25:14.053814 dns-monitor HostDnsMonitor: unchanged
+01:34:33.158928 dns-monitor HostDnsMonitor: updating information
+01:34:33.159737 dns-monitor HostDnsMonitor: unchanged
+01:35:29.363558 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:35:29.365236 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+01:35:29.365477 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:35:29.365673 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:35:29.366418 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:35:42.098860 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:35:42.104548 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:35:42.104677 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:35:42.104878 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:35:44.995966 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:35:45.001432 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:35:45.001800 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:35:45.009434 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:35:45.517541 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:35:45.519586 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:35:45.519699 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:35:45.519878 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:36:37.047189 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:36:37.053780 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+01:36:37.053894 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:36:37.053978 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:36:37.054271 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:36:37.054967 USBPROXY USB: Unknown USB device detected (idVendor: 0x27c6, idProduct: 0x639c)
+01:36:41.601353 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:36:41.603005 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+01:36:41.603165 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:36:41.603272 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:36:41.603532 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:36:48.247066 dns-monitor HostDnsMonitor: updating information
+01:36:48.247272 dns-monitor HostDnsMonitor: unchanged
+01:36:53.637427 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:36:53.650118 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+01:36:53.650259 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:36:53.650349 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:36:53.650537 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:36:55.450012 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:36:55.451058 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+01:36:55.451138 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:36:55.451207 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:36:55.451364 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:41:16.939522 dns-monitor HostDnsMonitor: updating information
+01:41:16.939567 dns-monitor HostDnsMonitor: unchanged
+01:42:51.848053 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:42:51.850505 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+01:42:51.850831 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+01:42:51.850988 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:42:51.851385 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:46:36.472415          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+01:46:36.479045          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+01:46:36.534475          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+01:46:38.355406          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+01:46:38.362695          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+01:46:38.374353          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+01:46:41.234354          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+01:46:41.241707          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+01:46:41.256095          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+01:49:51.662389 USBPROXY usbLibGetDevices: Starting USB device enumeration
+01:49:51.663833 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+01:49:51.666505 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+01:49:51.666950 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+01:51:42.251990          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+01:51:42.260574          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+01:51:42.275603          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+01:53:07.734787          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+01:53:07.742206          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+01:53:07.758906          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+01:53:09.197075          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+01:53:09.203041          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+01:53:09.217555          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+01:53:20.291955          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+01:53:20.366745          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+01:53:20.378310          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+01:53:25.156954          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+01:53:25.165098          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+01:53:25.181693          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Running)}, preserve=false aResultDetail=0
+01:54:50.000081 dns-monitor HostDnsMonitor: updating information
+01:54:50.000142 dns-monitor HostDnsMonitor: unchanged
+02:02:34.284773 dns-monitor HostDnsMonitor: updating information
+02:02:34.284836 dns-monitor HostDnsMonitor: unchanged
+02:04:01.611253 USBPROXY usbLibGetDevices: Starting USB device enumeration
+02:04:01.613436 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 5
+02:04:01.613817 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 6
+02:04:01.614028 USBPROXY Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&32360850&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+02:04:01.614652 USBPROXY usbLibGetDevices: Found 4 USB devices, 0 captured
+02:08:16.964483          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Paused)}, preserve=false aResultDetail=0
+02:08:19.187872          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is Stopping)}, preserve=false aResultDetail=0
+02:08:20.066278          Saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox" with version "1.19-windows"
+02:08:20.072285          Finished saving settings file "C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vbox"
+02:08:20.100806          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is PoweredOff)}, preserve=false aResultDetail=0
+02:08:21.657999          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={300763af-5d6b-46e6-aa96-273eac15538a} aComponent={MachineWrap} aText={The machine is not mutable (state is PoweredOff)}, preserve=false aResultDetail=0
+02:08:35.495492 main     VirtualBox: object deletion starts
+02:08:35.497611 main     ERROR [COM]: aRC=VBOX_E_OBJECT_IN_USE (0x80bb000c) aIID={ad47ad09-787b-44ab-b343-a082a3f2dfb1} aComponent={MediumWrap} aText={Medium 'C:\Users\pisti\VirtualBox VMs\CentOs 7\Centos 7\Centos 7.vdi' cannot be closed because it is still attached to 1 virtual machines}, preserve=false aResultDetail=0
+02:08:35.501712 main     HostDnsMonitor: shutting down ...
+02:08:35.501775 main     HostDnsMonitor: shut down
+02:08:35.504555 Watcher  ERROR [COM]: aRC=E_ACCESSDENIED (0x80070005) aIID={7682d5eb-f00e-44f1-8ca2-99d08b1cd607} aComponent={VirtualBoxWrap} aText={The object is not ready}, preserve=false aResultDetail=0
+02:08:35.504796 main     VirtualBox: object deleted

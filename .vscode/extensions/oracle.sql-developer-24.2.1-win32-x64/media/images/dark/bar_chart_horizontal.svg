@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <path d="m1,14v-2h7.5l.5-.5v-3l-.5-.5H1v-2h13.5l.5-.5v-3l-.5-.5H.5l-.5.5v12l.5.5h15.5v-1H1ZM1,3h13v2H1v-2Zm0,6h7v2H1v-2Z" fill="#c4c4c4" stroke-width="0"/>
+</svg>

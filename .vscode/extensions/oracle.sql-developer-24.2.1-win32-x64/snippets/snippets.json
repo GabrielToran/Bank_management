@@ -1,0 +1,1907 @@
+{
+  "Aggregate Functions": {
+    "COUNT(*)": {
+      "scope": "PLSQL",
+      "prefix": "COUNT(*)",
+      "body": [
+        "COUNT(*)"
+      ],
+      "description": "Returns the number of rows returned by the query."
+    },
+    "COUNT([ALL | DISTINCT] expr)": {
+      "scope": "PLSQL",
+      "prefix": "COUNT([ALL | DISTINCT] expr)",
+      "body": [
+        "COUNT([ALL | DISTINCT] expr)"
+      ],
+      "description": "Returns the number of rows returned by the query."
+    },
+    "MAX(expr)": {
+      "scope": "PLSQL",
+      "prefix": "MAX(expr)",
+      "body": [
+        "MAX(expr)"
+      ],
+      "description": "Returns maximum value of expr."
+    },
+    "MEDIAN(expr)": {
+      "scope": "PLSQL",
+      "prefix": "MEDIAN(expr)",
+      "body": [
+        "MEDIAN(expr)"
+      ],
+      "description": "Returns the middle value or an interpolated value that would be the middle value once the values are sorted."
+    },
+    "MIN(expr)": {
+      "scope": "PLSQL",
+      "prefix": "MIN(expr)",
+      "body": [
+        "MIN(expr)"
+      ],
+      "description": "Returns minimum value of expr."
+    },
+    "STDDEV(expr)": {
+      "scope": "PLSQL",
+      "prefix": "STDDEV(expr)",
+      "body": [
+        "STDDEV(expr)"
+      ],
+      "description": "Returns the sample standard deviation of expr, a set of numbers."
+    },
+    "SUM(expr)": {
+      "scope": "PLSQL",
+      "prefix": "SUM(expr)",
+      "body": [
+        "SUM(expr)"
+      ],
+      "description": "Returns the sum of values of expr."
+    },
+    "VARIANCE(expr)": {
+      "scope": "PLSQL",
+      "prefix": "VARIANCE(expr)",
+      "body": [
+        "VARIANCE(expr)"
+      ],
+      "description": "Returns the variance of expr."
+    }
+  },
+  "Analytic Functions": {
+    "AVG(expr)": {
+      "scope": "PLSQL",
+      "prefix": "AVG(expr)",
+      "body": [
+        "AVG(salary) OVER (PARTITION BY manager_id ORDER BY hire_date"
+      ],
+      "description": "AVG returns average value of expr."
+    },
+    "CORR(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "CORR(expr1, expr2)",
+      "body": [
+        "CORR(SYSDATE-hire_date, salary) OVER(PARTITION BY job_id) AS \"Correlation\""
+      ],
+      "description": "CORR returns the coefficient of correlation of a set of number pairs."
+    },
+    "COVAR_POP(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "COVAR_POP(expr1, expr2)",
+      "body": [
+        "COVAR_POP(list_price, min_price) OVER (ORDER BY product_id, supplier_id) AS CUM_COVP"
+      ],
+      "description": "COVAR_POP returns the population covariance of a set of number pairs."
+    },
+    "COVAR_SAMP(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "COVAR_SAMP(expr1, expr2)",
+      "body": [
+        "COVAR_SAMP(list_price, min_price) OVER (ORDER BY product_id, supplier_id) AS CUM_COVP"
+      ],
+      "description": "COVAR_SAMP returns the sample covariance of a set of number pairs."
+    },
+    "COUNT(expr)": {
+      "scope": "PLSQL",
+      "prefix": "COUNT(expr)",
+      "body": [
+        "COUNT(*) OVER (ORDER BY salary RANGE BETWEEN 50 PRECEDING AND 150 FOLLOWING) AS mov_count"
+      ],
+      "description": "COUNT returns the number of rows returned by the query."
+    },
+    "CUME_DIST(expr1, ...)": {
+      "scope": "PLSQL",
+      "prefix": "CUME_DIST(expr1, ...)",
+      "body": [
+        "CUME_DIST() OVER (PARTITION BY job_id ORDER BY salary) AS cume_dist"
+      ],
+      "description": "CUME_DIST calculates the cumulative distribution of a value in a group of values."
+    },
+    "DENSE_RANK()": {
+      "scope": "PLSQL",
+      "prefix": "DENSE_RANK()",
+      "body": [
+        "DENSE_RANK() OVER (PARTITION BY e.department_id ORDER BY e.salary) AS drank"
+      ],
+      "description": "DENSE_RANK computes the rank of a row in an ordered group of rows and returns the rank as a NUMBER."
+    },
+    "FIRST_VALUE(expr)": {
+      "scope": "PLSQL",
+      "prefix": "FIRST_VALUE(expr)",
+      "body": [
+        "FIRST_VALUE(last_name) OVER (ORDER BY salary ASC ROWS UNBOUNDED PRECEDING) AS lowest_sal"
+      ],
+      "description": "FIRST_VALUE returns the first value in an ordered set of values. "
+    },
+    "LAG(expr, offset, ...)": {
+      "scope": "PLSQL",
+      "prefix": "LAG(expr, offset, ...)",
+      "body": [
+        "LAG(salary, 1, 0) OVER (ORDER BY hire_date) AS prev_sal"
+      ],
+      "description": "LAG provides access to a row at a given physical offset prior to cursor position."
+    },
+    "LAST_VALUE(expr)": {
+      "scope": "PLSQL",
+      "prefix": "LAST_VALUE(expr)",
+      "body": [
+        "LAST_VALUE(hire_date) OVER (ORDER BY salary ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS lv"
+      ],
+      "description": "LAST_VALUE returns the last value in an ordered set of values. "
+    },
+    "LEAD(expr, offset, ...)": {
+      "scope": "PLSQL",
+      "prefix": "LEAD(expr, offset, ...)",
+      "body": [
+        "LEAD(hire_date, 1) OVER (ORDER BY hire_date) AS \"NextHired\""
+      ],
+      "description": "LEAD provides access to a row at a given physical offset beyond cursor position."
+    },
+    "MAX(expr)": {
+      "scope": "PLSQL",
+      "prefix": "MAX(expr)",
+      "body": [
+        "MAX(salary) OVER (PARTITION BY manager_id) AS mgr_max"
+      ],
+      "description": "Returns maximum value of expr."
+    },
+    "MIN(expr)": {
+      "scope": "PLSQL",
+      "prefix": "MIN(expr)",
+      "body": [
+        "MIN(salary) OVER(PARTITION BY manager_id ORDER BY hire_date"
+      ],
+      "description": "Returns minimum value of expr."
+    },
+    "NTILE(expr)": {
+      "scope": "PLSQL",
+      "prefix": "NTILE(expr)",
+      "body": [
+        "NTILE(4) OVER (ORDER BY salary DESC)"
+      ],
+      "description": "NTILE divides an ordered data set into a number of buckets indicated by expr and assigns the appropriate bucket number to each row."
+    },
+    "PERCENT_RANK(expr1, ...)": {
+      "scope": "PLSQL",
+      "prefix": "PERCENT_RANK(expr1, ...)",
+      "body": [
+        "PERCENT_RANK(15000, .05) WITHIN GROUP (ORDER BY salary, commission_pct) \"Percent-Rank\""
+      ],
+      "description": "For a row r, PERCENT_RANK calculates the rank of r minus 1, divided by 1 less than the number of rows being evaluated."
+    },
+    "PERCENTILE_CONT(expr)": {
+      "scope": "PLSQL",
+      "prefix": "PERCENTILE_CONT(expr)",
+      "body": [
+        "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary DESC) OVER (PARTITION BY department_id) \"Percentile_Cont\""
+      ],
+      "description": "PERCENTILE_CONT takes a percentile value and a sort specification, and returns an interpolated value that would fall into that percentile value."
+    },
+    "PERCENTILE_DISC(expr)": {
+      "scope": "PLSQL",
+      "prefix": "PERCENTILE_DISC(expr)",
+      "body": [
+        "PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY salary DESC) OVER (PARTITION BY department_id) \"Percentile_Disc\""
+      ],
+      "description": "PERCENTILE_DISC takes a percentile value and a sort specification and returns an element from the set."
+    },
+    "RANK(expr1, ...)": {
+      "scope": "PLSQL",
+      "prefix": "RANK(expr1, ...)",
+      "body": [
+        "RANK(15500, .05) WITHIN GROUP (ORDER BY salary, commission_pct) \"Rank\""
+      ],
+      "description": "RANK computes the rank of each row returned from a query with respect to the other rows returned by the query."
+    },
+    "RATIO_TO_REPORT(expr)": {
+      "scope": "PLSQL",
+      "prefix": "RATIO_TO_REPORT(expr)",
+      "body": [
+        "RATIO_TO_REPORT(salary) OVER () AS rr"
+      ],
+      "description": "RATIO_TO_REPORT computes the ratio of a value to the sum of a set of values."
+    },
+    "REGR_SLOPE(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "REGR_SLOPE(expr1, expr2)",
+      "body": [
+        "REGR_SLOPE(SYSDATE-hire_date, salary) OVER (PARTITION BY job_id) slope"
+      ],
+      "description": "REGR_SLOPE returns the slope of the line."
+    },
+    "REGR_INTERCEPT(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "REGR_INTERCEPT(expr1, expr2)",
+      "body": [
+        "REGR_INTERCEPT(SYSDATE-hire_date, salary) OVER (PARTITION BY job_id) slope"
+      ],
+      "description": "REGR_INTERCEPT returns the y-intercept of the regression line."
+    },
+    "REGR_COUNT(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "REGR_COUNT(expr1, expr2)",
+      "body": [
+        "REGR_COUNT(SYSDATE-hire_date, salary) OVER (PARTITION BY job_id) slope"
+      ],
+      "description": "REGR_COUNT returns an integer that is the number of non-null number pairs used to fit the regression line."
+    },
+    "REGR_R2(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "REGR_R2(expr1, expr2)",
+      "body": [
+        "REGR_R2(SYSDATE-hire_date, salary) OVER (PARTITION BY job_id) slope"
+      ],
+      "description": "REGR_R2 returns the coefficient of determination (also called R-squared or goodness of fit) for the regression."
+    },
+    "REGR_AVGX(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "REGR_AVGX(expr1, expr2)",
+      "body": [
+        "REGR_AVGX(SYSDATE-hire_date, salary) OVER (PARTITION BY job_id) slope"
+      ],
+      "description": "REGR_AVGX evaluates the average of the independent variable (expr2) of the regression line."
+    },
+    "REGR_AVGY(expr1, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "REGR_AVGY(expr1, expr2)",
+      "body": [
+        "REGR_AVGY(SYSDATE-hire_date, salary) OVER (PARTITION BY job_id) slope"
+      ],
+      "description": "REGR_AVGY evaluates the average of the independent variable (expr1) of the regression line."
+    },
+    "ROW_NUMBER()": {
+      "scope": "PLSQL",
+      "prefix": "ROW_NUMBER()",
+      "body": [
+        "ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY salary desc) rn"
+      ],
+      "description": "ROW_NUMBER assigns a unique number to each row to which it is applied."
+    },
+    "STDDEV(expr)": {
+      "scope": "PLSQL",
+      "prefix": "STDDEV(expr)",
+      "body": [
+        "STDDEV(salary) OVER (ORDER BY hire_date) \"StdDev\""
+      ],
+      "description": "STDDEV returns the sample standard deviation of expr, a set of numbers."
+    },
+    "STDDEV_POP(expr)": {
+      "scope": "PLSQL",
+      "prefix": "STDDEV_POP(expr)",
+      "body": [
+        "STDDEV_POP(salary) OVER (PARTITION BY department_id) AS pop_std"
+      ],
+      "description": "STDDEV_POP computes the population standard deviation and returns the square root of the population variance."
+    },
+    "STDDEV_SAMP(expr)": {
+      "scope": "PLSQL",
+      "prefix": "STDDEV_SAMP(expr)",
+      "body": [
+        "STDDEV_SAMP(salary) OVER (PARTITION BY department_id ORDER BY hire_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cum_sdev"
+      ],
+      "description": "STDDEV_SAMP computes the cumulative sample standard deviation and returns the square root of the sample variance."
+    },
+    "SUM(expr)": {
+      "scope": "PLSQL",
+      "prefix": "SUM(expr)",
+      "body": [
+        "SUM(salary) OVER (PARTITION BY manager_id) ORDER BY salary"
+      ],
+      "description": "SUM returns the sum of values of expr."
+    },
+    "VAR_POP(expr)": {
+      "scope": "PLSQL",
+      "prefix": "VAR_POP(expr)",
+      "body": [
+        "VARIANCE(salary) OVER (ORDER BY hire_date) \"Variance\""
+      ],
+      "description": "VARIANCE returns the variance of expr."
+    },
+    "VAR_SAMP(expr)": {
+      "scope": "PLSQL",
+      "prefix": "VAR_SAMP(expr)",
+      "body": [
+        "VAR_SAMP(SUM(s.amount_sold)) OVER (ORDER BY t.calendar_month_desc) \"Var_Samp\""
+      ],
+      "description": "VAR_SAMP returns the sample variance of a set of numbers."
+    }
+  },
+  "Character Functions": {
+    "CHR(n)": {
+      "scope": "PLSQL",
+      "prefix": "CHR(n)",
+      "body": [
+        "CHR(n)"
+      ],
+      "description": "Returns the character having the binary equivalent to n as a VARCHAR2 value in either the database character set or, if you specify USING NCHAR_CS, the national character set."
+    },
+    "CONCAT(char1, char2)": {
+      "scope": "PLSQL",
+      "prefix": "CONCAT(char1, char2)",
+      "body": [
+        "CONCAT(char1, char2)"
+      ],
+      "description": "Returns char1 concatenated with char2."
+    },
+    "INITCAP(char)": {
+      "scope": "PLSQL",
+      "prefix": "INITCAP(char)",
+      "body": [
+        "INITCAP(char)"
+      ],
+      "description": "Returns char, with the first letter of each word in uppercase, all other letters in lowercase."
+    },
+    "LOWER(char)": {
+      "scope": "PLSQL",
+      "prefix": "LOWER(char)",
+      "body": [
+        "LOWER(char)"
+      ],
+      "description": "Returns char, with all letters lowercase."
+    },
+    "LPAD(expr1, n, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "LPAD(expr1, n, expr2)",
+      "body": [
+        "LPAD(expr1, n, expr2)"
+      ],
+      "description": "Returns expr1, left-padded to length n characters with the sequence of characters in expr2."
+    },
+    "LTRIM(char, set)": {
+      "scope": "PLSQL",
+      "prefix": "LTRIM(char, set)",
+      "body": [
+        "LTRIM(char, set)"
+      ],
+      "description": "Removes from the left end of char all of the characters contained in set."
+    },
+    "NLS_INITCAP(char, 'NLS_SORT = lang')": {
+      "scope": "PLSQL",
+      "prefix": "NLS_INITCAP(char, 'NLS_SORT = lang')",
+      "body": [
+        "NLS_INITCAP(char, 'NLS_SORT = lang')"
+      ],
+      "description": "Returns char, with the first letter of each word in uppercase, all other letters in lowercase."
+    },
+    "NLS_LOWER(char, 'NLS_SORT = lang')": {
+      "scope": "PLSQL",
+      "prefix": "NLS_LOWER(char, 'NLS_SORT = lang')",
+      "body": [
+        "NLS_LOWER(char, 'NLS_SORT = lang')"
+      ],
+      "description": "Returns char, with all letters lowercase."
+    },
+    "NLS_UPPER(char, 'NLS_SORT = lang')": {
+      "scope": "PLSQL",
+      "prefix": "NLS_UPPER(char, 'NLS_SORT = lang')",
+      "body": [
+        "NLS_UPPER(char, 'NLS_SORT = lang')"
+      ],
+      "description": "Returns char, with all letters uppercase."
+    },
+    "NLSSORT(char, 'NLS_SORT = lang')": {
+      "scope": "PLSQL",
+      "prefix": "NLSSORT(char, 'NLS_SORT = lang')",
+      "body": [
+        "NLSSORT(char, 'NLS_SORT = lang')"
+      ],
+      "description": "Returns the string of bytes used to sort char."
+    },
+    "RPAD(expr1, n, expr2)": {
+      "scope": "PLSQL",
+      "prefix": "RPAD(expr1, n, expr2)",
+      "body": [
+        "RPAD(expr1, n, expr2)"
+      ],
+      "description": "Returns expr1, right-padded to length n characters with the sequence of characters in expr2."
+    },
+    "RTRIM(char, set)": {
+      "scope": "PLSQL",
+      "prefix": "RTRIM(char, set)",
+      "body": [
+        "RTRIM(char, set)"
+      ],
+      "description": "Removes from the right end of char all of the characters contained in set."
+    },
+    "SOUNDEX(char)": {
+      "scope": "PLSQL",
+      "prefix": "SOUNDEX(char)",
+      "body": [
+        "SOUNDEX(char)"
+      ],
+      "description": "Returns a character string containing the phonetic representation of char."
+    },
+    "SUBSTR(char, position, substring_length)": {
+      "scope": "PLSQL",
+      "prefix": "SUBSTR(char, position, substring_length)",
+      "body": [
+        "SUBSTR(char, position, substring_length)"
+      ],
+      "description": "Returns a portion of char, beginning at character position, substring_length characters long."
+    },
+    "TRANSLATE(expr, from_string, to_string)": {
+      "scope": "PLSQL",
+      "prefix": "TRANSLATE(expr, from_string, to_string)",
+      "body": [
+        "TRANSLATE(expr, from_string, to_string)"
+      ],
+      "description": "Returns expr with all occurrences of each character in from_string replaced by its corresponding character in to_string."
+    },
+    "TRIM([LEADING | TRAILING | BOTH] trim_character FROM trim_source)": {
+      "scope": "PLSQL",
+      "prefix": "TRIM([LEADING | TRAILING | BOTH] trim_character FROM trim_source)",
+      "body": [
+        "TRIM([LEADING | TRAILING | BOTH] trim_character FROM trim_source)"
+      ],
+      "description": "Trims leading or trailing characters (or both) from a character string. If trim_character or trim_source is a character literal, enclose it in single quotes."
+    },
+    "UPPER(char)": {
+      "scope": "PLSQL",
+      "prefix": "UPPER(char)",
+      "body": [
+        "UPPER(char)"
+      ],
+      "description": "Returns char, with all letters uppercase."
+    }
+  },
+  "Conversion Functions": {
+    "TO_CHAR (nchar | clob | nclob)": {
+      "scope": "PLSQL",
+      "prefix": "TO_CHAR (nchar | clob | nclob)",
+      "body": [
+        "TO_CHAR (nchar | clob | nclob)"
+      ],
+      "description": "Converts NCHAR, NVARCHAR2, CLOB, or NCLOB data to the database character set."
+    },
+    "TO_CHAR(datetime, fmt, nlsparam)": {
+      "scope": "PLSQL",
+      "prefix": "TO_CHAR(datetime, fmt, nlsparam)",
+      "body": [
+        "TO_CHAR(datetime, fmt, nlsparam)"
+      ],
+      "description": "Converts a datetime or interval value of DATE, TIMESTAMP, TIMESTAMP WITH TIME ZONE, or TIMESTAMP WITH LOCAL TIME ZONE datatype to a value of VARCHAR2 datatype in the format specified by the date format fmt."
+    },
+    "TO_CHAR (n, fmt, nlsparam)": {
+      "scope": "PLSQL",
+      "prefix": "TO_CHAR (n, fmt, nlsparam)",
+      "body": [
+        "TO_CHAR (n, fmt, nlsparam)"
+      ],
+      "description": "Converts n to a value of VARCHAR2 datatype, using the optional number format fmt."
+    },
+    "TO_CLOB(lob_column | char)": {
+      "scope": "PLSQL",
+      "prefix": "TO_CLOB(lob_column | char)",
+      "body": [
+        "TO_CLOB(lob_column | char)"
+      ],
+      "description": "Converts NCLOB values in a LOB column or other character strings to CLOB values."
+    },
+    "TO_DATE(datetime, fmt, nlsparam)": {
+      "scope": "PLSQL",
+      "prefix": "TO_DATE(datetime, fmt, nlsparam)",
+      "body": [
+        "TO_DATE(datetime, fmt, nlsparam)"
+      ],
+      "description": "Converts char of CHAR, VARCHAR2, NCHAR, or NVARCHAR2 datatype to a value of DATE datatype."
+    },
+    "TO_TIMESTAMP(char, fmt, nlsparam)": {
+      "scope": "PLSQL",
+      "prefix": "TO_TIMESTAMP(char, fmt, nlsparam)",
+      "body": [
+        "TO_TIMESTAMP(char, fmt, nlsparam)"
+      ],
+      "description": "Converts char of CHAR, VARCHAR2, NCHAR, or NVARCHAR2 datatype to a value of TIMESTAMP datatype."
+    },
+    "NVL(value, default)": {
+      "scope": "PLSQL",
+      "prefix": "NVL(value, default)",
+      "body": [
+        "NVL(value, default)"
+      ],
+      "description": "NVL lets you replace a null with a value."
+    }
+  },
+  "Date Formats": {
+    "DD-MON-YYYY HH24:MI:SS": {
+      "scope": "PLSQL",
+      "prefix": "DD-MON-YYYY HH24:MI:SS",
+      "body": [
+        "TO_CHAR(sysdate, 'DD-MON-YYYY HH24:MI:SS')"
+      ],
+      "description": "Example: 10-OCT-2005 17:58:01"
+    },
+    "DD-MON-YYYY HH12:MI:SS PM": {
+      "scope": "PLSQL",
+      "prefix": "DD-MON-YYYY HH12:MI:SS PM",
+      "body": [
+        "TO_CHAR(sysdate, 'DD-MON-YYYY HH12:MI:SS PM')"
+      ],
+      "description": "Example: 10-OCT-2005 05:58:01 PM"
+    },
+    "DD-MON-YYYY HH24:MI:SS.FF": {
+      "scope": "PLSQL",
+      "prefix": "DD-MON-YYYY HH24:MI:SS.FF",
+      "body": [
+        "TO_CHAR(systimestamp, 'DD-MON-YYYY HH24:MI:SS.FF')"
+      ],
+      "description": "Example: 10-OCT-2005 17:58:01.983755"
+    },
+    "DY, DD-MON-YYYY": {
+      "scope": "PLSQL",
+      "prefix": "DY, DD-MON-YYYY",
+      "body": [
+        "TO_CHAR(sysdate, 'DY, DD-MON-YYYY')"
+      ],
+      "description": "Example: MON, 10-OCT-2005"
+    },
+    "Month DDth, YYYY": {
+      "scope": "PLSQL",
+      "prefix": "Month DDth, YYYY",
+      "body": [
+        "TO_CHAR(sysdate,'Month DDth, YYYY')"
+      ],
+      "description": "Example: June 10TH, 2005"
+    },
+    "DD-MON-YYYY HH24:MI:SS TZH:TZM": {
+      "scope": "PLSQL",
+      "prefix": "DD-MON-YYYY HH24:MI:SS TZH:TZM",
+      "body": [
+        "TO_CHAR(systimestamp, 'DD-MON-YYYY HH24:MI:SS TZH:TZM')"
+      ],
+      "description": "Example: 10-OCT-2005 17:58:01 -07:00"
+    },
+    "MM/DD/YYYY HH24:MI:SS": {
+      "scope": "PLSQL",
+      "prefix": "MM/DD/YYYY HH24:MI:SS",
+      "body": [
+        "TO_CHAR(sysdate, 'MM/DD/YYYY HH24:MI:SS')"
+      ],
+      "description": "Example: 10/13/2005 18:10:25"
+    },
+    "MM/DD/YY HH24:MI:SS": {
+      "scope": "PLSQL",
+      "prefix": "MM/DD/YY HH24:MI:SS",
+      "body": [
+        "TO_CHAR(sysdate, 'MM/DD/YY HH24:MI:SS')"
+      ],
+      "description": "Example: 10/13/05 18:10:25"
+    },
+    "MM/DD/RRRR HH12:MI:SS PM": {
+      "scope": "PLSQL",
+      "prefix": "MM/DD/RRRR HH12:MI:SS PM",
+      "body": [
+        "TO_CHAR(sysdate, 'MM/DD/RRRR HH12:MI:SS PM')"
+      ],
+      "description": "Example: 10/13/2005 06:10:25 PM"
+    },
+    "MM/DD/RR HH12:MI:SS PM": {
+      "scope": "PLSQL",
+      "prefix": "MM/DD/RR HH12:MI:SS PM",
+      "body": [
+        "TO_CHAR(sysdate, 'MM/DD/RR HH12:MI:SS PM')"
+      ],
+      "description": "Example: 10/13/05 06:10:25 PM"
+    }
+  },
+  "Date/Time Functions": {
+    "ADD_MONTHS(date, integer)": {
+      "scope": "PLSQL",
+      "prefix": "ADD_MONTHS(date, integer)",
+      "body": [
+        "ADD_MONTHS(date, integer)"
+      ],
+      "description": "Returns the date plus integer months."
+    },
+    "CURRENT_DATE": {
+      "scope": "PLSQL",
+      "prefix": "CURRENT_DATE",
+      "body": [
+        "CURRENT_DATE"
+      ],
+      "description": "Returns the current date in the session time zone, in a value in the Gregorian calendar of datatype DATE."
+    },
+    "CURRENT_TIMESTAMP": {
+      "scope": "PLSQL",
+      "prefix": "CURRENT_TIMESTAMP",
+      "body": [
+        "CURRENT_TIMESTAMP"
+      ],
+      "description": "Returns the current date and time in the session time zone, in a value of datatype TIMESTAMP WITH TIME ZONE."
+    },
+    "SYSDATE": {
+      "scope": "PLSQL",
+      "prefix": "SYSDATE",
+      "body": [
+        "SYSDATE"
+      ],
+      "description": "Returns the current date and time set for the operating system on which the database resides."
+    },
+    "SYSTIMESTAMP": {
+      "scope": "PLSQL",
+      "prefix": "SYSTIMESTAMP",
+      "body": [
+        "SYSTIMESTAMP"
+      ],
+      "description": "Returns the system date, including fractional seconds and time zone, of the system on which the database resides."
+    },
+    "TO_CHAR(datetime, fmt, nlsparam)": {
+      "scope": "PLSQL",
+      "prefix": "TO_CHAR(datetime, fmt, nlsparam)",
+      "body": [
+        "TO_CHAR(datetime, fmt, nlsparam)"
+      ],
+      "description": "Converts a datetime or interval value of DATE, TIMESTAMP, TIMESTAMP WITH TIME ZONE, or TIMESTAMP WITH LOCAL TIME ZONE datatype to a value of VARCHAR2 datatype in the format specified by the date format fmt."
+    },
+    "TO_CHAR(sysdate, 'DD-MON-YYYY HH24:MI:SS')": {
+      "scope": "PLSQL",
+      "prefix": "TO_CHAR(sysdate, 'DD-MON-YYYY HH24:MI:SS')",
+      "body": [
+        "TO_CHAR(sysdate, 'DD-MON-YYYY HH24:MI:SS')"
+      ],
+      "description": "Converts timestamp [example]."
+    },
+    "TO_TIMESTAMP(char, fmt, nlsparam)": {
+      "scope": "PLSQL",
+      "prefix": "TO_TIMESTAMP(char, fmt, nlsparam)",
+      "body": [
+        "TO_TIMESTAMP(char, fmt, nlsparam)"
+      ],
+      "description": "Converts char of CHAR, VARCHAR2, NCHAR, or NVARCHAR2 datatype to a value of TIMESTAMP datatype."
+    },
+    "TRUNC(date, fmt)": {
+      "scope": "PLSQL",
+      "prefix": "TRUNC(date, fmt)",
+      "body": [
+        "TRUNC(date, fmt)"
+      ],
+      "description": "Returns date with the time portion of the day truncated to the unit specified by the format model fmt."
+    },
+    "MONTHS_BETWEEN(date, date)": {
+      "scope": "PLSQL",
+      "prefix": "MONTHS_BETWEEN(date, date)",
+      "body": [
+        "MONTHS_BETWEEN(date, date)"
+      ],
+      "description": "Returns the number of months between two dates."
+    }
+  },
+  "Number Formats": {
+    "999,999.99": {
+      "scope": "PLSQL",
+      "prefix": "999,999.99",
+      "body": [
+        "TO_CHAR(123456.78, '999,999.99')"
+      ],
+      "description": "Example: 123,456.78"
+    },
+    "S999,999.99": {
+      "scope": "PLSQL",
+      "prefix": "S999,999.99",
+      "body": [
+        "TO_CHAR(123456.78, 'S999,999.99')"
+      ],
+      "description": "Example: +123,456.78"
+    },
+    "$999,999.99": {
+      "scope": "PLSQL",
+      "prefix": "$999,999.99",
+      "body": [
+        "TO_CHAR(123456.78, '\\$999,999.99')"
+      ],
+      "description": "Example: $123,456.78"
+    },
+    "C999,999.99": {
+      "scope": "PLSQL",
+      "prefix": "C999,999.99",
+      "body": [
+        "TO_CHAR(123456.78, 'C999,999.99')"
+      ],
+      "description": "Example: USD123,456.78"
+    },
+    "9.9EEEE": {
+      "scope": "PLSQL",
+      "prefix": "9.9EEEE",
+      "body": [
+        "TO_CHAR(123456.78, '9.9EEEE')"
+      ],
+      "description": "Example: 1.2E+05"
+    },
+    "999,999.99PR": {
+      "scope": "PLSQL",
+      "prefix": "999,999.99PR",
+      "body": [
+        "TO_CHAR(-123456.78, '999,999.99PR')"
+      ],
+      "description": "Negative value in angle brackets; positive value with a leading and trailing blank."
+    }
+  },
+  "Numeric Functions": {
+    "ABS(n)": {
+      "scope": "PLSQL",
+      "prefix": "ABS(n)",
+      "body": [
+        "ABS(n)"
+      ],
+      "description": "Returns the absolute value of n."
+    },
+    "CEIL(n)": {
+      "scope": "PLSQL",
+      "prefix": "CEIL(n)",
+      "body": [
+        "CEIL(n)"
+      ],
+      "description": "Returns smallest integer greater than or equal to n."
+    },
+    "EXP(n)": {
+      "scope": "PLSQL",
+      "prefix": "EXP(n)",
+      "body": [
+        "EXP(n)"
+      ],
+      "description": "Returns e raised to the nth power, where e = 2.71828183."
+    },
+    "FLOOR(n)": {
+      "scope": "PLSQL",
+      "prefix": "FLOOR(n)",
+      "body": [
+        "FLOOR(n)"
+      ],
+      "description": "Returns largest integer equal to or less than n."
+    },
+    "LOG(n2, n1)": {
+      "scope": "PLSQL",
+      "prefix": "LOG(n2, n1)",
+      "body": [
+        "LOG(n2, n1)"
+      ],
+      "description": "Returns the logarithm, base n2, of n1."
+    },
+    "MOD(n2, n1)": {
+      "scope": "PLSQL",
+      "prefix": "MOD(n2, n1)",
+      "body": [
+        "MOD(n2, n1)"
+      ],
+      "description": "Returns the remainder of n2 divided by n1. Returns n2 if n1 is 0."
+    },
+    "POWER(n2, n1)": {
+      "scope": "PLSQL",
+      "prefix": "POWER(n2, n1)",
+      "body": [
+        "POWER(n2, n1)"
+      ],
+      "description": "Returns n2 raised to the n1 power."
+    },
+    "REMAINDER(n2, n1)": {
+      "scope": "PLSQL",
+      "prefix": "REMAINDER(n2, n1)",
+      "body": [
+        "REMAINDER(n2, n1)"
+      ],
+      "description": "Returns the remainder of n2 divided by n1."
+    },
+    "ROUND(n, integer)": {
+      "scope": "PLSQL",
+      "prefix": "ROUND(n, integer)",
+      "body": [
+        "ROUND(n, integer)"
+      ],
+      "description": "Returns n rounded to integer places to the right of the decimal point."
+    },
+    "TRUNC(n1, n2)": {
+      "scope": "PLSQL",
+      "prefix": "TRUNC(n1, n2)",
+      "body": [
+        "TRUNC(n1, n2)"
+      ],
+      "description": "Returns n1 truncated to n2 decimal places."
+    }
+  },
+  "Optimizer Hints": {
+    "ALL_ROWS": {
+      "scope": "PLSQL",
+      "prefix": "ALL_ROWS",
+      "body": [
+        "/*+ ALL_ROWS */"
+      ],
+      "description": "Optimizes a statement block with a goal of best throughput, that is, minimum total resource consumption."
+    },
+    "APPEND": {
+      "scope": "PLSQL",
+      "prefix": "APPEND",
+      "body": [
+        "/*+ APPEND */"
+      ],
+      "description": "Uses direct-path INSERT if your database is running in serial mode."
+    },
+    "CACHE(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "CACHE(table-name)",
+      "body": [
+        "/*+ CACHE(table-name) */"
+      ],
+      "description": "Places the blocks retrieved for the table at the most recently used end of the LRU list in the buffer cache when a full table scan is performed."
+    },
+    "CLUSTER(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "CLUSTER(table-name)",
+      "body": [
+        "/*+ CLUSTER(table-name) */"
+      ],
+      "description": "Uses a cluster scan to access the specified table."
+    },
+    "CURSOR_SHARING_EXACT ": {
+      "scope": "PLSQL",
+      "prefix": "CURSOR_SHARING_EXACT ",
+      "body": [
+        "/*+ CURSOR_SHARING_EXACT  */"
+      ],
+      "description": "Executes the SQL statement without any attempt to replace literals with bind variables."
+    },
+    "DRIVING_SITE(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "DRIVING_SITE(table-name)",
+      "body": [
+        "/*+ DRIVING_SITE(table-name) */"
+      ],
+      "description": "Executes the query at a different site than that selected by the database."
+    },
+    "DYNAMIC_SAMPLING(table-name integer)": {
+      "scope": "PLSQL",
+      "prefix": "DYNAMIC_SAMPLING(table-name integer)",
+      "body": [
+        "/*+ DYNAMIC_SAMPLING(table-name integer) */"
+      ],
+      "description": "Controls dynamic sampling to improve server performance by determining more accurate predicate selectivity and statistics for tables and indexes."
+    },
+    "FACT(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "FACT(table-name)",
+      "body": [
+        "/*+ FACT(table-name) */"
+      ],
+      "description": "Makes the table specified in tablespec a fact table in the star transformation."
+    },
+    "FIRST_ROWS(n)": {
+      "scope": "PLSQL",
+      "prefix": "FIRST_ROWS(n)",
+      "body": [
+        "/*+ FIRST_ROWS(n) */"
+      ],
+      "description": "Optimizes an individual SQL statement for fast response, choosing the plan that returns the first n rows most efficiently."
+    },
+    "FULL(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "FULL(table-name)",
+      "body": [
+        "/*+ FULL(table-name) */"
+      ],
+      "description": "Performs a full table scan for the specified table."
+    },
+    "HASH(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "HASH(table-name)",
+      "body": [
+        "/*+ HASH(table-name) */"
+      ],
+      "description": "Uses a hash scan to access the specified table."
+    },
+    "INDEX(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "INDEX(table-name index-name)",
+      "body": [
+        "/*+ INDEX(table-name index-name) */"
+      ],
+      "description": "Uses an index scan for the specified table."
+    },
+    "INDEX_COMBINE(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "INDEX_COMBINE(table-name index-name)",
+      "body": [
+        "/*+ INDEX_COMBINE(table-name index-name) */"
+      ],
+      "description": "Uses a bitmap access path for the table. If index-name is omitted, the optimizer uses whatever Boolean combination of indexes has the best cost estimate for the table."
+    },
+    "INDEX_FFS(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "INDEX_FFS(table-name index-name)",
+      "body": [
+        "/*+ INDEX_FFS(table-name index-name) */"
+      ],
+      "description": "Performs a fast full index scan rather than a full table scan."
+    },
+    "INDEX_JOIN(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "INDEX_JOIN(table-name index-name)",
+      "body": [
+        "/*+ INDEX_JOIN(table-name index-name) */"
+      ],
+      "description": "Uses an index join as an access path."
+    },
+    "INDEX_SS(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "INDEX_SS(table-name index-name)",
+      "body": [
+        "/*+ INDEX_SS(table-name index-name) */"
+      ],
+      "description": "Performs an index skip scan for the specified table."
+    },
+    "LEADING(table-name, ...)": {
+      "scope": "PLSQL",
+      "prefix": "LEADING(table-name, ...)",
+      "body": [
+        "/*+ LEADING(table-name, ...) */"
+      ],
+      "description": "Uses the specified set of tables as the prefix in the execution plan."
+    },
+    "MERGE(v)": {
+      "scope": "PLSQL",
+      "prefix": "MERGE(v)",
+      "body": [
+        "/*+ MERGE(v) */"
+      ],
+      "description": "Lets you merge views in a query."
+    },
+    "MODEL_MIN_ANALYSIS": {
+      "scope": "PLSQL",
+      "prefix": "MODEL_MIN_ANALYSIS",
+      "body": [
+        "/*+ MODEL_MIN_ANALYSIS */"
+      ],
+      "description": "Omits some compile-time optimizations of spreadsheet rules -- primarily detailed dependency graph analysis."
+    },
+    "NOAPPEND": {
+      "scope": "PLSQL",
+      "prefix": "NOAPPEND",
+      "body": [
+        "/*+ NOAPPEND */"
+      ],
+      "description": "Uses conventional INSERT by disabling parallel mode for the duration of the INSERT statement."
+    },
+    "NOCACHE(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "NOCACHE(table-name)",
+      "body": [
+        "/*+ NOCACHE(table-name) */"
+      ],
+      "description": "Places the blocks retrieved for the table at the least recently used end of the LRU list in the buffer cache when a full table scan is performed. This is the normal behavior of blocks in the buffer cache."
+    },
+    "NO_EXPAND(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_EXPAND(table-name)",
+      "body": [
+        "/*+ NO_EXPAND(table-name) */"
+      ],
+      "description": "Does not consider OR-expansion for queries having OR conditions or IN-lists in the WHERE clause. Usually, the optimizer considers using OR expansion and uses this method if it decides that the cost is lower than not using it."
+    },
+    "NO_FACT(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_FACT(table-name)",
+      "body": [
+        "/*+ NO_FACT(table-name) */"
+      ],
+      "description": "Makes the table specified in tablespec not a fact table in the star transformation."
+    },
+    "NO_INDEX(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_INDEX(table-name index-name)",
+      "body": [
+        "/*+ NO_INDEX(table-name index-name) */"
+      ],
+      "description": "Does not use one or more indexes for the specified table."
+    },
+    "NO_INDEX_FFS(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_INDEX_FFS(table-name index-name)",
+      "body": [
+        "/*+ NO_INDEX_FFS(table-name index-name) */"
+      ],
+      "description": "Excludes a fast full index scan of the specified indexes on the specified table."
+    },
+    "NO_INDEX_SS(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_INDEX_SS(table-name index-name)",
+      "body": [
+        "/*+ NO_INDEX_SS(table-name index-name) */"
+      ],
+      "description": "Excludes a skip scan of the specified indexes on the specified table."
+    },
+    "NO_MERGE(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_MERGE(table-name)",
+      "body": [
+        "/*+ NO_MERGE(table-name) */"
+      ],
+      "description": "Does not combine the outer query and any inline view queries into a single query."
+    },
+    "NO_PARALLEL(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_PARALLEL(table-name)",
+      "body": [
+        "/*+ NO_PARALLEL(table-name) */"
+      ],
+      "description": "Overrides a PARALLEL parameter in the DDL that created or altered the table."
+    },
+    "NO_PARALLEL_INDEX(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_PARALLEL_INDEX(table-name index-name)",
+      "body": [
+        "/*+ NO_PARALLEL_INDEX(table-name index-name) */"
+      ],
+      "description": "Overrides a PARALLEL parameter in the DDL that created or altered the index, thus avoiding a parallel index scan operation."
+    },
+    "NO_PUSH_PRED(v)": {
+      "scope": "PLSQL",
+      "prefix": "NO_PUSH_PRED(v)",
+      "body": [
+        "/*+ NO_PUSH_PRED(v) */"
+      ],
+      "description": "Does not push a join predicate into the view."
+    },
+    "NO_PUSH_SUBQ": {
+      "scope": "PLSQL",
+      "prefix": "NO_PUSH_SUBQ",
+      "body": [
+        "/*+ NO_PUSH_SUBQ */"
+      ],
+      "description": "Evaluates nonmerged subqueries as the last step in the execution plan. Can improve performance if the subquery is relatively expensive or does not reduce the number of rows significantly."
+    },
+    "NO_PX_JOIN_FILTER(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "NO_PX_JOIN_FILTER(table-name)",
+      "body": [
+        "/*+ NO_PX_JOIN_FILTER(table-name) */"
+      ],
+      "description": "Prevents the optimizer from using parallel join bitmap filtering."
+    },
+    "NO_REWRITE": {
+      "scope": "PLSQL",
+      "prefix": "NO_REWRITE",
+      "body": [
+        "/*+ NO_REWRITE */"
+      ],
+      "description": "Disables query rewrite for the query block, overriding the setting of the parameter QUERY_REWRITE_ENABLED."
+    },
+    "NO_QUERY_TRANSFORMATION": {
+      "scope": "PLSQL",
+      "prefix": "NO_QUERY_TRANSFORMATION",
+      "body": [
+        "/*+ NO_QUERY_TRANSFORMATION */"
+      ],
+      "description": "Skips all query transformations, including but not limited to OR-expansion, view merging, subquery unnesting, star transformation, and materialized view rewrite."
+    },
+    "NO_STAR_TRANSFORMATION": {
+      "scope": "PLSQL",
+      "prefix": "NO_STAR_TRANSFORMATION",
+      "body": [
+        "/*+ NO_STAR_TRANSFORMATION */"
+      ],
+      "description": "Does not perform star query transformation."
+    },
+    "NO_UNNEST": {
+      "scope": "PLSQL",
+      "prefix": "NO_UNNEST",
+      "body": [
+        "/*+ NO_UNNEST */"
+      ],
+      "description": "Turns off unnesting."
+    },
+    "NO_USE_HASH(table-name ...)": {
+      "scope": "PLSQL",
+      "prefix": "NO_USE_HASH(table-name ...)",
+      "body": [
+        "/*+ NO_USE_HASH(table-name ...) */"
+      ],
+      "description": "Excludes hash joins when joining each specified table to another row source using the specified table as the inner table."
+    },
+    "NO_USE_MERGE(table-name ...)": {
+      "scope": "PLSQL",
+      "prefix": "NO_USE_MERGE(table-name ...)",
+      "body": [
+        "/*+ NO_USE_MERGE(table-name ...) */"
+      ],
+      "description": "Excludes sort-merge joins when joining each specified table to another row source using the specified table as the inner table."
+    },
+    "NO_USE_NL(table-name ...)": {
+      "scope": "PLSQL",
+      "prefix": "NO_USE_NL(table-name ...)",
+      "body": [
+        "/*+ NO_USE_NL(table-name ...) */"
+      ],
+      "description": "Excludes nested loops joins when joining each specified table to another row source using the specified table as the inner table."
+    },
+    "NO_XML_QUERY_REWRITE": {
+      "scope": "PLSQL",
+      "prefix": "NO_XML_QUERY_REWRITE",
+      "body": [
+        "/*+ NO_XML_QUERY_REWRITE */"
+      ],
+      "description": "Prohibits the rewriting of XPath expressions in SQL statements."
+    },
+    "ORDERED": {
+      "scope": "PLSQL",
+      "prefix": "ORDERED",
+      "body": [
+        "/*+ ORDERED */"
+      ],
+      "description": "Joins tables in the order in which they appear in the FROM clause. (Tip: Use the LEADING hint, which is more versatile than the ORDERED hint.)"
+    },
+    "PARALLEL(table-name integer)": {
+      "scope": "PLSQL",
+      "prefix": "PARALLEL(table-name integer)",
+      "body": [
+        "/*+ PARALLEL(table-name integer) */"
+      ],
+      "description": "Uses the specified number of concurrent servers for a parallel operation."
+    },
+    "PARALLEL_INDEX(table-name index-name integer)": {
+      "scope": "PLSQL",
+      "prefix": "PARALLEL_INDEX(table-name index-name integer)",
+      "body": [
+        "/*+ PARALLEL_INDEX(table-name index-name integer) */"
+      ],
+      "description": "Uses the specified number of concurrent servers to parallelize index range scans for partitioned indexes."
+    },
+    "PQ_DISTRIBUTE(table-name outer-distr inner-distr)": {
+      "scope": "PLSQL",
+      "prefix": "PQ_DISTRIBUTE(table-name outer-distr inner-distr)",
+      "body": [
+        "/*+ PQ_DISTRIBUTE(table-name outer-distr inner-distr) */"
+      ],
+      "description": "Affects how to distribute rows of joined tables among producer and consumer query servers. Can improve the performance of parallel join operations."
+    },
+    "PUSH_PRED(v)": {
+      "scope": "PLSQL",
+      "prefix": "PUSH_PRED(v)",
+      "body": [
+        "/*+ PUSH_PRED(v) */"
+      ],
+      "description": "Pushes a join predicate into the view."
+    },
+    "PUSH_SUBQ": {
+      "scope": "PLSQL",
+      "prefix": "PUSH_SUBQ",
+      "body": [
+        "/*+ PUSH_SUBQ */"
+      ],
+      "description": "Evaluates nonmerged subqueries at the earliest possible step in the execution plan Can improve performance ff the subquery is relatively inexpensive and reduces the number of rows significantly."
+    },
+    "PX_JOIN_FILTER(table-name)": {
+      "scope": "PLSQL",
+      "prefix": "PX_JOIN_FILTER(table-name)",
+      "body": [
+        "/*+ PX_JOIN_FILTER(table-name) */"
+      ],
+      "description": "Forces the optimizer to use parallel join bitmap filtering."
+    },
+    "QB_NAME": {
+      "scope": "PLSQL",
+      "prefix": "QB_NAME",
+      "body": [
+        "/*+ QB_NAME */"
+      ],
+      "description": "Defines a name for a query block. This name can then be used in a hint in the outer query or even in a hint in an inline view to affect query execution on the tables appearing in the named query block."
+    },
+    "REWRITE": {
+      "scope": "PLSQL",
+      "prefix": "REWRITE",
+      "body": [
+        "/*+ REWRITE */"
+      ],
+      "description": "Rewrites a query in terms of materialized views, when possible, without cost consideration. Use this hint with or without a view list"
+    },
+    "STAR_TRANSFORMATION": {
+      "scope": "PLSQL",
+      "prefix": "STAR_TRANSFORMATION",
+      "body": [
+        "/*+ STAR_TRANSFORMATION */"
+      ],
+      "description": "Uses the best plan in which the transformation has been used."
+    },
+    "UNNEST": {
+      "scope": "PLSQL",
+      "prefix": "UNNEST",
+      "body": [
+        "/*+ UNNEST */"
+      ],
+      "description": "Unnests and merges the body of the subquery into the body of the query block that contains it, allowing the optimizer to consider them together when evaluating access paths and joins."
+    },
+    "USE_CONCAT": {
+      "scope": "PLSQL",
+      "prefix": "USE_CONCAT",
+      "body": [
+        "/*+ USE_CONCAT */"
+      ],
+      "description": "Transforms combined OR-conditions in the WHERE clause of a query into a compound query using the UNION ALL set operator."
+    },
+    "USE_HASH(table-name ...)": {
+      "scope": "PLSQL",
+      "prefix": "USE_HASH(table-name ...)",
+      "body": [
+        "/*+ USE_HASH(table-name ...) */"
+      ],
+      "description": "Joins each specified table with another row source using a hash join."
+    },
+    "USE_MERGE(table-name ...)": {
+      "scope": "PLSQL",
+      "prefix": "USE_MERGE(table-name ...)",
+      "body": [
+        "/*+ USE_MERGE(table-name ...) */"
+      ],
+      "description": "Joins each specified table with another row source using a sort-merge join."
+    },
+    "USE_NL(table-name ...)": {
+      "scope": "PLSQL",
+      "prefix": "USE_NL(table-name ...)",
+      "body": [
+        "/*+ USE_NL(table-name ...) */"
+      ],
+      "description": "Joins each specified table to another row source with a nested loops join, using the specified table as the inner table."
+    },
+    "USE_NL_WITH_INDEX(table-name index-name)": {
+      "scope": "PLSQL",
+      "prefix": "USE_NL_WITH_INDEX(table-name index-name)",
+      "body": [
+        "/*+ USE_NL_WITH_INDEX(table-name index-name) */"
+      ],
+      "description": "Joins the specified table to another row source with a nested loops join using the specified table as the inner table."
+    }
+  },
+  "PL/SQL Programming Techniques": {
+    "CASE": {
+      "scope": "PLSQL",
+      "prefix": "CASE",
+      "body": [
+        "CASE grade",
+        "  WHEN 'A' THEN 'Excellent'",
+        "  WHEN 'B' THEN 'Very Good'",
+        "  WHEN 'C' THEN 'Good'",
+        "  WHEN 'D' THEN 'Fair'",
+        "  WHEN 'F' THEN 'Poor'",
+        "  ELSE 'No such grade'",
+        "END;"
+      ],
+      "description": "Selects a result from one or more alternatives, and returns the result."
+    },
+    "Cursor": {
+      "scope": "PLSQL",
+      "prefix": "Cursor",
+      "body": [
+        "DECLARE",
+        "  ...",
+        "  TYPE my_cursor IS REF CURSOR;",
+        "  the_cursor my_cursor;",
+        "BEGIN",
+        "  OPEN the_cursor FOR '...' ;",
+        "  LOOP",
+        "    FETCH the_cursor INTO ...;",
+        "    EXIT WHEN the_cursor%NOTFOUND;",
+        "    ...",
+        "  END LOOP;",
+        "  CLOSE the_cursor;",
+        "END;",
+        "/"
+      ],
+      "description": "Cursor variable points to the current row in the result set of a multi-row query."
+    },
+    "DBMS_OUTPUT.PUT_LINE": {
+      "scope": "PLSQL",
+      "prefix": "DBMS_OUTPUT.PUT_LINE",
+      "body": [
+        "DBMS_OUTPUT.PUT_LINE('There are ' || in_stock || ' items in stock.');"
+      ],
+      "description": "Displays output from PL/SQL blocks, subprograms, packages, and triggers."
+    },
+    "IF-THEN-ELSE": {
+      "scope": "PLSQL",
+      "prefix": "IF-THEN-ELSE",
+      "body": [
+        "IF sales > (quota + 200) THEN",
+        "  bonus := (sales - quota)/4;",
+        "ELSE",
+        "  bonus := 50;",
+        "END IF;"
+      ],
+      "description": "Condition with alternative sequence of statements."
+    },
+    "IF-THEN-ELSEIF": {
+      "scope": "PLSQL",
+      "prefix": "IF-THEN-ELSEIF",
+      "body": [
+        "IF sales > 50000 THEN",
+        "  bonus := 1500;",
+        "ELSIF sales > 35000 THEN",
+        "  bonus := 500;",
+        "ELSE",
+        "  bonus := 100;",
+        "END IF;"
+      ],
+      "description": "Condition with several alternatives."
+    },
+    "Loop: FOR LOOP": {
+      "scope": "PLSQL",
+      "prefix": "Loop: FOR LOOP",
+      "body": [
+        "FOR x IN 1..n LOOP",
+        "  ...;",
+        "END LOOP;"
+      ],
+      "description": "Iterates over a range of integers."
+    },
+    "Loop: WHILE LOOP": {
+      "scope": "PLSQL",
+      "prefix": "Loop: WHILE LOOP",
+      "body": [
+        "WHILE condition LOOP",
+        "  sequence_of_statements",
+        "END LOOP;"
+      ],
+      "description": "Executes the statements in the loop body as long as a condition is true."
+    },
+    "RAISE_APPLICATION_ERROR(-number, 'error-text')": {
+      "scope": "PLSQL",
+      "prefix": "RAISE_APPLICATION_ERROR(-number, 'error-text')",
+      "body": [
+        "RAISE_APPLICATION_ERROR(-number, 'error-text');"
+      ],
+      "description": "Issues user-defined ORA- error message from a stored subprogram."
+    },
+    "Random number: NORMAL()": {
+      "scope": "PLSQL",
+      "prefix": "Random number: NORMAL()",
+      "body": [
+        "DBMS_RANDOM.NORMAL()"
+      ],
+      "description": "Returns random numbers in a standard normal distribution. Example: .693962661"
+    },
+    "Random number: VALUE()": {
+      "scope": "PLSQL",
+      "prefix": "Random number: VALUE()",
+      "body": [
+        "DBMS_RANDOM.VALUE()"
+      ],
+      "description": "Returns a random number, greater than or equal to 0 and less than 1, with 38 digits to the right of the decimal."
+    },
+    "Random number: VALUE(low, high)": {
+      "scope": "PLSQL",
+      "prefix": "Random number: VALUE(low, high)",
+      "body": [
+        "DBMS_RANDOM.VALUE(1, 100)"
+      ],
+      "description": "Returns a random number between low and high values. Example: 82.7931995 (between 1 and 100)"
+    },
+    "Random string: STRING('X', 10)": {
+      "scope": "PLSQL",
+      "prefix": "Random string: STRING('X', 10)",
+      "body": [
+        "DBMS_RANDOM.STRING('X', 10)"
+      ],
+      "description": "Returns uppercase alphanumeric characters of specified length. Example: Z71AHSQNA3"
+    },
+    "Random string: STRING('A', 10)": {
+      "scope": "PLSQL",
+      "prefix": "Random string: STRING('A', 10)",
+      "body": [
+        "DBMS_RANDOM.STRING('A', 10)"
+      ],
+      "description": "Returns mixed-case alphabetic characters of specified length. Example: jqKbPnwVql"
+    },
+    "Random string: STRING('P', 10)": {
+      "scope": "PLSQL",
+      "prefix": "Random string: STRING('P', 10)",
+      "body": [
+        "DBMS_RANDOM.STRING('P', 10)"
+      ],
+      "description": "Returns any printable characters of specified length. Example: SZ(X$]+42B"
+    }
+  },
+  "Predictive Analytics": {
+    "Prediction Regression Function": {
+      "scope": "PLSQL",
+      "prefix": "Prediction Regression Function",
+      "body": [
+        "--In this example, dynamic regression is used to predict the age of customers",
+        "--who are likely to use an affinity card. ",
+        "--The query returns the 3 customers whose predicted age is most different from",
+        "--the actual. The query includes information about the predictors that have the",
+        "--greatest influence on the prediction.",
+        "--Available starting in Oracle Enterprise DB 12.1.",
+        "SELECT cust_id, age, pred_age, age-pred_age age_diff, pred_det FROM",
+        "   (SELECT cust_id, age, pred_age, pred_det,",
+        "          RANK() OVER (ORDER BY ABS(age-pred_age) desc) rnk FROM",
+        "   (SELECT cust_id, age,",
+        "           PREDICTION(FOR age USING *) OVER () pred_age,",
+        "           PREDICTION_DETAILS(FOR age ABS USING *) OVER () pred_det",
+        "    FROM mining_data_apply_v))",
+        "  WHERE rnk <= 3;"
+      ],
+      "description": "Creates dynamic regression predictions and associated details without the need of a prebuilt model."
+    },
+    "Prediction Classification Function": {
+      "scope": "PLSQL",
+      "prefix": "Prediction Classification Function",
+      "body": [
+        "--In this example, dynamic classification is used to predict the cust_marital_status partitioned by affinity_card.",
+        "--The query also includes information about the top 5 predictors that have the",
+        "--greatest influence on the prediction.",
+        "--In addition to the most probable prediction, a prediction_set is returned with the full set of possible predictions",
+        "--and probability and associated probability for each customer.",
+        "--Available starting in Oracle Enterprise DB 12.1.",
+        "SELECT /*+ inline */\t\"CUST_MARITAL_STATUS\",",
+        "\t\"CUST_ID\",",
+        "\t\"AFFINITY_CARD\",",
+        "PREDICTION( FOR \"CUST_MARITAL_STATUS\" USING \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"PRED_CUST_MARITAL_STATUS_1\"",
+        ",PREDICTION_DETAILS( FOR \"CUST_MARITAL_STATUS\" , NULL , 5 ABS USING \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"PDET_CUST_MARITAL_STATUS_1\"",
+        ",PREDICTION_PROBABILITY( FOR \"CUST_MARITAL_STATUS\" USING \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"PROB_CUST_MARITAL_STATUS_1\"",
+        ",CAST(PREDICTION_SET ( FOR \"CUST_MARITAL_STATUS\"  USING \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) AS ODMR_PREDICTION_SET_CATPD) \"PSET_CUST_MARITAL_STATUS_1\"",
+        "FROM \"MINING_DATA_BUILD_V\";"
+      ],
+      "description": "Creates a dynamic classification prediction and associated details without the need of a prebuilt model."
+    },
+    "Prediction Feature Set Function": {
+      "scope": "PLSQL",
+      "prefix": "Prediction Feature Set Function",
+      "body": [
+        "--In this example, dynamic feature set is used to predict feature sets partitioned by affinity_card.",
+        "--Feature sets provide a general characterization of the underlying customer data.",
+        "--The query also includes information about the top 5 attributes that characterize the highest ranked feature. ",
+        "--Available starting in Oracle Enterprise DB 12.1.",
+        "SELECT /*+ inline */\t\"CUST_ID\",",
+        "\t\"AFFINITY_CARD\",",
+        "CAST(FEATURE_SET(INTO 5 USING  \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) AS ODMR_FEATURE_SET_NUMVD) \"FSET_1\"",
+        ",FEATURE_DETAILS(INTO 5 ABS USING  \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"FDET_1\"",
+        "FROM \"MINING_DATA_BUILD_V\";"
+      ],
+      "description": "Creates dynamic feature set predictions and associated details without the need for a prebuilt mining model."
+    },
+    "Prediction Cluster Function": {
+      "scope": "PLSQL",
+      "prefix": "Prediction Cluster Function",
+      "body": [
+        "--In this example, dynamic cluster set is used to predict the cluster a customer belongs to, partitioned by affinity_card.",
+        "--The query also includes information about the top attributes that characterize the cluser prediction for that customer.",
+        "--Available starting in Oracle Enterprise DB 12.1.",
+        "SELECT /*+ inline */\t\"CUST_ID\",",
+        "\t\"AFFINITY_CARD\",",
+        "CLUSTER_ID(INTO 10 USING  \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"CLID_1\"",
+        ",CLUSTER_PROBABILITY(INTO 10 USING  \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"PROB_1\"",
+        ",CLUSTER_DETAILS(INTO 10 USING  \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"CDET_1\"",
+        ",CLUSTER_DISTANCE(INTO 10 USING  \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"CDST_1\"",
+        ",CAST(CLUSTER_SET(INTO 10 USING  \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) AS ODMR_CLUSTER_SET_NUMPD) \"CSET_1\"",
+        "FROM \"MINING_DATA_BUILD_V\" ;"
+      ],
+      "description": "Creates dynamic cluster predictions and associated details without the need for a prebuilt mining model."
+    },
+    "Prediction Anomaly Function": {
+      "scope": "PLSQL",
+      "prefix": "Prediction Anomaly Function",
+      "body": [
+        "--In this example, dynamic anomaly is used to predict the anomalous customers partitioned by affinity_card.",
+        "--The query also includes information about the top attributes that characterize the anomalous prediction for that customer.",
+        "--Available starting in Oracle Enterprise DB 12.1.",
+        "SELECT /*+ inline */\t\"CUST_ID\",",
+        "\t\"AFFINITY_CARD\",",
+        "PREDICTION( OF ANOMALY USING \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"PRED_1\"",
+        ",PREDICTION_PROBABILITY( OF ANOMALY USING \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"PROB_1\"",
+        ",PREDICTION_DETAILS( OF ANOMALY , NULL , 5 ABS  USING \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) \"PDET_1\"",
+        ",CAST(PREDICTION_SET ( OF ANOMALY  USING \"AGE\", \"OCCUPATION\", \"FLAT_PANEL_MONITOR\", \"CUST_INCOME_LEVEL\", \"YRS_RESIDENCE\", \"HOME_THEATER_PACKAGE\", \"HOUSEHOLD_SIZE\", \"BULK_PACK_DISKETTES\", \"Y_BOX_GAMES\", \"PRINTER_SUPPLIES\", \"CUST_MARITAL_STATUS\", \"EDUCATION\", \"CUST_GENDER\", \"COUNTRY_NAME\", \"OS_DOC_SET_KANJI\", \"BOOKKEEPING_APPLICATION\")",
+        "    OVER (PARTITION BY \"AFFINITY_CARD\"",
+        "\tORDER BY \"CUST_ID\"",
+        "    ) AS ODMR_PREDICTION_SET_NUM_N) \"PSET_1\"",
+        "FROM \"MINING_DATA_BUILD_V\";"
+      ],
+      "description": "Creates dynamic anomaly predictions and associated details without the need for a prebuilt mining model."
+    },
+    "Explain": {
+      "scope": "PLSQL",
+      "prefix": "Explain",
+      "body": [
+        "--Available in Oracle Enterprise DB 10.2 and above",
+        "--Ranks attributes in order of influence in explaining a target column.",
+        "--For more info go to: http://www.oracle.com/pls/db112/vbook_subject?subject=dma",
+        "--Remove comment on Drop command if you want to rerun this script",
+        "--DROP TABLE mining_explain_result;",
+        "--Perform EXPLAIN operation ",
+        "BEGIN ",
+        "    DBMS_PREDICTIVE_ANALYTICS.EXPLAIN( ",
+        "        data_table_name      => '\"CUSTOMERS\"', ",
+        "        explain_column_name  => '\"CUST_GENDER\"', ",
+        "        result_table_name    => 'mining_explain_result',",
+        "        data_schema_name => '\"SH\"'); ",
+        "END; ",
+        "/ ",
+        "--output first 9 rows from resulting table mining_explain_result",
+        "COLUMN ATTRIBUTE_NAME FORMAT A30",
+        "COLUMN ATTRIBUTE_SUBNAME FORMAT A30",
+        "COLUMN EXPLANATORY_VALUE FORMAT 0D999999",
+        "COLUMN RANK FORMAT 999999",
+        "select * from mining_explain_result where rownum < 10;"
+      ],
+      "description": "Ranks attributes in order of influence in explaining a target column."
+    },
+    "Predict": {
+      "scope": "PLSQL",
+      "prefix": "Predict",
+      "body": [
+        "--Available in Oracle Enterprise DB 10.2 and above",
+        "--Predicts the value of a target column based on values in the input data.",
+        "--For more info go to: http://www.oracle.com/pls/db112/vbook_subject?subject=dma",
+        "--Remove comment on Drop command if you want to rerun this script",
+        "--DROP TABLE mining_predict_result;",
+        "--Perform PREDICT operation ",
+        "DECLARE",
+        "p_model_accuracy NUMBER(10,9);",
+        "BEGIN",
+        "  DBMS_PREDICTIVE_ANALYTICS.PREDICT(",
+        "       accuracy                => p_model_accuracy,",
+        "       data_table_name      => '\"CUSTOMERS\"', ",
+        "       case_id_column_name     =>'cust_id',",
+        "       target_column_name     => '\"CUST_GENDER\"', ",
+        "       result_table_name       =>'mining_predict_result',",
+        "       data_schema_name => '\"SH\"'); ",
+        " DBMS_OUTPUT.PUT_LINE('Overall Model Accuracy: ' || p_model_accuracy);",
+        "END;",
+        "/",
+        "--output first 9 rows from resulting table mining_predict_result",
+        "COLUMN PROBABILITY FORMAT 9D999999",
+        "select * from mining_predict_result where rownum < 10;"
+      ],
+      "description": "Predicts the value of a target column based on values in the input data."
+    },
+    "Profile": {
+      "scope": "PLSQL",
+      "prefix": "Profile",
+      "body": [
+        "--Available in Oracle Enterprise DB 10.2 and above",
+        "--Generates rules that identify the records that have the same target value.",
+        "--For more info go to: http://www.oracle.com/pls/db112/vbook_subject?subject=dma",
+        "--Remove comment on Drop commands if you want to rerun this script",
+        "--DROP VIEW mining_input_profile_data;",
+        "CREATE VIEW mining_input_profile_data AS",
+        "  SELECT country_id,",
+        "         cust_city_id,",
+        "         cust_credit_limit,",
+        "         cust_gender,",
+        "         cust_income_level,",
+        "         cust_marital_status,",
+        "         cust_state_province_id,",
+        "         cust_valid,",
+        "         cust_year_of_birth",
+        "   FROM sh.customers;",
+        "--DROP TABLE mining_profile_result;",
+        "--Perform PROFILE operation ",
+        "DECLARE",
+        "BEGIN",
+        "    DBMS_PREDICTIVE_ANALYTICS.PROFILE(",
+        "         DATA_TABLE_NAME    => 'mining_input_profile_data', ",
+        "         TARGET_COLUMN_NAME => '\"CUST_GENDER\"',",
+        "         RESULT_TABLE_NAME  => 'mining_profile_result');",
+        "END;",
+        "/",
+        "--output first 9 rows from resulting table mining_profile_result",
+        "select * from mining_profile_result where rownum < 10;"
+      ],
+      "description": "Generates rules that identify the records that have the same target value."
+    }
+  },
+  "Pseudocolumns": {
+    "COLUMN_VALUE": {
+      "scope": "PLSQL",
+      "prefix": "COLUMN_VALUE",
+      "body": [
+        "COLUMN_VALUE"
+      ],
+      "description": "An XMLTable construct without the COLUMNS clause, or the result of the TABLE function to refer to a scalar nested table type."
+    },
+    "CONNECT_BY_ISCYCLE": {
+      "scope": "PLSQL",
+      "prefix": "CONNECT_BY_ISCYCLE",
+      "body": [
+        "CONNECT_BY_ISCYCLE"
+      ],
+      "description": "Returns 1 if the current row has a child which is also its ancestor, otherwise 0."
+    },
+    "CONNECT_BY_ISLEAF": {
+      "scope": "PLSQL",
+      "prefix": "CONNECT_BY_ISLEAF",
+      "body": [
+        "CONNECT_BY_ISLEAF"
+      ],
+      "description": "Returns 1 if the current row is a leaf of the tree defined by the CONNECT BY condition, otherwise 0. Indicates whether a given row can be further expanded to show more of the hierarchy."
+    },
+    "CONNECT_BY_ROOT": {
+      "scope": "PLSQL",
+      "prefix": "CONNECT_BY_ROOT",
+      "body": [
+        "CONNECT_BY_ROOT"
+      ],
+      "description": "Returns label of the root node of the hierarchy."
+    },
+    "SYS_CONNECT_BY_PATH": {
+      "scope": "PLSQL",
+      "prefix": "SYS_CONNECT_BY_PATH",
+      "body": [
+        "SYS_CONNECT_BY_PATH"
+      ],
+      "description": "Returns path in the hierarchy."
+    },
+    "CURRVAL": {
+      "scope": "PLSQL",
+      "prefix": "CURRVAL",
+      "body": [
+        "sequence.CURRVAL"
+      ],
+      "description": "Returns the current value of a sequence."
+    },
+    "LEVEL": {
+      "scope": "PLSQL",
+      "prefix": "LEVEL",
+      "body": [
+        "LEVEL"
+      ],
+      "description": "For each row returned by a hierarchical query, returns 1 for a root row, 2 for a child of a root, and so on."
+    },
+    "NEXTVAL": {
+      "scope": "PLSQL",
+      "prefix": "NEXTVAL",
+      "body": [
+        "sequence.NEXTVAL"
+      ],
+      "description": "Increments the sequence and returns the next value."
+    },
+    "OBJECT_ID": {
+      "scope": "PLSQL",
+      "prefix": "OBJECT_ID",
+      "body": [
+        "OBJECT_ID"
+      ],
+      "description": "Returns the object identifier of a column of an object table or view."
+    },
+    "OBJECT_VALUE": {
+      "scope": "PLSQL",
+      "prefix": "OBJECT_VALUE",
+      "body": [
+        "OBJECT_VALUE"
+      ],
+      "description": "Returns system-generated names for the columns of an object table, XMLType table, object view, or XMLType view."
+    },
+    "ORA_ROWSCN": {
+      "scope": "PLSQL",
+      "prefix": "ORA_ROWSCN",
+      "body": [
+        "ORA_ROWSCN"
+      ],
+      "description": "For each row, returns the conservative upper bound system change number (SCN) of the most recent change to the row. Useful for determining approximately when a row was last updated."
+    },
+    "ROWID": {
+      "scope": "PLSQL",
+      "prefix": "ROWID",
+      "body": [
+        "ROWID"
+      ],
+      "description": "For each row in the database, returns the address of the row."
+    },
+    "ROWNUM": {
+      "scope": "PLSQL",
+      "prefix": "ROWNUM",
+      "body": [
+        "ROWNUM"
+      ],
+      "description": "For each row returned by a query, returns a number indicating the order in which Oracle selects the row from a table or set of joined rows."
+    },
+    "XMLDATA": {
+      "scope": "PLSQL",
+      "prefix": "XMLDATA",
+      "body": [
+        "XMLDATA"
+      ],
+      "description": "For XMLType data, lets you access the underlying LOB or object relational column to specify additional storage clause parameters, constraints, indexes, and so on."
+    }
+  },
+  "Flashback": {
+    "Query - Timestamp": {
+      "scope": "PLSQL",
+      "prefix": "Query - Timestamp",
+      "body": [
+        "select * ",
+        "  from <table name>",
+        "       as of timestamp (systimestamp - interval '1' hour);"
+      ],
+      "description": ""
+    },
+    "Session - Timestamp": {
+      "scope": "PLSQL",
+      "prefix": "Session - Timestamp",
+      "body": [
+        "exec dbms_flashback.enable_at_time(SYSTIMESTAMP - INTERVAL '1' hour);"
+      ],
+      "description": "dbms_flashback.enable_at_time"
+    },
+    "Example of Versions Query": {
+      "scope": "PLSQL",
+      "prefix": "Example of Versions Query",
+      "body": [
+        "-- does not work with Flashback DB Archive in 11.1",
+        "select first_name,last_name, versions_operation,rawtohex(versions_xid) xid, versions_starttime",
+        "  from employees",
+        "   versions between scn minvalue and maxvalue",
+        "  where employee_id = 100;"
+      ],
+      "description": "All versions of a row in flashback"
+    },
+    "Transaction": {
+      "scope": "PLSQL",
+      "prefix": "Transaction",
+      "body": [
+        "-- as sys: grant select any transaction to hr;",
+        "-- first get the XID from a flashback versions query",
+        "select undo_sql ",
+        "  from flashback_transaction_query",
+        " where xid = hextoraw('0F0018000A000000');"
+      ],
+      "description": "Use to get the UNDO for a particular transaction"
+    },
+    "Table to before drop": {
+      "scope": "PLSQL",
+      "prefix": "Table to before drop",
+      "body": [
+        "flashback table <table name> to before drop;"
+      ],
+      "description": ""
+    },
+    "Database - Timestamp / Interval": {
+      "scope": "PLSQL",
+      "prefix": "Database - Timestamp / Interval",
+      "body": [
+        "-- Must be SYS",
+        "-- Warning: This will put the whole database back in time",
+        "FLASHBACK DATABASE TO TIMESTMP (SYSTIMESTAMP - INTERVAL '3' hour);"
+      ],
+      "description": ""
+    },
+    "Database - SCN": {
+      "scope": "PLSQL",
+      "prefix": "Database - SCN",
+      "body": [
+        "FLASHBACK DATABASE TO SCN <SCN>;"
+      ],
+      "description": ""
+    },
+    "Database - Restore Point": {
+      "scope": "PLSQL",
+      "prefix": "Database - Restore Point",
+      "body": [
+        "FLASHBACK DATABASE TO RESTORE POINT SAVE1;"
+      ],
+      "description": ""
+    },
+    "Create Restore Point": {
+      "scope": "PLSQL",
+      "prefix": "Create Restore Point",
+      "body": [
+        "create restore point <restore point>;"
+      ],
+      "description": ""
+    },
+    "Table - Restore Point": {
+      "scope": "PLSQL",
+      "prefix": "Table - Restore Point",
+      "body": [
+        "FLASHBACK TABLE employees TO RESTORE POINT <restore point>;"
+      ],
+      "description": ""
+    },
+    "Table - Timestamp": {
+      "scope": "PLSQL",
+      "prefix": "Table - Timestamp",
+      "body": [
+        "FLASHBACK TABLE <table name> TO TIMESTAMP (SYSTIMESTAMP - INTERVAL '25' MINUTE);"
+      ],
+      "description": ""
+    }
+  },
+  "SQL Developer Tips": {
+    "Migration Repository Schema Creation": {
+      "scope": "PLSQL",
+      "prefix": "Migration Repository Schema Creation",
+      "body": [
+        "UNDEFINE repository_name",
+        "",
+        "CREATE USER &&repository_name IDENTIFIED BY &&repository_name ",
+        "DEFAULT TABLESPACE users",
+        "TEMPORARY TABLESPACE temp;",
+        "",
+        "GRANT CONNECT, ",
+        "      RESOURCE, ",
+        "      CREATE VIEW, ",
+        "      CREATE PUBLIC SYNONYM ",
+        "TO &&repository_name WITH ADMIN OPTION;",
+        "",
+        "GRANT ALTER ANY ROLE, ",
+        "      ALTER ANY SEQUENCE, ",
+        "      ALTER ANY TABLE, ",
+        "      ALTER TABLESPACE,",
+        "      ALTER ANY TRIGGER, ",
+        "      COMMENT ANY TABLE, ",
+        "      CREATE ANY SEQUENCE, ",
+        "      CREATE ANY TABLE,",
+        "      CREATE ANY TRIGGER, ",
+        "      CREATE ROLE, ",
+        "      CREATE TABLESPACE, ",
+        "      CREATE USER, ",
+        "      DROP ANY SEQUENCE, ",
+        "      DROP ANY TABLE, ",
+        "      DROP ANY TRIGGER, ",
+        "      DROP TABLESPACE, ",
+        "      DROP USER, ",
+        "      DROP ANY ROLE, ",
+        "      GRANT ANY ROLE, ",
+        "      INSERT ANY TABLE, ",
+        "      SELECT ANY TABLE, ",
+        "      UPDATE ANY TABLE ",
+        "TO &&repository_name;"
+      ],
+      "description": "This script creates a schema with all the privileges required to be used as a migration repository"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+		<Metadata>
+			<Identity Language="en-US" Id="sql-developer" Version="24.2.1" Publisher="Oracle" TargetPlatform="win32-x64"/>
+			<DisplayName>Oracle SQL Developer Extension for VSCode</DisplayName>
+			<Description xml:space="preserve">End-to-end development tools for your SQL and PL/SQL applications.</Description>
+			<Tags>Oracle,SQL,PL/SQL,plsql,sqldev,SQL Developer,database,data,sequel,data mode,raptor,db,orcl,explain plan,dbms_output,ci/cd,devops,schema browser,command line,worksheet,sqlcl,sqlplus,snippet,keybindings,oracle-sql,__ext_sql,__ext_plsql,__ext_klr,__ext_pkb,__ext_pkh,__ext_pks,__ext_plb,__ext_pls,sqldeveloper-log,sql</Tags>
+			<Categories>Programming Languages,Formatters,Snippets,Other</Categories>
+			<GalleryFlags>Public</GalleryFlags>
+			
+			<Properties>
+				<Property Id="Microsoft.VisualStudio.Code.Engine" Value="^1.82.0" />
+				<Property Id="Microsoft.VisualStudio.Code.ExtensionDependencies" Value="" />
+				<Property Id="Microsoft.VisualStudio.Code.ExtensionPack" Value="" />
+				<Property Id="Microsoft.VisualStudio.Code.ExtensionKind" Value="workspace" />
+				<Property Id="Microsoft.VisualStudio.Code.LocalizedLanguages" Value="" />
+				
+				
+				
+				
+				
+				
+				
+				<Property Id="Microsoft.VisualStudio.Services.GitHubFlavoredMarkdown" Value="true" />
+				<Property Id="Microsoft.VisualStudio.Services.Content.Pricing" Value="Free"/>
+
+				
+				
+			</Properties>
+			<License>extension/LICENSE.txt</License>
+			<Icon>extension/images/icon.png</Icon>
+		</Metadata>
+		<Installation>
+			<InstallationTarget Id="Microsoft.VisualStudio.Code"/>
+		</Installation>
+		<Dependencies/>
+		<Assets>
+			<Asset Type="Microsoft.VisualStudio.Code.Manifest" Path="extension/package.json" Addressable="true" />
+			<Asset Type="Microsoft.VisualStudio.Services.Content.Details" Path="extension/README.md" Addressable="true" />
+<Asset Type="Microsoft.VisualStudio.Services.Content.Changelog" Path="extension/CHANGELOG.md" Addressable="true" />
+<Asset Type="Microsoft.VisualStudio.Services.Content.License" Path="extension/LICENSE.txt" Addressable="true" />
+<Asset Type="Microsoft.VisualStudio.Services.Icons.Default" Path="extension/images/icon.png" Addressable="true" />
+		</Assets>
+	</PackageManifest>

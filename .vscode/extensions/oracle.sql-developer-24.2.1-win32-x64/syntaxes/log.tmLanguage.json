@@ -1,0 +1,62 @@
+{
+  "scopeName": "source.log",
+  "patterns": [
+    { "include": "#timestamp" },
+    { "include": "#loggers" },
+    { "include": "#levels" },
+    { "include": "#string" },
+    { "include": "#number" },
+    { "include": "#boolean" }
+  ],
+  "repository": {
+    "timestamp": {
+      "match": "^\\[[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{1,4}, [0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2} \\w{2}\\]",
+      "name": "storage.type.objc"
+    },
+    "loggers": {
+      "match": "\\[.{15,20}\\]",
+      "name": "markup.bold"
+    },
+    "levels": {
+      "patterns": [
+        { "include": "#error" },
+        { "include": "#warn" },
+        { "include": "#info" },
+        { "include": "#debug" },
+        { "include": "#trace" }
+      ]
+    },
+    "error": {
+      "match": "\\[ERROR\\].*",
+      "name": "invalid"
+    },
+    "warn": {
+      "match": "\\[WARN \\].*",
+      "name": "string.other"
+    },
+    "info": {
+      "match": "\\[INFO \\].*",
+      "name": "keyword.operator"
+    },
+    "debug": {
+      "match": "\\[DEBUG\\].*",
+      "name": "entity.name.tag"
+    },
+    "trace": {
+      "match": "\\[TRACE\\].*",
+      "name": "keyword.control"
+    },
+    "string": {
+      "match": "\"(.*?)\"",
+      "name": "comment.line.percentage"
+    },
+    "number": {
+      "match": "\\b\\d+\\.?\\d*?\\b",
+      "name": "constant.numeric"
+    },
+    "boolean": {
+      "match": "true|false",
+      "name": "constant.character"
+    }
+  }
+}

@@ -1,0 +1,4823 @@
+{
+	"name": "sql-developer",
+	"icon": "images/icon.png",
+	"displayName": "Oracle SQL Developer Extension for VSCode",
+	"description": "End-to-end development tools for your SQL and PL/SQL applications.",
+	"version": "24.2.1",
+	"engines": {
+		"vscode": "^1.82.0"
+	},
+	"publisher": "Oracle",
+	"categories": [
+		"Programming Languages",
+		"Formatters",
+		"Snippets",
+		"Other"
+	],
+	"keywords": [
+		"Oracle",
+		"SQL",
+		"PL/SQL",
+		"plsql",
+		"sqldev",
+		"SQL Developer",
+		"database",
+		"data",
+		"sequel",
+		"data mode",
+		"raptor",
+		"db",
+		"orcl",
+		"explain plan",
+		"dbms_output",
+		"ci/cd",
+		"devops",
+		"schema browser",
+		"command line",
+		"worksheet",
+		"sqlcl",
+		"sqlplus"
+	],
+	"activationEvents": [
+		"onStartupFinished",
+		"onFileSystem:worksheet"
+	],
+	"main": "./dist/extension.js",
+	"l10n": "./src/l10n",
+	"contributes": {
+		"customEditors": [
+			{
+				"viewType": "sqldeveloper.editor.browser",
+				"displayName": "SQL Developer Object Browser",
+				"selector": [
+					{
+						"filenamePattern": "**/object/*/{APEX,DATABASE LINK,DIRECTORY,EDITION_SUBFOLDER,INDEX,JAVA,JOBS,MATERIALIZED VIEW,PUBLIC DATABASE LINK,PUBLIC_SYNONYM,QUEUE,QUEUE TABLE,RECYCLEBIN,SEQUENCE,SYNONYM,TABLE,VIEW,DUALITY_VIEW,XDB_SUBFOLDER}/*[!.]*"
+					}
+				]
+			}
+		],
+		"viewsWelcome": [
+			{
+				"view": "sqldeveloper.connections",
+				"contents": "No database connections found.\nIn order to use Oracle SQL Developer features, you can easily create a connection.\n[Create Connection](command:sqldeveloper.connection.add)\nPlease refer to the [docs](https://docs.oracle.com/en/database/oracle/sql-developer-vscode/23.4/sqdnx/index.html) for further information about database connections.",
+				"when": "emptyTree"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "sqldeveloper-explorer",
+					"title": "%sqldeveloper.application.name%",
+					"icon": "media/images/sql-developer-next-logo.svg"
+				}
+			],
+			"panel": [
+				{
+					"id": "sqldeveloper-queryResultPanel",
+					"title": "%sqldeveloper.worksheet.queryResult.title%",
+					"icon": "$(play)"
+				},
+				{
+					"id": "sqldeveloper-scriptOutputPanel",
+					"title": "%sqldeveloper.worksheet.scriptOutput.title%",
+					"icon": "$(output)"
+				},
+				{
+					"id": "sqldeveloper-objectDetailsTabsPanel",
+					"title": "%sqldeveloper.objects.details.title%",
+					"icon": "$(database)"
+				},
+				{
+					"id": "sqldeveloper-sqlHistoryPanel",
+					"title": "%sqldeveloper.worksheet.sqlHistory.title%",
+					"icon": "$(history)"
+				},
+				{
+					"id": "sqldeveloper-explainPlanPanel",
+					"title": "%sqldeveloper.worksheet.explainPlan.title%",
+					"icon": "media/images/light/explainplan.svg"
+				}
+			]
+		},
+		"terminal": {
+			"profiles": [
+				{
+					"id": "sqldeveloper.sqlclTerminal.profile",
+					"title": "SQLcl"
+				}
+			]
+		},
+		"views": {
+			"sqldeveloper-explorer": [
+				{
+					"id": "sqldeveloper.connections",
+					"name": "%sqldeveloper.open.connections.name%",
+					"icon": "media/images/sql-developer-next-logo.svg",
+					"when": "sqldeveloper.extension.isActivated"
+				},
+				{
+					"id": "sqldeveloper.snippets",
+					"name": "%sqldeveloper.snippetsTree.title%",
+					"when": "sqldeveloper.extension.isActivated"
+				}
+			],
+			"sqldeveloper-queryResultPanel": [
+				{
+					"type": "webview",
+					"id": "sqldeveloper.worksheet.queryResult",
+					"name": "%sqldeveloper.worksheet.queryResult.name%",
+					"icon": "$(play)",
+					"when": "sqldeveloper.worksheet.queryResult.isNeeded",
+					"visibility": "visible"
+				}
+			],
+			"sqldeveloper-scriptOutputPanel": [
+				{
+					"type": "webview",
+					"id": "sqldeveloper.worksheet.scriptOutput",
+					"name": "%sqldeveloper.worksheet.scriptOutput.name%",
+					"icon": "$(output)",
+					"when": "sqldeveloper.worksheet.scriptOutput.isNeeded",
+					"visibility": "visible"
+				}
+			],
+			"sqldeveloper-sqlHistoryPanel": [
+				{
+					"type": "webview",
+					"id": "sqldeveloper.worksheet.sqlHistoryPanel",
+					"name": "%sqldeveloper.worksheet.sqlHistory.name%",
+					"icon": "$(history)"
+				}
+			],
+			"sqldeveloper-objectDetailsTabsPanel": [
+				{
+					"type": "webview",
+					"id": "sqldeveloper.objects.details",
+					"name": "%sqldeveloper.objects.details.name%",
+					"icon": "$(database)",
+					"visibility": "visible",
+					"when": "sqldeveloper.activeEditorType == plsqlEditor"
+				}
+			],
+			"sqldeveloper-explainPlanPanel": [
+				{
+					"type": "webview",
+					"id": "sqldeveloper.worksheet.explainPlan",
+					"name": "%sqldeveloper.worksheet.explainPlan.name%",
+					"icon": "media/images/light/explainplan.svg",
+					"visibility": "visible",
+					"when": "sqldeveloper.worksheet.explainPlan.isNeeded"
+				}
+			]
+		},
+		"configuration": [
+			{
+				"id": "log",
+				"title": "%sqldeveloper.configuration.logging.title%",
+				"order": 1,
+				"properties": {
+					"sqldeveloper.logging.enable": {
+						"order": 1,
+						"type": "boolean",
+						"default": true,
+						"markdownDescription": "%sqldeveloper.logging.enable%"
+					},
+					"sqldeveloper.logging.level": {
+						"order": 2,
+						"type": "string",
+						"default": "INFO",
+						"enum": [
+							"ERROR",
+							"WARN",
+							"INFO",
+							"DEBUG",
+							"TRACE"
+						],
+						"markdownEnumDescriptions": [
+							"%sqldeveloper.logging.level.error%",
+							"%sqldeveloper.logging.level.warn%",
+							"%sqldeveloper.logging.level.info%",
+							"%sqldeveloper.logging.level.debug%",
+							"%sqldeveloper.logging.level.trace%"
+						]
+					},
+					"sqldeveloper.logging.toFile": {
+						"order": 3,
+						"type": "boolean",
+						"default": false,
+						"markdownDescription": "%sqldeveloper.logging.to.file%"
+					}
+				}
+			},
+			{
+				"id": "connections",
+				"title": "%sqldeveloper.configuration.connections.title%",
+				"order": 2,
+				"properties": {
+					"connections.tnsConfiguration.path": {
+						"order": 1,
+						"type": "string",
+						"markdownDescription": "%sqldeveloper.configuration.connections.tnsConfiguration.description%"
+					},
+					"connections.startupScript.path": {
+						"order": 2,
+						"type": "string",
+						"markdownDescription": "%sqldeveloper.configuration.connections.startupScript.description%"
+					},
+					"connections.browsing.fetchSize": {
+						"order": 3,
+						"type": "number",
+						"default": 1000,
+						"minimum": 1,
+						"markdownDescription": "%sqldeveloper.configuration.connections.browsing.fetchSize%"
+					},
+					"connections.session.sharing": {
+						"order": 4,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.connections.session.sharing%"
+					}
+				}
+			},
+			{
+				"id": "nls",
+				"title": "%sqldeveloper.configuration.nls.title%",
+				"order": 4,
+				"properties": {
+					"database.nls.language": {
+						"order": 1,
+						"type": "string",
+						"default": "ENGLISH",
+						"enum": [
+							"ALBANIAN",
+							"AMERICAN",
+							"AMHARIC",
+							"ARABIC",
+							"ARMENIAN",
+							"ASSAMESE",
+							"AZERBAIJANI",
+							"BANGLA",
+							"BASQUE",
+							"BELARUSIAN",
+							"BRAZILIAN PORTUGUESE",
+							"BULGARIAN",
+							"BURMESE",
+							"CANADIAN FRENCH",
+							"CATALAN",
+							"CROATIAN",
+							"CYRILLIC KAZAKH",
+							"CYRILLIC SERBIAN",
+							"CYRILLIC UZBEK",
+							"CZECH",
+							"DANISH",
+							"DARI",
+							"DIVEHI",
+							"DUTCH",
+							"EGYPTIAN",
+							"ENGLISH",
+							"ESTONIAN",
+							"FINNISH",
+							"FRENCH",
+							"GEORGIAN",
+							"GERMAN",
+							"GERMAN DIN",
+							"GREEK",
+							"GUJARATI",
+							"HEBREW",
+							"HINDI",
+							"HUNGARIAN",
+							"ICELANDIC",
+							"INDONESIAN",
+							"IRISH",
+							"ITALIAN",
+							"JAPANESE",
+							"KANNADA",
+							"KHMER",
+							"KOREAN",
+							"KYRGYZ",
+							"LAO",
+							"LATIN AMERICAN SPANISH",
+							"LATIN BOSNIAN",
+							"LATIN SERBIAN",
+							"LATIN UZBEK",
+							"LATVIAN",
+							"LITHUANIAN",
+							"MACEDONIAN",
+							"MALAY",
+							"MALAYALAM",
+							"MALTESE",
+							"MARATHI",
+							"MEXICAN SPANISH",
+							"NEPALI",
+							"NORWEGIAN",
+							"ORIYA",
+							"PERSIAN",
+							"POLISH",
+							"PORTUGUESE",
+							"PUNJABI",
+							"ROMANIAN",
+							"RUSSIAN",
+							"SIMPLIFIED CHINESE",
+							"SINHALA",
+							"SLOVAK",
+							"SLOVENIAN",
+							"SPANISH",
+							"SWAHILI",
+							"SWEDISH",
+							"TAMIL",
+							"TELUGU",
+							"THAI",
+							"TRADITIONAL CHINESE",
+							"TURKISH",
+							"TURKMEN",
+							"UKRAINIAN",
+							"URDU",
+							"VIETNAMESE"
+						]
+					},
+					"database.nls.territory": {
+						"order": 2,
+						"type": "string",
+						"default": "AMERICA",
+						"enum": [
+							"AFGHANISTAN",
+							"ALBANIA",
+							"ALGERIA",
+							"AMERICA",
+							"ANGOLA",
+							"ANTIGUA AND BARBUDA",
+							"ARGENTINA",
+							"ARMENIA",
+							"ARUBA",
+							"AUSTRALIA",
+							"AUSTRIA",
+							"AZERBAIJAN",
+							"BAHAMAS",
+							"BAHRAIN",
+							"BANGLADESH",
+							"BARBADOS",
+							"BELARUS",
+							"BELGIUM",
+							"BELIZE",
+							"BERMUDA",
+							"BOLIVIA",
+							"BOSNIA AND HERZEGOVINA",
+							"BOTSWANA",
+							"BRAZIL",
+							"BULGARIA",
+							"CAMBODIA",
+							"CAMEROON",
+							"CANADA",
+							"CATALONIA",
+							"CAYMAN ISLANDS",
+							"CHILE",
+							"CHINA",
+							"COLOMBIA",
+							"CONGO BRAZZAVILLE",
+							"CONGO KINSHASA",
+							"COSTA RICA",
+							"CROATIA",
+							"CURACAO",
+							"CYPRUS",
+							"CZECH REPUBLIC",
+							"DENMARK",
+							"DJIBOUTI",
+							"DOMINICA",
+							"DOMINICAN REPUBLIC",
+							"ECUADOR",
+							"EGYPT",
+							"EL SALVADOR",
+							"ESTONIA",
+							"ETHIOPIA",
+							"FINLAND",
+							"FRANCE",
+							"FYR MACEDONIA",
+							"GABON",
+							"GEORGIA",
+							"GERMANY",
+							"GHANA",
+							"GREECE",
+							"GRENADA",
+							"GUATEMALA",
+							"GUYANA",
+							"HAITI",
+							"HONDURAS",
+							"HONG KONG",
+							"HUNGARY",
+							"ICELAND",
+							"INDIA",
+							"INDONESIA",
+							"IRAN",
+							"IRAQ",
+							"IRELAND",
+							"ISRAEL",
+							"ITALY",
+							"IVORY COAST",
+							"JAMAICA",
+							"JAPAN",
+							"JORDAN",
+							"KAZAKHSTAN",
+							"KENYA",
+							"KOREA",
+							"KUWAIT",
+							"KYRGYZSTAN",
+							"LAOS",
+							"LATVIA",
+							"LEBANON",
+							"LIBYA",
+							"LIECHTENSTEIN",
+							"LITHUANIA",
+							"LUXEMBOURG",
+							"MACAO",
+							"MALAWI",
+							"MALAYSIA",
+							"MALDIVES",
+							"MALTA",
+							"MAURITANIA",
+							"MAURITIUS",
+							"MEXICO",
+							"MOLDOVA",
+							"MONTENEGRO",
+							"MOROCCO",
+							"MOZAMBIQUE",
+							"MYANMAR",
+							"NAMIBIA",
+							"NEPAL",
+							"NEW ZEALAND",
+							"NICARAGUA",
+							"NIGERIA",
+							"NORWAY",
+							"OMAN",
+							"PAKISTAN",
+							"PANAMA",
+							"PARAGUAY",
+							"PERU",
+							"PHILIPPINES",
+							"POLAND",
+							"PORTUGAL",
+							"PUERTO RICO",
+							"QATAR",
+							"ROMANIA",
+							"RUSSIA",
+							"SAINT KITTS AND NEVIS",
+							"SAINT LUCIA",
+							"SAUDI ARABIA",
+							"SENEGAL",
+							"SERBIA",
+							"SIERRA LEONE",
+							"SINGAPORE",
+							"SLOVAKIA",
+							"SLOVENIA",
+							"SOMALIA",
+							"SOUTH AFRICA",
+							"SOUTH SUDAN",
+							"SPAIN",
+							"SRI LANKA",
+							"SUDAN",
+							"SURINAME",
+							"SWAZILAND",
+							"SWEDEN",
+							"SWITZERLAND",
+							"SYRIA",
+							"TAIWAN",
+							"TANZANIA",
+							"THAILAND",
+							"THE NETHERLANDS",
+							"TRINIDAD AND TOBAGO",
+							"TUNISIA",
+							"TURKEY",
+							"TURKMENISTAN",
+							"UGANDA",
+							"UKRAINE",
+							"UNITED ARAB EMIRATES",
+							"UNITED KINGDOM",
+							"URUGUAY",
+							"UZBEKISTAN",
+							"VENEZUELA",
+							"VIETNAM",
+							"YEMEN",
+							"ZAMBIA",
+							"ZIMBABWE"
+						]
+					},
+					"database.nls.sort": {
+						"order": 3,
+						"type": "string",
+						"default": "BINARY",
+						"enum": [
+							"BINARY",
+							"BINARY_CI",
+							"ARABIC",
+							"ARABIC_ABJ_MATCH",
+							"ARABIC_ABJ_SORT",
+							"ARABIC_MATCH",
+							"ASCII7",
+							"AZERBAIJANI",
+							"BENGALI",
+							"BIG5",
+							"BULGARIAN",
+							"CANADIAN_M",
+							"CATALAN",
+							"CROATIAN",
+							"CZECH",
+							"CZECH_PUNCTUATION",
+							"DANISH",
+							"DANISH_M",
+							"DUTCH",
+							"EBCDIC",
+							"EEC_EURO",
+							"EEC_EUROPA3",
+							"ESTONIAN",
+							"FINNISH",
+							"FRENCH",
+							"FRENCH_M",
+							"GBK",
+							"GENERIC_BASELETTER",
+							"GENERIC_M",
+							"GERMAN",
+							"GERMAN_DIN",
+							"GREEK",
+							"HEBREW",
+							"HKSCS",
+							"HUNGARIAN",
+							"ICELANDIC",
+							"INDONESIAN",
+							"ITALIAN",
+							"JAPANESE_M",
+							"KOREAN_M",
+							"LATIN",
+							"LATVIAN",
+							"LITHUANIAN",
+							"MALAY",
+							"NORWEGIAN",
+							"POLISH",
+							"PUNCTUATION",
+							"ROMANIAN",
+							"RUSSIAN",
+							"SCHINESE_PINYIN_M",
+							"SCHINESE_RADICAL_M",
+							"SCHINESE_STROKE_M",
+							"SLOVAK",
+							"SLOVENIAN",
+							"SPANISH",
+							"SPANISH_M",
+							"SWEDISH",
+							"SWISS",
+							"TCHINESE_RADICAL_M",
+							"TCHINESE_STROKE_M",
+							"THAI_M",
+							"TURKISH",
+							"UKRAINIAN",
+							"UNICODE_BINARY",
+							"VIETNAMESE",
+							"WEST_EUROPEAN",
+							"XAZERBAIJANI",
+							"XCATALAN",
+							"XCROATIAN",
+							"XCZECH",
+							"XCZECH_PUNCTUATION",
+							"XDANISH",
+							"XDUTCH",
+							"XFRENCH",
+							"XGERMAN",
+							"XGERMAN_DIN",
+							"XGERMAN_DIN_S",
+							"XGERMAN_S",
+							"XHUNGARIAN",
+							"XPUNCTUATION",
+							"XSLOVAK",
+							"XSLOVENIAN",
+							"XSPANISH",
+							"XSWISS",
+							"XTURKISH",
+							"XWEST_EUROPEAN"
+						]
+					},
+					"database.nls.comparison": {
+						"order": 4,
+						"type": "string",
+						"default": "BINARY",
+						"enum": [
+							"BINARY",
+							"ANSI",
+							"LINGUISTIC"
+						]
+					},
+					"database.nls.dateLanguage": {
+						"order": 5,
+						"type": "string",
+						"default": "ENGLISH",
+						"enum": [
+							"ALBANIAN",
+							"AMERICAN",
+							"AMHARIC",
+							"ARABIC",
+							"ARMENIAN",
+							"ASSAMESE",
+							"AZERBAIJANI",
+							"BANGLA",
+							"BASQUE",
+							"BELARUSIAN",
+							"BRAZILIAN PORTUGUESE",
+							"BULGARIAN",
+							"BURMESE",
+							"CANADIAN FRENCH",
+							"CATALAN",
+							"CROATIAN",
+							"CYRILLIC KAZAKH",
+							"CYRILLIC SERBIAN",
+							"CYRILLIC UZBEK",
+							"CZECH",
+							"DANISH",
+							"DARI",
+							"DIVEHI",
+							"DUTCH",
+							"EGYPTIAN",
+							"ENGLISH",
+							"ESTONIAN",
+							"FINNISH",
+							"FRENCH",
+							"GEORGIAN",
+							"GERMAN",
+							"GERMAN DIN",
+							"GREEK",
+							"GUJARATI",
+							"HEBREW",
+							"HINDI",
+							"HUNGARIAN",
+							"ICELANDIC",
+							"INDONESIAN",
+							"IRISH",
+							"ITALIAN",
+							"JAPANESE",
+							"KANNADA",
+							"KHMER",
+							"KOREAN",
+							"KYRGYZ",
+							"LAO",
+							"LATIN AMERICAN SPANISH",
+							"LATIN BOSNIAN",
+							"LATIN SERBIAN",
+							"LATIN UZBEK",
+							"LATVIAN",
+							"LITHUANIAN",
+							"MACEDONIAN",
+							"MALAY",
+							"MALAYALAM",
+							"MALTESE",
+							"MARATHI",
+							"MEXICAN SPANISH",
+							"NEPALI",
+							"NORWEGIAN",
+							"ORIYA",
+							"PERSIAN",
+							"POLISH",
+							"PORTUGUESE",
+							"PUNJABI",
+							"ROMANIAN",
+							"RUSSIAN",
+							"SIMPLIFIED CHINESE",
+							"SINHALA",
+							"SLOVAK",
+							"SLOVENIAN",
+							"SPANISH",
+							"SWAHILI",
+							"SWEDISH",
+							"TAMIL",
+							"TELUGU",
+							"THAI",
+							"TRADITIONAL CHINESE",
+							"TURKISH",
+							"TURKMEN",
+							"UKRAINIAN",
+							"URDU",
+							"VIETNAMESE"
+						]
+					},
+					"database.nls.dateFormat": {
+						"order": 6,
+						"type": "string",
+						"default": "DD/MM/RR"
+					},
+					"database.nls.timestampFormat": {
+						"order": 7,
+						"type": "string",
+						"default": "DD/MM/RR HH24:MI:SSXFF"
+					},
+					"database.nls.timestampTZ Format": {
+						"order": 8,
+						"type": "string",
+						"default": "DD/MM/RR HH24:MI:SSXFF TZR"
+					},
+					"database.nls.decimalSeparator": {
+						"order": 9,
+						"type": "string",
+						"default": "."
+					},
+					"database.nls.groupSeparator": {
+						"order": 10,
+						"type": "string",
+						"default": ","
+					},
+					"database.nls.currency": {
+						"order": 11,
+						"type": "string",
+						"default": "$"
+					},
+					"database.nls.ISOCurrency": {
+						"order": 12,
+						"type": "string",
+						"default": "AMERICA",
+						"enum": [
+							"AFGHANISTAN",
+							"ALBANIA",
+							"ALGERIA",
+							"AMERICA",
+							"ANGOLA",
+							"ANTIGUA AND BARBUDA",
+							"ARGENTINA",
+							"ARMENIA",
+							"ARUBA",
+							"AUSTRALIA",
+							"AUSTRIA",
+							"AZERBAIJAN",
+							"BAHAMAS",
+							"BAHRAIN",
+							"BANGLADESH",
+							"BARBADOS",
+							"BELARUS",
+							"BELGIUM",
+							"BELIZE",
+							"BERMUDA",
+							"BOLIVIA",
+							"BOSNIA AND HERZEGOVINA",
+							"BOTSWANA",
+							"BRAZIL",
+							"BULGARIA",
+							"CAMBODIA",
+							"CAMEROON",
+							"CANADA",
+							"CATALONIA",
+							"CAYMAN ISLANDS",
+							"CHILE",
+							"CHINA",
+							"COLOMBIA",
+							"CONGO BRAZZAVILLE",
+							"CONGO KINSHASA",
+							"COSTA RICA",
+							"CROATIA",
+							"CURACAO",
+							"CYPRUS",
+							"CZECH REPUBLIC",
+							"DENMARK",
+							"DJIBOUTI",
+							"DOMINICA",
+							"DOMINICAN REPUBLIC",
+							"ECUADOR",
+							"EGYPT",
+							"EL SALVADOR",
+							"ESTONIA",
+							"ETHIOPIA",
+							"FINLAND",
+							"FRANCE",
+							"FYR MACEDONIA",
+							"GABON",
+							"GEORGIA",
+							"GERMANY",
+							"GHANA",
+							"GREECE",
+							"GRENADA",
+							"GUATEMALA",
+							"GUYANA",
+							"HAITI",
+							"HONDURAS",
+							"HONG KONG",
+							"HUNGARY",
+							"ICELAND",
+							"INDIA",
+							"INDONESIA",
+							"IRAN",
+							"IRAQ",
+							"IRELAND",
+							"ISRAEL",
+							"ITALY",
+							"IVORY COAST",
+							"JAMAICA",
+							"JAPAN",
+							"JORDAN",
+							"KAZAKHSTAN",
+							"KENYA",
+							"KOREA",
+							"KUWAIT",
+							"KYRGYZSTAN",
+							"LAOS",
+							"LATVIA",
+							"LEBANON",
+							"LIBYA",
+							"LIECHTENSTEIN",
+							"LITHUANIA",
+							"LUXEMBOURG",
+							"MACAO",
+							"MALAWI",
+							"MALAYSIA",
+							"MALDIVES",
+							"MALTA",
+							"MAURITANIA",
+							"MAURITIUS",
+							"MEXICO",
+							"MOLDOVA",
+							"MONTENEGRO",
+							"MOROCCO",
+							"MOZAMBIQUE",
+							"MYANMAR",
+							"NAMIBIA",
+							"NEPAL",
+							"NEW ZEALAND",
+							"NICARAGUA",
+							"NIGERIA",
+							"NORWAY",
+							"OMAN",
+							"PAKISTAN",
+							"PANAMA",
+							"PARAGUAY",
+							"PERU",
+							"PHILIPPINES",
+							"POLAND",
+							"PORTUGAL",
+							"PUERTO RICO",
+							"QATAR",
+							"ROMANIA",
+							"RUSSIA",
+							"SAINT KITTS AND NEVIS",
+							"SAINT LUCIA",
+							"SAUDI ARABIA",
+							"SENEGAL",
+							"SERBIA",
+							"SIERRA LEONE",
+							"SINGAPORE",
+							"SLOVAKIA",
+							"SLOVENIA",
+							"SOMALIA",
+							"SOUTH AFRICA",
+							"SOUTH SUDAN",
+							"SPAIN",
+							"SRI LANKA",
+							"SUDAN",
+							"SURINAME",
+							"SWAZILAND",
+							"SWEDEN",
+							"SWITZERLAND",
+							"SYRIA",
+							"TAIWAN",
+							"TANZANIA",
+							"THAILAND",
+							"THE NETHERLANDS",
+							"TRINIDAD AND TOBAGO",
+							"TUNISIA",
+							"TURKEY",
+							"TURKMENISTAN",
+							"UGANDA",
+							"UKRAINE",
+							"UNITED ARAB EMIRATES",
+							"UNITED KINGDOM",
+							"URUGUAY",
+							"UZBEKISTAN",
+							"VENEZUELA",
+							"VIETNAM",
+							"YEMEN",
+							"ZAMBIA",
+							"ZIMBABWE"
+						]
+					},
+					"database.nls.length": {
+						"order": 13,
+						"type": "string",
+						"default": "BYTE",
+						"enum": [
+							"BYTE",
+							"CHAR"
+						]
+					}
+				}
+			},
+			{
+				"id": "sqlHistory",
+				"title": "%sqldeveloper.configuration.sqlHistory.title%",
+				"order": 5,
+				"properties": {
+					"sqlHistory.recordHistory": {
+						"order": 1,
+						"type": "boolean",
+						"default": true,
+						"description": "%sqldeveloper.configuration.sqlHistory.record.description%"
+					},
+					"sqlHistory.historyLimit": {
+						"order": 2,
+						"type": "number",
+						"default": 500,
+						"description": "%sqldeveloper.configuration.sqlHistory.limit.description%"
+					}
+				}
+			},
+			{
+				"id": "telemetry",
+				"title": "%sqldeveloper.telemetry.title%",
+				"order": 6,
+				"properties": {
+					"sqldeveloper.telemetry.enabled": {
+						"order": 1,
+						"type": "boolean",
+						"default": true,
+						"description": "%sqldeveloper.telemetry.enabled.label%"
+					}
+				}
+			},
+			{
+				"id": "worksheet",
+				"title": "%sqldeveloper.configuration.worksheet.title%",
+				"order": 7,
+				"properties": {
+					"worksheet.explainPlan.detailsLevel": {
+						"default": "TYPICAL",
+						"enum": [
+							"ALL",
+							"BASIC",
+							"SERIAL",
+							"TYPICAL"
+						],
+						"enumDescriptions": [
+							"%sqldeveloper.configuration.worksheet.explainPlan.detailsLevel.all.description%",
+							"%sqldeveloper.configuration.worksheet.explainPlan.detailsLevel.basic.description%",
+							"%sqldeveloper.configuration.worksheet.explainPlan.detailsLevel.serial.description%",
+							"%sqldeveloper.configuration.worksheet.explainPlan.detailsLevel.typical.description%"
+						],
+						"description": "%sqldeveloper.configuration.worksheet.explainPlan.detailsLevel.description%"
+					}
+				}
+			},
+			{
+				"id": "DDL",
+				"title": "%sqldeveloper.configuration.ddl.title%",
+				"order": 8,
+				"properties": {
+					"DDL.body": {
+						"order": 1,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.body.description%"
+					},
+					"DDL.storage": {
+						"order": 2,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.storage.description%"
+					},
+					"DDL.constraints": {
+						"order": 3,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.constraints.description%"
+					},
+					"DDL.constraintsAsAlter": {
+						"order": 4,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.constraints_as_alter.description%"
+					},
+					"DDL.emitSchema": {
+						"order": 5,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.emit_schema.description%"
+					},
+					"DDL.force": {
+						"order": 6,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.force.description%"
+					},
+					"DDL.inherit": {
+						"order": 7,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.inherit.description%"
+					},
+					"DDL.insert": {
+						"order": 8,
+						"type": "string",
+						"default": "off",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.insert.description%"
+					},
+					"DDL.OID": {
+						"order": 9,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.oid.description%"
+					},
+					"DDL.partitioning": {
+						"order": 10,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.partitioning.description%"
+					},
+					"DDL.pretty": {
+						"order": 11,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.pretty.description%"
+					},
+					"DDL.refConstraints": {
+						"order": 12,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.ref_constraints.description%"
+					},
+					"DDL.segmentAttributes": {
+						"order": 13,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.segment_attributes.description%"
+					},
+					"DDL.sizeByteKeyword": {
+						"order": 14,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.size_byte_keyword.description%"
+					},
+					"DDL.specification": {
+						"order": 15,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.specification.description%"
+					},
+					"DDL.sqlTerminator": {
+						"order": 16,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.sqlterminator.description%"
+					},
+					"DDL.collationClause": {
+						"order": 17,
+						"type": "string",
+						"default": "NEVER",
+						"enum": [
+							"ALWAYS",
+							"NEVER",
+							"NON_DEFAULT"
+						],
+						"markdownDescription": {
+							"message": "%sqldeveloper.configuration.ddl.collation_clause.description%",
+							"comment": [
+								"Preferences relating to DDL collation_clause parameter"
+							]
+						},
+						"enumDescriptions": [
+							"%sqldeveloper.configuration.ddl.collation_clause.always.description%",
+							"%sqldeveloper.configuration.ddl.collation_clause.never.description%",
+							"%sqldeveloper.configuration.ddl.collation_clause.non_default.description%"
+						]
+					},
+					"DDL.tablespace": {
+						"order": 18,
+						"type": "string",
+						"default": "on",
+						"enum": [
+							"on",
+							"off"
+						],
+						"markdownDescription": "%sqldeveloper.configuration.ddl.tablespace.description%"
+					}
+				}
+			},
+			{
+				"id": "notifications",
+				"title": "%sqldeveloper.configuration.notifications.title%",
+				"order": 8,
+				"properties": {
+					"sqldeveloper.notification.duration": {
+						"order": 1,
+						"type": "number",
+						"default": 2,
+						"minimum": 2,
+						"markdownDescription": "%sqldeveloper.configuration.notifications.duration.description%"
+					}
+				}
+			},
+			{
+				"id": "plsqlCompiler",
+				"title": "%sqldeveloper.configuration.plsqlCompiler.title%",
+				"order": 9,
+				"properties": {
+					"sqldeveloper.plsqlCompiler.dropTypeForce": {
+						"order": 1,
+						"type": "boolean",
+						"default": false,
+						"markdownDescription": "%sqldeveloper.configuration.plsqlCompiler.dropTypeForce.description%"
+					}
+				}
+			}
+		],
+		"commands": [
+			{
+				"command": "sqldeveloper.connection.openSqlcl",
+				"title": "%sqldeveloper.connection.openSqlcl%"
+			},
+			{
+				"command": "sqldeveloper.editor.open",
+				"title": "%sqldeveloper.editor.open.title%"
+			},
+			{
+				"command": "sqldeveloper.object.run",
+				"title": "%sqldeveloper.object.run.title%"
+			},
+			{
+				"command": "sqldeveloper.connection.folder.disconnect",
+				"title": "%sqldeveloper.connection.folder.disconnect.title%",
+				"icon": "$(debug-disconnect)",
+				"enablement": "viewItem == OPEN_CONNECTION_FOLDER"
+			},
+			{
+				"command": "sqldeveloper.connection.folder.reconnect",
+				"title": "%sqldeveloper.connection.folder.reconnect.title%",
+				"enablement": "viewItem == OPEN_CONNECTION_FOLDER"
+			},
+			{
+				"command": "sqldeveloper.connection.folder.clone",
+				"title": "%sqldeveloper.connection.folder.clone.title%"
+			},
+			{
+				"command": "sqldeveloper.connection.folder.open.worksheet",
+				"title": "%sqldeveloper.connection.folder.open.worksheet.title%",
+				"icon": "$(new-file)",
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "viewItem != CONNECTING_CONNECTION_FOLDER"
+			},
+			{
+				"command": "sqldeveloper.connection.add",
+				"title": "%sqldeveloper.connection.add.title%",
+				"icon": "$(add)",
+				"category": "%sqldeveloper.connections.category%"
+			},
+			{
+				"command": "sqldeveloper.sqlHistory.refresh",
+				"title": "%sqldeveloper.sqlHistory.refresh.title%",
+				"category": "%sqldeveloper.sqlHistory.category%"
+			},
+			{
+				"command": "sqldeveloper.worksheet.sqlHistory.down",
+				"title": "%sqldeveloper.worksheet.sqlHistory.down.title%",
+				"category": "%sqldeveloper.worksheet.category%"
+			},
+			{
+				"command": "sqldeveloper.worksheet.sqlHistory.down.insert",
+				"title": "%sqldeveloper.worksheet.sqlHistory.down.insert.title%",
+				"category": "%sqldeveloper.worksheet.category%"
+			},
+			{
+				"command": "sqldeveloper.worksheet.sqlHistory.up",
+				"title": "%sqldeveloper.worksheet.sqlHistory.up.title%",
+				"category": "%sqldeveloper.worksheet.category%"
+			},
+			{
+				"command": "sqldeveloper.worksheet.sqlHistory.up.insert",
+				"title": "%sqldeveloper.worksheet.sqlHistory.up.insert.title%",
+				"category": "%sqldeveloper.worksheet.category%"
+			},
+			{
+				"command": "sqldeveloper.tree.refresh",
+				"title": "%sqldeveloper.sqlHistory.refresh.title%",
+				"icon": "$(refresh)",
+				"enablement": "viewItem !=  PENDING_CONNECTION_FOLDER && viewItem != OPEN_PENDING_CONNECTION_FOLDER && viewItem != CONNECTING_CONNECTION_FOLDER && viewItem != PENDING_REFRESH"
+			},
+			{
+				"command": "sqldeveloper.connection.open",
+				"title": "%sqldeveloper.connection.open.title%",
+				"category": "%sqldeveloper.connections.category%",
+				"enablement": "viewItem == CONNECTION_FOLDER"
+			},
+			{
+				"command": "sqldeveloper.connection.delete",
+				"title": "%sqldeveloper.connection.delete.title%",
+				"category": "%sqldeveloper.connections.category%",
+				"enablement": "viewItem == CONNECTION_FOLDER"
+			},
+			{
+				"command": "sqldeveloper.connection.folder.edit",
+				"title": "%sqldeveloper.connection.folder.edit.title%",
+				"icon": "$(edit)",
+				"category": "%sqldeveloper.connections.category%"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runStatement",
+				"title": "%sqldeveloper.worksheet.runStatement.title%",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"icon": {
+					"light": "media/images/light/run.svg",
+					"dark": "media/images/dark/run.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runObject",
+				"title": "%sqldeveloper.worksheet.runObject.title%",
+				"when": "editorLangId == oracle-sql && sqldeveloper.activeEditorType == plsqlEditor",
+				"icon": {
+					"light": "media/images/light/run.svg",
+					"dark": "media/images/dark/run.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.plsqlEditor.activePLSQLEditorId not in sqldeveloper.worksheet.busyWorksheetIds && sqldeveloper.plsqlEditor.activePLSQLEditorId in sqldeveloper.worksheet.runnablePlsqlObjectIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runScript",
+				"title": "%sqldeveloper.worksheet.runScript.title%",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"icon": {
+					"light": "media/images/light/runscript.svg",
+					"dark": "media/images/dark/runscript.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runInSQLcl",
+				"title": "%sqldeveloper.worksheet.runInSQLcl.title%",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"icon": {
+					"light": "media/images/light/sqlcl.svg",
+					"dark": "media/images/dark/sqlcl.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.compileObject",
+				"title": "%sqldeveloper.worksheet.compileObject.title%",
+				"when": "editorLangId == oracle-sql && sqldeveloper.activeEditorType == plsqlEditor",
+				"icon": {
+					"light": "media/images/light/compilecode.svg",
+					"dark": "media/images/dark/compilecode.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.plsqlEditor.activePLSQLEditorId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.compileObjectDebug",
+				"title": "%sqldeveloper.worksheet.compileObjectDebug.title%",
+				"when": "editorLangId == oracle-sql && sqldeveloper.activeEditorType == plsqlEditor",
+				"icon": {
+					"light": "media/images/light/compilecodebug.svg",
+					"dark": "media/images/dark/compilecodebug.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.plsqlEditor.activePLSQLEditorId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.openSpec",
+				"title": "%sqldeveloper.worksheet.openSpec.title%",
+				"when": "editorLangId == oracle-sql && sqldeveloper.activeEditorType == plsqlEditor",
+				"icon": {
+					"light": "media/images/light/package.svg",
+					"dark": "media/images/dark/package.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.plsqlEditor.activePLSQLEditorId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.openBody",
+				"title": "%sqldeveloper.worksheet.openBody.title%",
+				"when": "editorLangId == oracle-sql && sqldeveloper.activeEditorType == plsqlEditor",
+				"icon": {
+					"light": "media/images/light/package.svg",
+					"dark": "media/images/dark/package.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.plsqlEditor.activePLSQLEditorId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.detachConnection",
+				"title": "%sqldeveloper.worksheet.attachConnection.title%",
+				"when": "editorLangId == oracle-sql && !attach && sqldeveloper.activeEditorType == sqlWorksheet",
+				"icon": {
+					"light": "media/images/light/db_w_plug.svg",
+					"dark": "media/images/dark/db_w_plug.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.attachConnection",
+				"title": "%sqldeveloper.worksheet.attachConnection.title%",
+				"when": "editorLangId == oracle-sql && attach && sqldeveloper.activeEditorType == sqlWorksheet",
+				"icon": {
+					"light": "media/images/light/db.svg",
+					"dark": "media/images/dark/db.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.explainPlan",
+				"title": "%sqldeveloper.worksheet.explainPlan.title%",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"icon": {
+					"light": "media/images/light/explainplan.svg",
+					"dark": "media/images/dark/explainplan.svg"
+				},
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.scriptOutput.clear",
+				"title": "%sqldeveloper.worksheet.scriptOutput.clear.title%",
+				"icon": "$(clear-all)",
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "(sqldeveloper.plsqlEditor.activePLSQLEditorId in sqldeveloper.worksheet.scriptOutput.scriptOutputWithContentIds || sqldeveloper.worksheet.activeWorksheetId in sqldeveloper.worksheet.scriptOutput.scriptOutputWithContentIds) && sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.worksheet.queryResult.clear",
+				"title": "%sqldeveloper.worksheet.queryResult.clear.title%",
+				"icon": "$(clear-all)",
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.worksheet.activeDualityViewBuilderId in sqldeveloper.worksheet.queryResult.queryResultSetsWithContentIds || (sqldeveloper.worksheet.activeWorksheetId in sqldeveloper.worksheet.queryResult.queryResultSetsWithContentIds && sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds)"
+			},
+			{
+				"command": "sqldeveloper.worksheet.explainPlan.clear",
+				"title": "%sqldeveloper.worksheet.explainPlan.clear.title%",
+				"icon": "$(clear-all)",
+				"category": "%sqldeveloper.worksheet.category%",
+				"enablement": "sqldeveloper.worksheet.activeWorksheetId in sqldeveloper.worksheet.explainPlan.explainPlansWithContentIds && sqldeveloper.worksheet.activeWorksheetId not in sqldeveloper.worksheet.busyWorksheetIds"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.insertRow",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"title": "%sqldeveloper.objectViewer.dataBrowser.insertRow.title%",
+				"category": "%sqldeveloper.objectViewer.dataBrowser.category%"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.deleteSelectedRows",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"title": "%sqldeveloper.objectViewer.dataBrowser.deleteSelectedRows.title%",
+				"category": "%sqldeveloper.objectViewer.dataBrowser.category%"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.commitChanges",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"title": "%sqldeveloper.objectViewer.dataBrowser.commitChanges.title%",
+				"category": "%sqldeveloper.objectViewer.dataBrowser.category%"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.rollbackChanges",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"title": "%sqldeveloper.objectViewer.dataBrowser.rollbackChanges.title%",
+				"category": "%sqldeveloper.objectViewer.dataBrowser.category%"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.refresh",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"title": "%sqldeveloper.objectViewer.dataBrowser.refresh.title%",
+				"category": "%sqldeveloper.objectViewer.dataBrowser.category%"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.filter",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"title": "%sqldeveloper.objectViewer.dataBrowser.filter.title%",
+				"category": "%sqldeveloper.objectViewer.dataBrowser.category%"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.sort",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"title": "%sqldeveloper.objectViewer.dataBrowser.sort.title%",
+				"category": "%sqldeveloper.objectViewer.dataBrowser.category%"
+			},
+			{
+				"command": "sqldeveloper.duality_view_folder.builder",
+				"title": "%sqldeveloper.duality_view_folder.builder.title%",
+				"enablement": "viewItem == DUALITY_VIEW_FOLDER"
+			},
+			{
+				"command": "sqldeveloper.duality_view_folder.loadFromFile",
+				"title": "%sqldeveloper.duality_view_folder.loadFromFile.title%",
+				"enablement": "viewItem == DUALITY_VIEW_FOLDER"
+			},
+			{
+				"command": "sqldeveloper.duality_view.edit",
+				"title": "%sqldeveloper.duality_view.edit.title%",
+				"enablement": "viewItem == DUALITY_VIEW"
+			},
+			{
+				"command": "sqldeveloper.tree.filter",
+				"title": "%sqldeveloper.tree.filter.title%",
+				"icon": "$(filter)",
+				"when": "view == sqldeveloper.connections",
+				"enablement": "sqldeveloper.selected.item not in sqldeveloper.tree.closedConnectionTypes && sqldeveloper.selected.item not in sqldeveloper.tree.nonFilterableTypes && (sqldeveloper.selected.item =~ /^(\\w)(\\s|\\w)*(\\w)_FOLDER$/ || sqldeveloper.selected.item == SCHEMAS)"
+			},
+			{
+				"command": "sqldeveloper.tree.filter.apply",
+				"icon": "$(filter)",
+				"title": "%sqldeveloper.tree.filter.title%",
+				"when": "view == sqldeveloper.connections"
+			},
+			{
+				"command": "sqldeveloper.tree.filter.clear",
+				"title": "%sqldeveloper.tree.filter.clear%",
+				"when": "view == sqldeveloper.connections"
+			},
+			{
+				"command": "sqldeveloper.object.show.json.data.guide",
+				"title": "%sqldeveloper.object.show.json.data.guide.title%"
+			},
+			{
+				"command": "sqldeveloper.task_monitor.watch",
+				"title": "%sqldeveloper.task_monitor.watch.title%",
+				"enablement": "false"
+			},
+			{
+				"command": "sqldeveloper.apex.modify.application.alias",
+				"title": "%sqldeveloper.apex.modify.application.alias.title%"
+			},
+			{
+				"command": "sqldeveloper.apex.modify.application.rename",
+				"title": "%sqldeveloper.apex.modify.application.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.apex.modify.application.status",
+				"title": "%sqldeveloper.apex.modify.application.status.title%"
+			},
+			{
+				"command": "sqldeveloper.apex.modify.application.global.notification",
+				"title": "%sqldeveloper.apex.modify.application.global.notification.title%"
+			},
+			{
+				"command": "sqldeveloper.apex.modify.application.proxy",
+				"title": "%sqldeveloper.apex.modify.application.proxy.title%"
+			},
+			{
+				"command": "sqldeveloper.column.rename",
+				"title": "%sqldeveloper.column.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.column.drop",
+				"title": "%sqldeveloper.column.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.column.comment",
+				"title": "%sqldeveloper.column.comment.title%"
+			},
+			{
+				"command": "sqldeveloper.column.encrypt",
+				"title": "%sqldeveloper.column.encrypt.title%"
+			},
+			{
+				"command": "sqldeveloper.column.decrypt",
+				"title": "%sqldeveloper.column.decrypt.title%"
+			},
+			{
+				"command": "sqldeveloper.column.normalize",
+				"title": "%sqldeveloper.column.normalize.title%"
+			},
+			{
+				"command": "sqldeveloper.connection.gather.schema.statistics",
+				"title": "%sqldeveloper.connection.gather.schema.statistics.title%"
+			},
+			{
+				"command": "sqldeveloper.connection.recompile.schema",
+				"title": "%sqldeveloper.connection.recompile.schema.title%"
+			},
+			{
+				"command": "sqldeveloper.connection.liquibase.generate.schema",
+				"title": "%sqldeveloper.connection.liquibase.generate.schema.title%"
+			},
+			{
+				"command": "sqldeveloper.connection.xml.db.protocol.server.configuration",
+				"title": "%sqldeveloper.connection.xml.db.protocol.server.configuration.title%"
+			},
+			{
+				"command": "sqldeveloper.database.link.test.database.link",
+				"title": "%sqldeveloper.database.link.test.database.link.title%"
+			},
+			{
+				"command": "sqldeveloper.database.link.drop",
+				"title": "%sqldeveloper.database.link.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.database.link.generate.changelog.liquibase",
+				"title": "%sqldeveloper.database.link.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.directory.drop",
+				"title": "%sqldeveloper.directory.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.directory.generate.changelog.liquibase",
+				"title": "%sqldeveloper.directory.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.directory_folder.create.directory",
+				"title": "%sqldeveloper.directory_folder.create.directory.title%"
+			},
+			{
+				"command": "sqldeveloper.duality_view.rename",
+				"title": "%sqldeveloper.duality_view.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.duality_view.drop",
+				"title": "%sqldeveloper.duality_view.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.duality_view.compile",
+				"title": "%sqldeveloper.duality_view.compile.title%"
+			},
+			{
+				"command": "sqldeveloper.duality_view_column.comment",
+				"title": "%sqldeveloper.duality_view_column.comment.title%"
+			},
+			{
+				"command": "sqldeveloper.duality_view_folder.compile.invalid",
+				"title": "%sqldeveloper.duality_view_folder.compile.invalid.title%"
+			},
+			{
+				"command": "sqldeveloper.edition_subfolder.set.current.edition",
+				"title": "%sqldeveloper.edition_subfolder.set.current.edition.title%"
+			},
+			{
+				"command": "sqldeveloper.edition_subfolder.create.edition",
+				"title": "%sqldeveloper.edition_subfolder.create.edition.title%"
+			},
+			{
+				"command": "sqldeveloper.edition_subfolder.drop.edition",
+				"title": "%sqldeveloper.edition_subfolder.drop.edition.title%"
+			},
+			{
+				"command": "sqldeveloper.function.drop",
+				"title": "%sqldeveloper.function.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.function.generate.changelog.liquibase",
+				"title": "%sqldeveloper.function.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.function_folder.compile.invalid",
+				"title": "%sqldeveloper.function_folder.compile.invalid.title%"
+			},
+			{
+				"command": "sqldeveloper.function_folder.compile.all",
+				"title": "%sqldeveloper.function_folder.compile.all.title%"
+			},
+			{
+				"command": "sqldeveloper.index.drop",
+				"title": "%sqldeveloper.index.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.index.rebuild",
+				"title": "%sqldeveloper.index.rebuild.title%"
+			},
+			{
+				"command": "sqldeveloper.index.rename",
+				"title": "%sqldeveloper.index.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.index.make.unusable",
+				"title": "%sqldeveloper.index.make.unusable.title%"
+			},
+			{
+				"command": "sqldeveloper.index.coalesce",
+				"title": "%sqldeveloper.index.coalesce.title%"
+			},
+			{
+				"command": "sqldeveloper.index.compute.statistics",
+				"title": "%sqldeveloper.index.compute.statistics.title%"
+			},
+			{
+				"command": "sqldeveloper.index.rebuild.index.partition",
+				"title": "%sqldeveloper.index.rebuild.index.partition.title%"
+			},
+			{
+				"command": "sqldeveloper.index.drop.index.partition",
+				"title": "%sqldeveloper.index.drop.index.partition.title%"
+			},
+			{
+				"command": "sqldeveloper.index.generate.changelog.liquibase",
+				"title": "%sqldeveloper.index.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.java.drop.class",
+				"title": "%sqldeveloper.java.drop.class.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.force.broken",
+				"title": "%sqldeveloper.jobs.force.broken.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.force.unbroken",
+				"title": "%sqldeveloper.jobs.force.unbroken.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.instance",
+				"title": "%sqldeveloper.jobs.instance.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.interval",
+				"title": "%sqldeveloper.jobs.interval.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.change",
+				"title": "%sqldeveloper.jobs.change.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.set.next.date",
+				"title": "%sqldeveloper.jobs.set.next.date.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.remove.job",
+				"title": "%sqldeveloper.jobs.remove.job.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.run.job",
+				"title": "%sqldeveloper.jobs.run.job.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.what",
+				"title": "%sqldeveloper.jobs.what.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs.generate.changelog.liquibase",
+				"title": "%sqldeveloper.jobs.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.jobs_folder.submit.dbms_job",
+				"title": "%sqldeveloper.jobs_folder.submit.dbms_job.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.drop",
+				"title": "%sqldeveloper.materialized.view.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.generate.changelog.liquibase",
+				"title": "%sqldeveloper.materialized.view.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.caching.enable.materialized.view.cache",
+				"title": "%sqldeveloper.materialized.view.caching.enable.materialized.view.cache.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.caching.disable.materialized.view.cache",
+				"title": "%sqldeveloper.materialized.view.caching.disable.materialized.view.cache.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.compression.compress.materialized.view",
+				"title": "%sqldeveloper.materialized.view.compression.compress.materialized.view.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.compression.disable.materialized.view.compression",
+				"title": "%sqldeveloper.materialized.view.compression.disable.materialized.view.compression.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.query.rewrite.enable.query.rewrite",
+				"title": "%sqldeveloper.materialized.view.query.rewrite.enable.query.rewrite.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.query.rewrite.disable.query.rewrite",
+				"title": "%sqldeveloper.materialized.view.query.rewrite.disable.query.rewrite.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.parallelism.no.paralellism",
+				"title": "%sqldeveloper.materialized.view.parallelism.no.paralellism.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.parallelism.change.paralellism",
+				"title": "%sqldeveloper.materialized.view.parallelism.change.paralellism.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.logging.disable.logging",
+				"title": "%sqldeveloper.materialized.view.logging.disable.logging.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.logging.enable.logging",
+				"title": "%sqldeveloper.materialized.view.logging.enable.logging.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.refresh.option.change.refresh.method",
+				"title": "%sqldeveloper.materialized.view.refresh.option.change.refresh.method.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.refresh.option.change.refresh.type",
+				"title": "%sqldeveloper.materialized.view.refresh.option.change.refresh.type.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.refresh.option.force.refresh.now",
+				"title": "%sqldeveloper.materialized.view.refresh.option.force.refresh.now.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.other.actions.enable.row.movement",
+				"title": "%sqldeveloper.materialized.view.other.actions.enable.row.movement.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.other.actions.shrink.materialized.view",
+				"title": "%sqldeveloper.materialized.view.other.actions.shrink.materialized.view.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.other.actions.compile.materialized.view",
+				"title": "%sqldeveloper.materialized.view.other.actions.compile.materialized.view.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.other.actions.consider.materialized.view.refresh",
+				"title": "%sqldeveloper.materialized.view.other.actions.consider.materialized.view.refresh.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.other.actions.rebuild.materialized.view",
+				"title": "%sqldeveloper.materialized.view.other.actions.rebuild.materialized.view.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.log.drop",
+				"title": "%sqldeveloper.materialized.view.log.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.materialized.view.log.generate.changelog.liquibase",
+				"title": "%sqldeveloper.materialized.view.log.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.package.drop.package",
+				"title": "%sqldeveloper.package.drop.package.title%"
+			},
+			{
+				"command": "sqldeveloper.package.generate.changelog.liquibase",
+				"title": "%sqldeveloper.package.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.package.body.drop.package.body",
+				"title": "%sqldeveloper.package.body.drop.package.body.title%"
+			},
+			{
+				"command": "sqldeveloper.package.body.generate.changelog.liquibase",
+				"title": "%sqldeveloper.package.body.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.package_folder.compile.invalid",
+				"title": "%sqldeveloper.package_folder.compile.invalid.title%"
+			},
+			{
+				"command": "sqldeveloper.package_folder.compile.all",
+				"title": "%sqldeveloper.package_folder.compile.all.title%"
+			},
+			{
+				"command": "sqldeveloper.procedure.drop",
+				"title": "%sqldeveloper.procedure.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.procedure.compile.dependants",
+				"title": "%sqldeveloper.procedure.compile.dependants.title%"
+			},
+			{
+				"command": "sqldeveloper.procedure.generate.changelog.liquibase",
+				"title": "%sqldeveloper.procedure.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.procedure_folder.compile.invalid",
+				"title": "%sqldeveloper.procedure_folder.compile.invalid.title%"
+			},
+			{
+				"command": "sqldeveloper.procedure_folder.compile.all",
+				"title": "%sqldeveloper.procedure_folder.compile.all.title%"
+			},
+			{
+				"command": "sqldeveloper.public.database.link.test.database.link",
+				"title": "%sqldeveloper.public.database.link.test.database.link.title%"
+			},
+			{
+				"command": "sqldeveloper.public.database.link.drop",
+				"title": "%sqldeveloper.public.database.link.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.public_synonym.drop",
+				"title": "%sqldeveloper.public_synonym.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.public_synonym.generate.changelog.liquibase",
+				"title": "%sqldeveloper.public_synonym.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.queue.start.enqueue",
+				"title": "%sqldeveloper.queue.start.enqueue.title%"
+			},
+			{
+				"command": "sqldeveloper.queue.stop.enqueue",
+				"title": "%sqldeveloper.queue.stop.enqueue.title%"
+			},
+			{
+				"command": "sqldeveloper.queue.start.dequeue",
+				"title": "%sqldeveloper.queue.start.dequeue.title%"
+			},
+			{
+				"command": "sqldeveloper.queue.stop.dequeue",
+				"title": "%sqldeveloper.queue.stop.dequeue.title%"
+			},
+			{
+				"command": "sqldeveloper.recyclebin.purge",
+				"title": "%sqldeveloper.recyclebin.purge.title%"
+			},
+			{
+				"command": "sqldeveloper.recyclebin.flashback.to.before.drop",
+				"title": "%sqldeveloper.recyclebin.flashback.to.before.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.sequence.drop",
+				"title": "%sqldeveloper.sequence.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.sequence.generate.changelog.liquibase",
+				"title": "%sqldeveloper.sequence.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.synonym.rename",
+				"title": "%sqldeveloper.synonym.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.synonym.drop",
+				"title": "%sqldeveloper.synonym.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.synonym.generate.changelog.liquibase",
+				"title": "%sqldeveloper.synonym.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.table.generate.changelog.liquibase",
+				"title": "%sqldeveloper.table.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.table.column.comment",
+				"title": "%sqldeveloper.table.column.comment.title%"
+			},
+			{
+				"command": "sqldeveloper.table.column.rename",
+				"title": "%sqldeveloper.table.column.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.table.column.add",
+				"title": "%sqldeveloper.table.column.add.title%"
+			},
+			{
+				"command": "sqldeveloper.table.column.drop",
+				"title": "%sqldeveloper.table.column.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.table.column.normalize",
+				"title": "%sqldeveloper.table.column.normalize.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.enable.related.foreign.keys",
+				"title": "%sqldeveloper.table.constraint.enable.related.foreign.keys.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.disable.related.foreign.keys",
+				"title": "%sqldeveloper.table.constraint.disable.related.foreign.keys.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.enable.all",
+				"title": "%sqldeveloper.table.constraint.enable.all.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.disable.all",
+				"title": "%sqldeveloper.table.constraint.disable.all.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.enable.single",
+				"title": "%sqldeveloper.table.constraint.enable.single.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.disable.single",
+				"title": "%sqldeveloper.table.constraint.disable.single.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.rename.single",
+				"title": "%sqldeveloper.table.constraint.rename.single.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.drop",
+				"title": "%sqldeveloper.table.constraint.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.add.check",
+				"title": "%sqldeveloper.table.constraint.add.check.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.add.primary.key",
+				"title": "%sqldeveloper.table.constraint.add.primary.key.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.add.foreign.key",
+				"title": "%sqldeveloper.table.constraint.add.foreign.key.title%"
+			},
+			{
+				"command": "sqldeveloper.table.constraint.add.unique",
+				"title": "%sqldeveloper.table.constraint.add.unique.title%"
+			},
+			{
+				"command": "sqldeveloper.table.index.drop",
+				"title": "%sqldeveloper.table.index.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.table.index.rebuild",
+				"title": "%sqldeveloper.table.index.rebuild.title%"
+			},
+			{
+				"command": "sqldeveloper.table.statistics.validate.structure",
+				"title": "%sqldeveloper.table.statistics.validate.structure.title%"
+			},
+			{
+				"command": "sqldeveloper.table.statistics.gather.statistics",
+				"title": "%sqldeveloper.table.statistics.gather.statistics.title%"
+			},
+			{
+				"command": "sqldeveloper.table.storage.shrink.table",
+				"title": "%sqldeveloper.table.storage.shrink.table.title%"
+			},
+			{
+				"command": "sqldeveloper.table.storage.row.movement",
+				"title": "%sqldeveloper.table.storage.row.movement.title%"
+			},
+			{
+				"command": "sqldeveloper.table.storage.compress",
+				"title": "%sqldeveloper.table.storage.compress.title%"
+			},
+			{
+				"command": "sqldeveloper.table.storage.no.compress",
+				"title": "%sqldeveloper.table.storage.no.compress.title%"
+			},
+			{
+				"command": "sqldeveloper.table.storage.move",
+				"title": "%sqldeveloper.table.storage.move.title%"
+			},
+			{
+				"command": "sqldeveloper.table.storage.move.tablespace",
+				"title": "%sqldeveloper.table.storage.move.tablespace.title%"
+			},
+			{
+				"command": "sqldeveloper.table.storage.cache",
+				"title": "%sqldeveloper.table.storage.cache.title%"
+			},
+			{
+				"command": "sqldeveloper.table.storage.no.cache",
+				"title": "%sqldeveloper.table.storage.no.cache.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.rename",
+				"title": "%sqldeveloper.table.table.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.copy",
+				"title": "%sqldeveloper.table.table.copy.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.drop",
+				"title": "%sqldeveloper.table.table.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.truncate",
+				"title": "%sqldeveloper.table.table.truncate.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.lock",
+				"title": "%sqldeveloper.table.table.lock.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.comment",
+				"title": "%sqldeveloper.table.table.comment.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.parallel",
+				"title": "%sqldeveloper.table.table.parallel.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.logging",
+				"title": "%sqldeveloper.table.table.logging.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.no.parallel",
+				"title": "%sqldeveloper.table.table.no.parallel.title%"
+			},
+			{
+				"command": "sqldeveloper.table.table.count.rows",
+				"title": "%sqldeveloper.table.table.count.rows.title%"
+			},
+			{
+				"command": "sqldeveloper.table.trigger.create.pk.from.sequence",
+				"title": "%sqldeveloper.table.trigger.create.pk.from.sequence.title%"
+			},
+			{
+				"command": "sqldeveloper.table.trigger.enable.all",
+				"title": "%sqldeveloper.table.trigger.enable.all.title%"
+			},
+			{
+				"command": "sqldeveloper.table.trigger.disable.all",
+				"title": "%sqldeveloper.table.trigger.disable.all.title%"
+			},
+			{
+				"command": "sqldeveloper.table.trigger.disable.single",
+				"title": "%sqldeveloper.table.trigger.disable.single.title%"
+			},
+			{
+				"command": "sqldeveloper.table.trigger.enable.single",
+				"title": "%sqldeveloper.table.trigger.enable.single.title%"
+			},
+			{
+				"command": "sqldeveloper.table.trigger.drop",
+				"title": "%sqldeveloper.table.trigger.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.trigger.rename",
+				"title": "%sqldeveloper.trigger.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.trigger.drop.trigger",
+				"title": "%sqldeveloper.trigger.drop.trigger.title%"
+			},
+			{
+				"command": "sqldeveloper.trigger.enable",
+				"title": "%sqldeveloper.trigger.enable.title%"
+			},
+			{
+				"command": "sqldeveloper.trigger.disable",
+				"title": "%sqldeveloper.trigger.disable.title%"
+			},
+			{
+				"command": "sqldeveloper.trigger.generate.changelog.liquibase",
+				"title": "%sqldeveloper.trigger.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.trigger_folder.compile.invalid",
+				"title": "%sqldeveloper.trigger_folder.compile.invalid.title%"
+			},
+			{
+				"command": "sqldeveloper.trigger_folder.compile.all",
+				"title": "%sqldeveloper.trigger_folder.compile.all.title%"
+			},
+			{
+				"command": "sqldeveloper.type.drop",
+				"title": "%sqldeveloper.type.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.type.generate.changelog.liquibase",
+				"title": "%sqldeveloper.type.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.type.body.drop.type.body",
+				"title": "%sqldeveloper.type.body.drop.type.body.title%"
+			},
+			{
+				"command": "sqldeveloper.type.body.generate.changelog.liquibase",
+				"title": "%sqldeveloper.type.body.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.type_folder.compile.invalid",
+				"title": "%sqldeveloper.type_folder.compile.invalid.title%"
+			},
+			{
+				"command": "sqldeveloper.type_folder.compile.all",
+				"title": "%sqldeveloper.type_folder.compile.all.title%"
+			},
+			{
+				"command": "sqldeveloper.user.drop.user",
+				"title": "%sqldeveloper.user.drop.user.title%"
+			},
+			{
+				"command": "sqldeveloper.user_folder.drop.user",
+				"title": "%sqldeveloper.user_folder.drop.user.title%"
+			},
+			{
+				"command": "sqldeveloper.view.rename",
+				"title": "%sqldeveloper.view.rename.title%"
+			},
+			{
+				"command": "sqldeveloper.view.drop",
+				"title": "%sqldeveloper.view.drop.title%"
+			},
+			{
+				"command": "sqldeveloper.view.compile",
+				"title": "%sqldeveloper.view.compile.title%"
+			},
+			{
+				"command": "sqldeveloper.view.generate.changelog.liquibase",
+				"title": "%sqldeveloper.view.generate.changelog.liquibase.title%"
+			},
+			{
+				"command": "sqldeveloper.view_column.comment",
+				"title": "%sqldeveloper.view_column.comment.title%"
+			},
+			{
+				"command": "sqldeveloper.view_folder.compile.invalid",
+				"title": "%sqldeveloper.view_folder.compile.invalid.title%"
+			},
+			{
+				"command": "sqldeveloper.xdb_subfolder.drop.folder",
+				"title": "%sqldeveloper.xdb_subfolder.drop.folder.title%"
+			},
+			{
+				"command": "sqldeveloper.xdb_subfolder.create.subfolder",
+				"title": "%sqldeveloper.xdb_subfolder.create.subfolder.title%"
+			},
+			{
+				"command": "sqldeveloper.xml.schema.drop.xml.schema",
+				"title": "%sqldeveloper.xml.schema.drop.xml.schema.title%"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "sqldeveloper.connections.focus",
+				"when": "activeViewlet == workbench.view.extension.sqldeveloper-explorer",
+				"key": "ctrl+shift+c",
+				"mac": "cmd+shift+c"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runStatement",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "f9"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runStatement",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "ctrl+enter"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runStatement",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"mac": "cmd+enter"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runScript",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "f5"
+			},
+			{
+				"command": "sqldeveloper.worksheet.runInSQLcl",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "ctrl+shift+enter"
+			},
+			{
+				"command": "sqldeveloper.worksheet.explainPlan",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "f10"
+			},
+			{
+				"command": "sqldeveloper.connection.add",
+				"when": "activeViewlet == workbench.view.extension.sqldeveloper-explorer",
+				"key": "ctrl+shift+n",
+				"mac": "cmd+shift+n"
+			},
+			{
+				"command": "sqldeveloper.connection.folder.edit",
+				"when": "activeViewlet == workbench.view.extension.sqldeveloper-explorer",
+				"key": "ctrl+shift+e",
+				"mac": "cmd+shift+e"
+			},
+			{
+				"command": "sqldeveloper.connection.folder.open.worksheet",
+				"when": "activeViewlet == workbench.view.extension.sqldeveloper-explorer",
+				"key": "ctrl+shift+w",
+				"mac": "cmd+shift+w"
+			},
+			{
+				"command": "sqldeveloper.worksheet.queryResult.focus",
+				"when": "activeViewlet == workbench.view.extension.sqldeveloper-explorer",
+				"key": "ctrl+alt+q"
+			},
+			{
+				"command": "sqldeveloper.worksheet.scriptOutput.focus",
+				"when": "activeViewlet == workbench.view.extension.sqldeveloper-explorer",
+				"key": "ctrl+alt+s"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.insertRow",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"key": "ctrl+i",
+				"mac": "cmd+i"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.deleteSelectedRows",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"key": "ctrl+d",
+				"mac": "cmd+d"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.commitChanges",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"key": "f11",
+				"mac": "f10"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.rollbackChanges",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"key": "f12"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.refresh",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"key": "ctrl+r",
+				"mac": "cmd+r"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.filter",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"key": "ctrl+shift+f"
+			},
+			{
+				"command": "sqldeveloper.objectViewer.dataBrowser.sort",
+				"when": "activeCustomEditorId == sqldeveloper.editor.browser",
+				"key": "ctrl+shift+s"
+			},
+			{
+				"command": "sqldeveloper.worksheet.sqlHistory.down",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "ctrl+down",
+				"mac": "cmd+down"
+			},
+			{
+				"command": "sqldeveloper.worksheet.sqlHistory.down.insert",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "ctrl+shift+down",
+				"mac": "cmd+shift+down"
+			},
+			{
+				"command": "sqldeveloper.worksheet.sqlHistory.up",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "ctrl+up",
+				"mac": "cmd+up"
+			},
+			{
+				"command": "sqldeveloper.worksheet.sqlHistory.up.insert",
+				"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+				"key": "ctrl+shift+up",
+				"mac": "cmd+shift+up"
+			}
+		],
+		"menus": {
+			"view/item/context": [
+				{
+					"command": "sqldeveloper.tree.refresh",
+					"when": "viewItem =~ /^(\\w)(\\s|\\w)*(\\w)_FOLDER$/ || viewItem == PENDING_REFRESH || viewItem == APEX || viewItem == APEX_PAGE || viewItem == BLOCK || viewItem == EDITION_SUBFOLDER || viewItem == JOBS || viewItem == 'MATERIALIZED VIEW' || viewItem == PACKAGE || viewItem == 'PACKAGE BODY' || viewItem == QUEUE || viewItem == RECYCLEBIN || viewItem == TABLE || viewItem == TYPE || viewItem == TYPE_BODY || viewItem == VIEW || viewItem == XDB_SUBFOLDER",
+					"group": "inline"
+				},
+				{
+					"command": "sqldeveloper.tree.filter.apply",
+					"when": "(viewItem == OPEN_PENDING_CONNECTION_FOLDER || viewItem == OPEN_CONNECTION_FOLDER || viewItem =~ /^(\\w)(\\s|\\w)*(\\w)_FOLDER$/ || viewItem == SCHEMAS) && viewItem not in sqldeveloper.tree.closedConnectionTypes && viewItem not in sqldeveloper.tree.nonFilterableTypes",
+					"group": "inline"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.open.worksheet",
+					"when": "viewItem in sqldeveloper.tree.closedConnectionTypes || viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "inline@1"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.disconnect",
+					"when": "viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "inline@2"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.edit",
+					"when": "viewItem in sqldeveloper.tree.closedConnectionTypes || viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "inline@3"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.open.worksheet",
+					"when": "viewItem in sqldeveloper.tree.closedConnectionTypes || viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "navigation@0"
+				},
+				{
+					"command": "sqldeveloper.connection.openSqlcl",
+					"when": "viewItem in sqldeveloper.tree.closedConnectionTypes || viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "navigation@1"
+				},
+				{
+					"command": "sqldeveloper.connection.open",
+					"when": "viewItem in sqldeveloper.tree.closedConnectionTypes",
+					"group": "1_modification@0"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.reconnect",
+					"when": "viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "1_modification@0"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.disconnect",
+					"when": "viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "1_modification@1"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.edit",
+					"when": "viewItem in sqldeveloper.tree.closedConnectionTypes || viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "1_modification@2"
+				},
+				{
+					"command": "sqldeveloper.connection.delete",
+					"when": "viewItem in sqldeveloper.tree.closedConnectionTypes || viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "1_modification@3"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.clone",
+					"when": "viewItem in sqldeveloper.tree.closedConnectionTypes || viewItem in sqldeveloper.tree.openConnectionTypes",
+					"group": "9_cutcopypaste"
+				},
+				{
+					"command": "sqldeveloper.editor.open",
+					"when": "viewItem == APEX || viewItem == APEX_PAGE || viewItem == 'DATABASE LINK' || viewItem == DIRECTORY || viewItem == EDITION_SUBFOLDER || viewItem == FUNCTION || viewItem == INDEX || viewItem == JAVA || viewItem == JOBS || viewItem == 'MATERIALIZED VIEW' || viewItem == PACKAGE || viewItem == 'PACKAGE BODY' || viewItem == PROCEDURE || viewItem == 'PUBLIC DATABASE LINK' || viewItem == PUBLIC_SYNONYM || viewItem == QUEUE || viewItem == 'QUEUE TABLE' || viewItem == SEQUENCE || viewItem == SYNONYM || viewItem == TABLE || viewItem == TRIGGER || viewItem == TYPE || viewItem == VIEW || viewItem == DUALITY_VIEW || viewItem == XDB_SUBFOLDER",
+					"group": "@0"
+				},
+				{
+					"command": "sqldeveloper.object.run",
+					"when": "viewItem in sqldeveloper.panel.plsqlTypes",
+					"group": "@1"
+				},
+				{
+					"command": "sqldeveloper.duality_view_folder.builder",
+					"when": "viewItem == DUALITY_VIEW_FOLDER",
+					"group": "@0"
+				},
+				{
+					"command": "sqldeveloper.duality_view_folder.loadFromFile",
+					"when": "viewItem == DUALITY_VIEW_FOLDER",
+					"group": "@0"
+				},
+				{
+					"command": "sqldeveloper.duality_view.edit",
+					"when": "viewItem == DUALITY_VIEW",
+					"group": "@1"
+				},
+				{
+					"command": "sqldeveloper.tree.filter.apply",
+					"when": "(viewItem =~ /^(\\w)(\\s|\\w)*(\\w)_FOLDER$/ || viewItem == SCHEMAS) && viewItem not in sqldeveloper.tree.closedConnectionTypes && viewItem not in sqldeveloper.tree.nonFilterableTypes",
+					"group": "z_commands@0"
+				},
+				{
+					"command": "sqldeveloper.tree.filter.clear",
+					"when": "(viewItem =~ /^(\\w)(\\s|\\w)*(\\w)_FOLDER$/ || viewItem == SCHEMAS) && viewItem not in sqldeveloper.tree.closedConnectionTypes && viewItem not in sqldeveloper.tree.nonFilterableTypes",
+					"group": "z_commands@1"
+				},
+				{
+					"command": "sqldeveloper.object.show.json.data.guide",
+					"when": "viewItem == 'DUALITY_VIEW'",
+					"group": "DUALITY_VIEW@101"
+				},
+				{
+					"submenu": "sqldeveloper.apex.modify.application",
+					"when": "viewItem == APEX",
+					"group": "APEX@3"
+				},
+				{
+					"command": "sqldeveloper.column.rename",
+					"when": "viewItem == COLUMN",
+					"group": "COLUMN@4"
+				},
+				{
+					"command": "sqldeveloper.column.drop",
+					"when": "viewItem == COLUMN",
+					"group": "COLUMN@5"
+				},
+				{
+					"command": "sqldeveloper.column.comment",
+					"when": "viewItem == COLUMN",
+					"group": "COLUMN@6"
+				},
+				{
+					"command": "sqldeveloper.column.encrypt",
+					"when": "viewItem == COLUMN",
+					"group": "COLUMN@7"
+				},
+				{
+					"command": "sqldeveloper.column.decrypt",
+					"when": "viewItem == COLUMN",
+					"group": "COLUMN@8"
+				},
+				{
+					"command": "sqldeveloper.column.normalize",
+					"when": "viewItem == COLUMN",
+					"group": "COLUMN@9"
+				},
+				{
+					"command": "sqldeveloper.connection.gather.schema.statistics",
+					"when": "viewItem == OPEN_PENDING_CONNECTION_FOLDER || viewItem == OPEN_CONNECTION_FOLDER",
+					"group": "CONNECTION@10"
+				},
+				{
+					"command": "sqldeveloper.connection.recompile.schema",
+					"when": "viewItem == OPEN_PENDING_CONNECTION_FOLDER || viewItem == OPEN_CONNECTION_FOLDER",
+					"group": "CONNECTION@11"
+				},
+				{
+					"submenu": "sqldeveloper.connection.liquibase",
+					"when": "viewItem == OPEN_PENDING_CONNECTION_FOLDER || viewItem == OPEN_CONNECTION_FOLDER",
+					"group": "CONNECTION@12"
+				},
+				{
+					"command": "sqldeveloper.connection.xml.db.protocol.server.configuration",
+					"when": "viewItem == OPEN_PENDING_CONNECTION_FOLDER || viewItem == OPEN_CONNECTION_FOLDER",
+					"group": "CONNECTION@13"
+				},
+				{
+					"command": "sqldeveloper.database.link.test.database.link",
+					"when": "viewItem == 'DATABASE LINK'",
+					"group": "DATABASE_LINK@14"
+				},
+				{
+					"command": "sqldeveloper.database.link.drop",
+					"when": "viewItem == 'DATABASE LINK'",
+					"group": "DATABASE_LINK@15"
+				},
+				{
+					"command": "sqldeveloper.database.link.generate.changelog.liquibase",
+					"when": "false",
+					"group": "DATABASE_LINK@16"
+				},
+				{
+					"command": "sqldeveloper.directory.drop",
+					"when": "viewItem == DIRECTORY",
+					"group": "DIRECTORY@19"
+				},
+				{
+					"command": "sqldeveloper.directory.generate.changelog.liquibase",
+					"when": "false",
+					"group": "DIRECTORY@20"
+				},
+				{
+					"command": "sqldeveloper.directory_folder.create.directory",
+					"when": "viewItem == DIRECTORY_FOLDER",
+					"group": "DIRECTORY_FOLDER@21"
+				},
+				{
+					"command": "sqldeveloper.duality_view.rename",
+					"when": "viewItem == DUALITY_VIEW",
+					"group": "DUALITY_VIEW@22"
+				},
+				{
+					"command": "sqldeveloper.duality_view.drop",
+					"when": "viewItem == DUALITY_VIEW",
+					"group": "DUALITY_VIEW@23"
+				},
+				{
+					"command": "sqldeveloper.duality_view.compile",
+					"when": "viewItem == DUALITY_VIEW",
+					"group": "DUALITY_VIEW@24"
+				},
+				{
+					"submenu": "sqldeveloper.duality_view.privileges",
+					"when": "viewItem == DUALITY_VIEW",
+					"group": "DUALITY_VIEW@25"
+				},
+				{
+					"command": "sqldeveloper.duality_view_column.comment",
+					"when": "viewItem == DUALITY_VIEW_COLUMN",
+					"group": "DUALITY_VIEW_COLUMN@26"
+				},
+				{
+					"command": "sqldeveloper.duality_view_folder.compile.invalid",
+					"when": "viewItem == DUALITY_VIEW_FOLDER",
+					"group": "DUALITY_VIEW_FOLDER@27"
+				},
+				{
+					"command": "sqldeveloper.edition_subfolder.set.current.edition",
+					"when": "viewItem == EDITION_SUBFOLDER",
+					"group": "EDITION_SUBFOLDER@29"
+				},
+				{
+					"command": "sqldeveloper.edition_subfolder.create.edition",
+					"when": "viewItem == EDITION_SUBFOLDER",
+					"group": "EDITION_SUBFOLDER@30"
+				},
+				{
+					"command": "sqldeveloper.edition_subfolder.drop.edition",
+					"when": "viewItem == EDITION_SUBFOLDER",
+					"group": "EDITION_SUBFOLDER@31"
+				},
+				{
+					"command": "sqldeveloper.function.drop",
+					"when": "viewItem == FUNCTION",
+					"group": "FUNCTION@32"
+				},
+				{
+					"command": "sqldeveloper.function.generate.changelog.liquibase",
+					"when": "false",
+					"group": "FUNCTION@35"
+				},
+				{
+					"command": "sqldeveloper.function_folder.compile.invalid",
+					"when": "viewItem == FUNCTION_FOLDER",
+					"group": "FUNCTION_FOLDER@36"
+				},
+				{
+					"command": "sqldeveloper.function_folder.compile.all",
+					"when": "viewItem == FUNCTION_FOLDER",
+					"group": "FUNCTION_FOLDER@38"
+				},
+				{
+					"command": "sqldeveloper.index.drop",
+					"when": "viewItem == INDEX",
+					"group": "INDEX@39"
+				},
+				{
+					"command": "sqldeveloper.index.rebuild",
+					"when": "viewItem == INDEX",
+					"group": "INDEX@40"
+				},
+				{
+					"command": "sqldeveloper.index.rename",
+					"when": "viewItem == INDEX",
+					"group": "INDEX@41"
+				},
+				{
+					"command": "sqldeveloper.index.make.unusable",
+					"when": "viewItem == INDEX",
+					"group": "INDEX@42"
+				},
+				{
+					"command": "sqldeveloper.index.coalesce",
+					"when": "viewItem == INDEX",
+					"group": "INDEX@43"
+				},
+				{
+					"command": "sqldeveloper.index.compute.statistics",
+					"when": "viewItem == INDEX",
+					"group": "INDEX@44"
+				},
+				{
+					"command": "sqldeveloper.index.rebuild.index.partition",
+					"when": "viewItem == INDEX",
+					"group": "INDEX@45"
+				},
+				{
+					"command": "sqldeveloper.index.drop.index.partition",
+					"when": "viewItem == INDEX",
+					"group": "INDEX@46"
+				},
+				{
+					"command": "sqldeveloper.index.generate.changelog.liquibase",
+					"when": "false",
+					"group": "INDEX@47"
+				},
+				{
+					"command": "sqldeveloper.java.drop.class",
+					"when": "viewItem == JAVA",
+					"group": "JAVA@48"
+				},
+				{
+					"command": "sqldeveloper.jobs.force.broken",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@50"
+				},
+				{
+					"command": "sqldeveloper.jobs.force.unbroken",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@51"
+				},
+				{
+					"command": "sqldeveloper.jobs.instance",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@52"
+				},
+				{
+					"command": "sqldeveloper.jobs.interval",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@53"
+				},
+				{
+					"command": "sqldeveloper.jobs.change",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@54"
+				},
+				{
+					"command": "sqldeveloper.jobs.set.next.date",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@55"
+				},
+				{
+					"command": "sqldeveloper.jobs.remove.job",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@56"
+				},
+				{
+					"command": "sqldeveloper.jobs.run.job",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@57"
+				},
+				{
+					"command": "sqldeveloper.jobs.what",
+					"when": "viewItem == JOBS",
+					"group": "JOBS@58"
+				},
+				{
+					"command": "sqldeveloper.jobs.generate.changelog.liquibase",
+					"when": "false",
+					"group": "JOBS@59"
+				},
+				{
+					"command": "sqldeveloper.jobs_folder.submit.dbms_job",
+					"when": "viewItem == JOBS_FOLDER",
+					"group": "JOBS_FOLDER@60"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.drop",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@61"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.generate.changelog.liquibase",
+					"when": "false",
+					"group": "MATERIALIZED_VIEW@62"
+				},
+				{
+					"submenu": "sqldeveloper.materialized.view.privileges",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@63"
+				},
+				{
+					"submenu": "sqldeveloper.materialized.view.caching",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@64"
+				},
+				{
+					"submenu": "sqldeveloper.materialized.view.compression",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@65"
+				},
+				{
+					"submenu": "sqldeveloper.materialized.view.query.rewrite",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@66"
+				},
+				{
+					"submenu": "sqldeveloper.materialized.view.parallelism",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@67"
+				},
+				{
+					"submenu": "sqldeveloper.materialized.view.logging",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@68"
+				},
+				{
+					"submenu": "sqldeveloper.materialized.view.refresh.option",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@69"
+				},
+				{
+					"submenu": "sqldeveloper.materialized.view.other.actions",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "MATERIALIZED_VIEW@70"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.log.drop",
+					"when": "viewItem == 'MATERIALIZED VIEW LOG'",
+					"group": "MATERIALIZED_VIEW_LOG@71"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.log.generate.changelog.liquibase",
+					"when": "false",
+					"group": "MATERIALIZED_VIEW_LOG@72"
+				},
+				{
+					"submenu": "sqldeveloper.member.order.members.by",
+					"when": "viewItem == MEMBER",
+					"group": "MEMBER@74"
+				},
+				{
+					"command": "sqldeveloper.package.drop.package",
+					"when": "viewItem == PACKAGE",
+					"group": "PACKAGE@75"
+				},
+				{
+					"command": "sqldeveloper.package.generate.changelog.liquibase",
+					"when": "false",
+					"group": "PACKAGE@80"
+				},
+				{
+					"submenu": "sqldeveloper.package.order.members.by",
+					"when": "viewItem == PACKAGE",
+					"group": "PACKAGE@82"
+				},
+				{
+					"command": "sqldeveloper.package.body.drop.package.body",
+					"when": "viewItem == 'PACKAGE BODY'",
+					"group": "PACKAGE_BODY@83"
+				},
+				{
+					"command": "sqldeveloper.package.body.generate.changelog.liquibase",
+					"when": "false",
+					"group": "PACKAGE_BODY@84"
+				},
+				{
+					"submenu": "sqldeveloper.package.body.order.members.by",
+					"when": "viewItem == 'PACKAGE BODY'",
+					"group": "PACKAGE_BODY@85"
+				},
+				{
+					"command": "sqldeveloper.package_folder.compile.invalid",
+					"when": "viewItem == PACKAGE_FOLDER",
+					"group": "PACKAGE_FOLDER@86"
+				},
+				{
+					"command": "sqldeveloper.package_folder.compile.all",
+					"when": "viewItem == PACKAGE_FOLDER",
+					"group": "PACKAGE_FOLDER@88"
+				},
+				{
+					"command": "sqldeveloper.procedure.drop",
+					"when": "viewItem == PROCEDURE",
+					"group": "PROCEDURE@93"
+				},
+				{
+					"command": "sqldeveloper.procedure.compile.dependants",
+					"when": "viewItem == PROCEDURE",
+					"group": "PROCEDURE@94"
+				},
+				{
+					"command": "sqldeveloper.procedure.generate.changelog.liquibase",
+					"when": "false",
+					"group": "PROCEDURE@95"
+				},
+				{
+					"command": "sqldeveloper.procedure_folder.compile.invalid",
+					"when": "viewItem == PROCEDURE_FOLDER",
+					"group": "PROCEDURE_FOLDER@96"
+				},
+				{
+					"command": "sqldeveloper.procedure_folder.compile.all",
+					"when": "viewItem == PROCEDURE_FOLDER",
+					"group": "PROCEDURE_FOLDER@97"
+				},
+				{
+					"command": "sqldeveloper.public.database.link.test.database.link",
+					"when": "viewItem == 'PUBLIC DATABASE LINK'",
+					"group": "PUBLIC_DATABASE_LINK@98"
+				},
+				{
+					"command": "sqldeveloper.public.database.link.drop",
+					"when": "viewItem == 'PUBLIC DATABASE LINK'",
+					"group": "PUBLIC_DATABASE_LINK@99"
+				},
+				{
+					"command": "sqldeveloper.public_synonym.drop",
+					"when": "viewItem == PUBLIC_SYNONYM",
+					"group": "PUBLIC_SYNONYM@100"
+				},
+				{
+					"command": "sqldeveloper.public_synonym.generate.changelog.liquibase",
+					"when": "false",
+					"group": "PUBLIC_SYNONYM@101"
+				},
+				{
+					"command": "sqldeveloper.queue.start.enqueue",
+					"when": "viewItem == QUEUE",
+					"group": "QUEUE@102"
+				},
+				{
+					"command": "sqldeveloper.queue.stop.enqueue",
+					"when": "viewItem == QUEUE",
+					"group": "QUEUE@103"
+				},
+				{
+					"command": "sqldeveloper.queue.start.dequeue",
+					"when": "viewItem == QUEUE",
+					"group": "QUEUE@104"
+				},
+				{
+					"command": "sqldeveloper.queue.stop.dequeue",
+					"when": "viewItem == QUEUE",
+					"group": "QUEUE@105"
+				},
+				{
+					"command": "sqldeveloper.recyclebin.purge",
+					"when": "viewItem == RECYCLEBIN",
+					"group": "RECYCLEBIN@106"
+				},
+				{
+					"command": "sqldeveloper.recyclebin.flashback.to.before.drop",
+					"when": "viewItem == RECYCLEBIN",
+					"group": "RECYCLEBIN@107"
+				},
+				{
+					"command": "sqldeveloper.sequence.drop",
+					"when": "viewItem == SEQUENCE",
+					"group": "SEQUENCE@108"
+				},
+				{
+					"command": "sqldeveloper.sequence.generate.changelog.liquibase",
+					"when": "false",
+					"group": "SEQUENCE@109"
+				},
+				{
+					"command": "sqldeveloper.synonym.rename",
+					"when": "viewItem == SYNONYM",
+					"group": "SYNONYM@110"
+				},
+				{
+					"command": "sqldeveloper.synonym.drop",
+					"when": "viewItem == SYNONYM",
+					"group": "SYNONYM@111"
+				},
+				{
+					"command": "sqldeveloper.synonym.generate.changelog.liquibase",
+					"when": "false",
+					"group": "SYNONYM@112"
+				},
+				{
+					"command": "sqldeveloper.table.generate.changelog.liquibase",
+					"when": "false",
+					"group": "TABLE@114"
+				},
+				{
+					"submenu": "sqldeveloper.table.column",
+					"when": "viewItem == TABLE",
+					"group": "TABLE@115"
+				},
+				{
+					"submenu": "sqldeveloper.table.constraint",
+					"when": "viewItem == TABLE",
+					"group": "TABLE@116"
+				},
+				{
+					"submenu": "sqldeveloper.table.index",
+					"when": "viewItem == TABLE",
+					"group": "TABLE@117"
+				},
+				{
+					"submenu": "sqldeveloper.table.privileges",
+					"when": "viewItem == TABLE",
+					"group": "TABLE@118"
+				},
+				{
+					"submenu": "sqldeveloper.table.statistics",
+					"when": "viewItem == TABLE",
+					"group": "TABLE@119"
+				},
+				{
+					"submenu": "sqldeveloper.table.storage",
+					"when": "viewItem == TABLE",
+					"group": "TABLE@120"
+				},
+				{
+					"submenu": "sqldeveloper.table.table",
+					"when": "viewItem == TABLE",
+					"group": "TABLE@121"
+				},
+				{
+					"submenu": "sqldeveloper.table.trigger",
+					"when": "viewItem == TABLE",
+					"group": "TABLE@122"
+				},
+				{
+					"command": "sqldeveloper.trigger.rename",
+					"when": "viewItem == TRIGGER",
+					"group": "TRIGGER@124"
+				},
+				{
+					"command": "sqldeveloper.trigger.drop.trigger",
+					"when": "viewItem == TRIGGER",
+					"group": "TRIGGER@125"
+				},
+				{
+					"command": "sqldeveloper.trigger.enable",
+					"when": "viewItem == TRIGGER",
+					"group": "TRIGGER@126"
+				},
+				{
+					"command": "sqldeveloper.trigger.disable",
+					"when": "viewItem == TRIGGER",
+					"group": "TRIGGER@127"
+				},
+				{
+					"command": "sqldeveloper.trigger.generate.changelog.liquibase",
+					"when": "false",
+					"group": "TRIGGER@128"
+				},
+				{
+					"command": "sqldeveloper.trigger_folder.compile.invalid",
+					"when": "viewItem == TRIGGER_FOLDER",
+					"group": "TRIGGER_FOLDER@129"
+				},
+				{
+					"command": "sqldeveloper.trigger_folder.compile.all",
+					"when": "viewItem == TRIGGER_FOLDER",
+					"group": "TRIGGER_FOLDER@130"
+				},
+				{
+					"command": "sqldeveloper.type.drop",
+					"when": "viewItem == TYPE",
+					"group": "TYPE@132"
+				},
+				{
+					"command": "sqldeveloper.type.generate.changelog.liquibase",
+					"when": "false",
+					"group": "TYPE@137"
+				},
+				{
+					"command": "sqldeveloper.type.body.drop.type.body",
+					"when": "viewItem == 'TYPE BODY'",
+					"group": "TYPE_BODY@138"
+				},
+				{
+					"command": "sqldeveloper.type.body.generate.changelog.liquibase",
+					"when": "false",
+					"group": "TYPE_BODY@139"
+				},
+				{
+					"submenu": "sqldeveloper.type.body.order.members.by",
+					"when": "viewItem == 'TYPE BODY'",
+					"group": "TYPE_BODY@140"
+				},
+				{
+					"command": "sqldeveloper.type_folder.compile.invalid",
+					"when": "viewItem == TYPE_FOLDER",
+					"group": "TYPE_FOLDER@141"
+				},
+				{
+					"command": "sqldeveloper.type_folder.compile.all",
+					"when": "viewItem == TYPE_FOLDER",
+					"group": "TYPE_FOLDER@142"
+				},
+				{
+					"command": "sqldeveloper.user.drop.user",
+					"when": "viewItem == USER",
+					"group": "USER@144"
+				},
+				{
+					"command": "sqldeveloper.user_folder.drop.user",
+					"when": "viewItem == USER_FOLDER",
+					"group": "USER_FOLDER@146"
+				},
+				{
+					"command": "sqldeveloper.view.rename",
+					"when": "viewItem == VIEW",
+					"group": "VIEW@147"
+				},
+				{
+					"command": "sqldeveloper.view.drop",
+					"when": "viewItem == VIEW",
+					"group": "VIEW@148"
+				},
+				{
+					"command": "sqldeveloper.view.compile",
+					"when": "viewItem == VIEW",
+					"group": "VIEW@149"
+				},
+				{
+					"command": "sqldeveloper.view.generate.changelog.liquibase",
+					"when": "false",
+					"group": "VIEW@150"
+				},
+				{
+					"submenu": "sqldeveloper.view.privileges",
+					"when": "viewItem == VIEW",
+					"group": "VIEW@151"
+				},
+				{
+					"command": "sqldeveloper.view_column.comment",
+					"when": "viewItem == VIEW_COLUMN",
+					"group": "VIEW_COLUMN@152"
+				},
+				{
+					"command": "sqldeveloper.view_folder.compile.invalid",
+					"when": "viewItem == VIEW_FOLDER",
+					"group": "VIEW_FOLDER@153"
+				},
+				{
+					"command": "sqldeveloper.xdb_subfolder.drop.folder",
+					"when": "viewItem == XDB_SUBFOLDER",
+					"group": "XDB_SUBFOLDER@155"
+				},
+				{
+					"command": "sqldeveloper.xdb_subfolder.create.subfolder",
+					"when": "viewItem == XDB_SUBFOLDER",
+					"group": "XDB_SUBFOLDER@156"
+				},
+				{
+					"command": "sqldeveloper.xml.schema.drop.xml.schema",
+					"when": "viewItem == 'XML SCHEMA'",
+					"group": "XML_SCHEMA@157"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "sqldeveloper.connection.folder.edit",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.connection.open",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.connection.folder.disconnect",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.connection.add",
+					"when": "dbtoolsCoreServicesActive"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runStatement",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runScript",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runInSQLcl",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.explainPlan",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.compileObject",
+					"when": "sqldeveloper.activeEditorType == plsqlEditor"
+				},
+				{
+					"command": "sqldeveloper.worksheet.compileObjectDebug",
+					"when": "sqldeveloper.activeEditorType == plsqlEditor"
+				},
+				{
+					"command": "sqldeveloper.worksheet.openSpec",
+					"when": "sqldeveloper.activeEditorType == plsqlEditor"
+				},
+				{
+					"command": "sqldeveloper.worksheet.openBody",
+					"when": "sqldeveloper.activeEditorType == plsqlEditor"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runObject",
+					"when": "sqldeveloper.activeEditorType == plsqlEditor"
+				},
+				{
+					"command": "sqldeveloper.worksheet.attachConnection",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.detachConnection",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.sqlHistory.down",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.sqlHistory.down.insert",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.sqlHistory.up",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.worksheet.sqlHistory.up.insert",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet"
+				},
+				{
+					"command": "sqldeveloper.objectViewer.dataBrowser.insertRow",
+					"when": "activeCustomEditorId == sqldeveloper.editor.browser"
+				},
+				{
+					"command": "sqldeveloper.objectViewer.dataBrowser.deleteSelectedRows",
+					"when": "activeCustomEditorId == sqldeveloper.editor.browser"
+				},
+				{
+					"command": "sqldeveloper.objectViewer.dataBrowser.commitChanges",
+					"when": "activeCustomEditorId == sqldeveloper.editor.browser"
+				},
+				{
+					"command": "sqldeveloper.objectViewer.dataBrowser.rollbackChanges",
+					"when": "activeCustomEditorId == sqldeveloper.editor.browser"
+				},
+				{
+					"command": "sqldeveloper.objectViewer.dataBrowser.refresh",
+					"when": "activeCustomEditorId == sqldeveloper.editor.browser"
+				},
+				{
+					"command": "sqldeveloper.objectViewer.dataBrowser.filter",
+					"when": "activeCustomEditorId == sqldeveloper.editor.browser"
+				},
+				{
+					"command": "sqldeveloper.objectViewer.dataBrowser.sort",
+					"when": "activeCustomEditorId == sqldeveloper.editor.browser"
+				},
+				{
+					"command": "sqldeveloper.tree.filter",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.tree.filter.apply",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.tree.filter.clear",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.alias",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.status",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.global.notification",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.proxy",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.column.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.column.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.column.comment",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.column.encrypt",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.column.decrypt",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.column.normalize",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.connection.gather.schema.statistics",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.connection.recompile.schema",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.connection.liquibase.generate.schema",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.connection.xml.db.protocol.server.configuration",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.database.link.test.database.link",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.database.link.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.database.link.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.directory.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.directory.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.directory_folder.create.directory",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.duality_view.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.duality_view.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.duality_view.compile",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.duality_view_column.comment",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.duality_view_folder.compile.invalid",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.edition_subfolder.set.current.edition",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.edition_subfolder.create.edition",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.edition_subfolder.drop.edition",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.function.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.function.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.function_folder.compile.invalid",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.function_folder.compile.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.rebuild",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.make.unusable",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.coalesce",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.compute.statistics",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.rebuild.index.partition",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.drop.index.partition",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.index.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.java.drop.class",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.force.broken",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.force.unbroken",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.instance",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.interval",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.change",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.set.next.date",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.remove.job",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.run.job",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.what",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.jobs_folder.submit.dbms_job",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.caching.enable.materialized.view.cache",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.caching.disable.materialized.view.cache",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.compression.compress.materialized.view",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.compression.disable.materialized.view.compression",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.query.rewrite.enable.query.rewrite",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.query.rewrite.disable.query.rewrite",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.parallelism.no.paralellism",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.parallelism.change.paralellism",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.logging.disable.logging",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.logging.enable.logging",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.refresh.option.change.refresh.method",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.refresh.option.change.refresh.type",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.refresh.option.force.refresh.now",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.enable.row.movement",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.shrink.materialized.view",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.compile.materialized.view",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.consider.materialized.view.refresh",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.rebuild.materialized.view",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.log.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.log.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.package.drop.package",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.package.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.package.body.drop.package.body",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.package.body.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.package_folder.compile.invalid",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.package_folder.compile.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.procedure.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.procedure.compile.dependants",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.procedure.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.procedure_folder.compile.invalid",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.procedure_folder.compile.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.public.database.link.test.database.link",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.public.database.link.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.public_synonym.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.public_synonym.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.queue.start.enqueue",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.queue.stop.enqueue",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.queue.start.dequeue",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.queue.stop.dequeue",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.recyclebin.purge",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.recyclebin.flashback.to.before.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.sequence.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.sequence.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.synonym.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.synonym.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.synonym.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.column.comment",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.column.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.column.add",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.column.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.column.normalize",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.enable.related.foreign.keys",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.disable.related.foreign.keys",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.enable.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.disable.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.enable.single",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.disable.single",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.rename.single",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.add.check",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.add.primary.key",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.add.foreign.key",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.add.unique",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.index.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.index.rebuild",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.statistics.validate.structure",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.statistics.gather.statistics",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.storage.shrink.table",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.storage.row.movement",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.storage.compress",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.storage.no.compress",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.storage.move",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.storage.move.tablespace",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.storage.cache",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.storage.no.cache",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.copy",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.truncate",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.lock",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.comment",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.parallel",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.logging",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.no.parallel",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.table.count.rows",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.create.pk.from.sequence",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.enable.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.disable.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.disable.single",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.enable.single",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.trigger.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.trigger.drop.trigger",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.trigger.enable",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.trigger.disable",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.trigger.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.trigger_folder.compile.invalid",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.trigger_folder.compile.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.type.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.type.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.type.body.drop.type.body",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.type.body.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.type_folder.compile.invalid",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.type_folder.compile.all",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.user.drop.user",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.user_folder.drop.user",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.view.rename",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.view.drop",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.view.compile",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.view.generate.changelog.liquibase",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.view_column.comment",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.view_folder.compile.invalid",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.xdb_subfolder.drop.folder",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.xdb_subfolder.create.subfolder",
+					"when": "false"
+				},
+				{
+					"command": "sqldeveloper.xml.schema.drop.xml.schema",
+					"when": "false"
+				}
+			],
+			"sqldeveloper.apex.modify.application": [
+				{
+					"command": "sqldeveloper.apex.modify.application.alias",
+					"when": "viewItem == APEX",
+					"group": "sqldeveloper.apex.modify.application@1"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.rename",
+					"when": "viewItem == APEX",
+					"group": "sqldeveloper.apex.modify.application@2"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.status",
+					"when": "viewItem == APEX",
+					"group": "sqldeveloper.apex.modify.application@3"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.global.notification",
+					"when": "viewItem == APEX",
+					"group": "sqldeveloper.apex.modify.application@4"
+				},
+				{
+					"command": "sqldeveloper.apex.modify.application.proxy",
+					"when": "viewItem == APEX",
+					"group": "sqldeveloper.apex.modify.application@5"
+				}
+			],
+			"sqldeveloper.connection.liquibase": [
+				{
+					"command": "sqldeveloper.connection.liquibase.generate.schema",
+					"when": "false",
+					"group": "sqldeveloper.connection.liquibase@1"
+				}
+			],
+			"sqldeveloper.materialized.view.caching": [
+				{
+					"command": "sqldeveloper.materialized.view.caching.enable.materialized.view.cache",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.caching@1"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.caching.disable.materialized.view.cache",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.caching@2"
+				}
+			],
+			"sqldeveloper.materialized.view.compression": [
+				{
+					"command": "sqldeveloper.materialized.view.compression.compress.materialized.view",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.compression@1"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.compression.disable.materialized.view.compression",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.compression@2"
+				}
+			],
+			"sqldeveloper.materialized.view.query.rewrite": [
+				{
+					"command": "sqldeveloper.materialized.view.query.rewrite.enable.query.rewrite",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.query.rewrite@1"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.query.rewrite.disable.query.rewrite",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.query.rewrite@2"
+				}
+			],
+			"sqldeveloper.materialized.view.parallelism": [
+				{
+					"command": "sqldeveloper.materialized.view.parallelism.no.paralellism",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.parallelism@1"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.parallelism.change.paralellism",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.parallelism@2"
+				}
+			],
+			"sqldeveloper.materialized.view.logging": [
+				{
+					"command": "sqldeveloper.materialized.view.logging.disable.logging",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.logging@1"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.logging.enable.logging",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.logging@2"
+				}
+			],
+			"sqldeveloper.materialized.view.refresh.option": [
+				{
+					"command": "sqldeveloper.materialized.view.refresh.option.change.refresh.method",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.refresh.option@1"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.refresh.option.change.refresh.type",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.refresh.option@2"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.refresh.option.force.refresh.now",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.refresh.option@3"
+				}
+			],
+			"sqldeveloper.materialized.view.other.actions": [
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.enable.row.movement",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.other.actions@1"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.shrink.materialized.view",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.other.actions@2"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.compile.materialized.view",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.other.actions@3"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.consider.materialized.view.refresh",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.other.actions@4"
+				},
+				{
+					"command": "sqldeveloper.materialized.view.other.actions.rebuild.materialized.view",
+					"when": "viewItem == 'MATERIALIZED VIEW'",
+					"group": "sqldeveloper.materialized.view.other.actions@5"
+				}
+			],
+			"sqldeveloper.table.column": [
+				{
+					"command": "sqldeveloper.table.column.comment",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.column@1"
+				},
+				{
+					"command": "sqldeveloper.table.column.rename",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.column@2"
+				},
+				{
+					"command": "sqldeveloper.table.column.add",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.column@3"
+				},
+				{
+					"command": "sqldeveloper.table.column.drop",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.column@4"
+				},
+				{
+					"command": "sqldeveloper.table.column.normalize",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.column@5"
+				}
+			],
+			"sqldeveloper.table.constraint": [
+				{
+					"command": "sqldeveloper.table.constraint.enable.related.foreign.keys",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@1"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.disable.related.foreign.keys",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@2"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.enable.all",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@3"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.disable.all",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@4"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.enable.single",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@5"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.disable.single",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@6"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.rename.single",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@7"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.drop",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@8"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.add.check",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@9"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.add.primary.key",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@10"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.add.foreign.key",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@11"
+				},
+				{
+					"command": "sqldeveloper.table.constraint.add.unique",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.constraint@12"
+				}
+			],
+			"sqldeveloper.table.index": [
+				{
+					"command": "sqldeveloper.table.index.drop",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.index@2"
+				},
+				{
+					"command": "sqldeveloper.table.index.rebuild",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.index@3"
+				}
+			],
+			"sqldeveloper.table.statistics": [
+				{
+					"command": "sqldeveloper.table.statistics.validate.structure",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.statistics@1"
+				},
+				{
+					"command": "sqldeveloper.table.statistics.gather.statistics",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.statistics@2"
+				}
+			],
+			"sqldeveloper.table.storage": [
+				{
+					"command": "sqldeveloper.table.storage.shrink.table",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.storage@1"
+				},
+				{
+					"command": "sqldeveloper.table.storage.row.movement",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.storage@2"
+				},
+				{
+					"command": "sqldeveloper.table.storage.compress",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.storage@3"
+				},
+				{
+					"command": "sqldeveloper.table.storage.no.compress",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.storage@4"
+				},
+				{
+					"command": "sqldeveloper.table.storage.move",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.storage@5"
+				},
+				{
+					"command": "sqldeveloper.table.storage.move.tablespace",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.storage@6"
+				},
+				{
+					"command": "sqldeveloper.table.storage.cache",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.storage@7"
+				},
+				{
+					"command": "sqldeveloper.table.storage.no.cache",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.storage@8"
+				}
+			],
+			"sqldeveloper.table.table": [
+				{
+					"command": "sqldeveloper.table.table.rename",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@1"
+				},
+				{
+					"command": "sqldeveloper.table.table.copy",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@2"
+				},
+				{
+					"command": "sqldeveloper.table.table.drop",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@3"
+				},
+				{
+					"command": "sqldeveloper.table.table.truncate",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@4"
+				},
+				{
+					"command": "sqldeveloper.table.table.lock",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@5"
+				},
+				{
+					"command": "sqldeveloper.table.table.comment",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@6"
+				},
+				{
+					"command": "sqldeveloper.table.table.parallel",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@7"
+				},
+				{
+					"command": "sqldeveloper.table.table.logging",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@8"
+				},
+				{
+					"command": "sqldeveloper.table.table.no.parallel",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@9"
+				},
+				{
+					"command": "sqldeveloper.table.table.count.rows",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.table@10"
+				}
+			],
+			"sqldeveloper.table.trigger": [
+				{
+					"command": "sqldeveloper.table.trigger.create.pk.from.sequence",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.trigger@2"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.enable.all",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.trigger@3"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.disable.all",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.trigger@4"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.disable.single",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.trigger@5"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.enable.single",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.trigger@6"
+				},
+				{
+					"command": "sqldeveloper.table.trigger.drop",
+					"when": "viewItem == TABLE",
+					"group": "sqldeveloper.table.trigger@7"
+				}
+			],
+			"editor/title": [
+				{
+					"command": "sqldeveloper.worksheet.runStatement",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+					"group": "navigation@1"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runScript",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+					"group": "navigation@2"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runInSQLcl",
+					"when": "editorLangId == oracle-sql && sqldeveloper.activeEditorType == sqlWorksheet",
+					"group": "navigation@3"
+				},
+				{
+					"command": "sqldeveloper.worksheet.compileObject",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor)",
+					"group": "navigation@1"
+				},
+				{
+					"command": "sqldeveloper.worksheet.compileObjectDebug",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor)",
+					"group": "navigation@2"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runObject",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor)",
+					"group": "navigation@3"
+				},
+				{
+					"command": "sqldeveloper.worksheet.openSpec",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor) && sqldeveloper.plsqlEditor.activePLSQLEditorType == 'PACKAGE BODY'",
+					"group": "navigation@4"
+				},
+				{
+					"command": "sqldeveloper.worksheet.openBody",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor) && sqldeveloper.plsqlEditor.activePLSQLEditorType == 'PACKAGE'",
+					"group": "navigation@4"
+				},
+				{
+					"command": "sqldeveloper.worksheet.attachConnection",
+					"when": "editorLangId == oracle-sql && !attach && sqldeveloper.activeEditorType == sqlWorksheet",
+					"group": "navigation@6"
+				},
+				{
+					"command": "sqldeveloper.worksheet.detachConnection",
+					"when": "editorLangId == oracle-sql && attach && sqldeveloper.activeEditorType == sqlWorksheet",
+					"group": "navigation@6"
+				},
+				{
+					"command": "sqldeveloper.worksheet.explainPlan",
+					"when": "editorLangId == oracle-sql && sqldeveloper.activeEditorType == sqlWorksheet",
+					"group": "navigation@5"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "sqldeveloper.worksheet.runStatement",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+					"alt": "",
+					"group": "navigation@1"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runScript",
+					"when": "sqldeveloper.activeEditorType == sqlWorksheet",
+					"alt": "",
+					"group": "navigation@2"
+				},
+				{
+					"command": "sqldeveloper.worksheet.compileObject",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor)",
+					"alt": "",
+					"group": "navigation@1"
+				},
+				{
+					"command": "sqldeveloper.worksheet.compileObjectDebug",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor)",
+					"alt": "",
+					"group": "navigation@2"
+				},
+				{
+					"command": "sqldeveloper.worksheet.runObject",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor)",
+					"alt": "",
+					"group": "navigation@3"
+				},
+				{
+					"command": "sqldeveloper.worksheet.openSpec",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor)",
+					"alt": "",
+					"group": "navigation@4"
+				},
+				{
+					"command": "sqldeveloper.worksheet.openBody",
+					"when": "editorLangId == oracle-sql && (sqldeveloper.activeEditorType == plsqlEditor)",
+					"alt": "",
+					"group": "navigation@4"
+				}
+			],
+			"explorer/context": [],
+			"view/title": [
+				{
+					"command": "sqldeveloper.worksheet.scriptOutput.clear",
+					"when": "view == sqldeveloper.worksheet.scriptOutput",
+					"group": "navigation"
+				},
+				{
+					"command": "sqldeveloper.worksheet.queryResult.clear",
+					"when": "view == sqldeveloper.worksheet.queryResult",
+					"group": "navigation"
+				},
+				{
+					"command": "sqldeveloper.worksheet.explainPlan.clear",
+					"when": "view == sqldeveloper.worksheet.explainPlan",
+					"group": "navigation"
+				},
+				{
+					"command": "sqldeveloper.connection.add",
+					"when": "view == sqldeveloper.connections && dbtoolsCoreServicesActive",
+					"group": "navigation"
+				},
+				{
+					"command": "sqldeveloper.tree.refresh",
+					"when": "view == sqldeveloper.connections && dbtoolsCoreServicesActive",
+					"group": "navigation"
+				},
+				{
+					"command": "sqldeveloper.tree.filter",
+					"when": "view == sqldeveloper.connections && dbtoolsCoreServicesActive",
+					"group": "navigation"
+				}
+			]
+		},
+		"submenus": [
+			{
+				"id": "sqldeveloper.apex.modify.application",
+				"label": "%sqldeveloper.apex.modify.application.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.connection.liquibase",
+				"label": "%sqldeveloper.connection.liquibase.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.duality_view.privileges",
+				"label": "%sqldeveloper.duality_view.privileges.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.materialized.view.privileges",
+				"label": "%sqldeveloper.materialized.view.privileges.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.materialized.view.caching",
+				"label": "%sqldeveloper.materialized.view.caching.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.materialized.view.compression",
+				"label": "%sqldeveloper.materialized.view.compression.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.materialized.view.query.rewrite",
+				"label": "%sqldeveloper.materialized.view.query.rewrite.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.materialized.view.parallelism",
+				"label": "%sqldeveloper.materialized.view.parallelism.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.materialized.view.logging",
+				"label": "%sqldeveloper.materialized.view.logging.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.materialized.view.refresh.option",
+				"label": "%sqldeveloper.materialized.view.refresh.option.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.materialized.view.other.actions",
+				"label": "%sqldeveloper.materialized.view.other.actions.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.member.order.members.by",
+				"label": "%sqldeveloper.member.order.members.by.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.package.order.members.by",
+				"label": "%sqldeveloper.package.order.members.by.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.package.body.order.members.by",
+				"label": "%sqldeveloper.package.body.order.members.by.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.table.column",
+				"label": "%sqldeveloper.table.column.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.table.constraint",
+				"label": "%sqldeveloper.table.constraint.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.table.index",
+				"label": "%sqldeveloper.table.index.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.table.privileges",
+				"label": "%sqldeveloper.table.privileges.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.table.statistics",
+				"label": "%sqldeveloper.table.statistics.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.table.storage",
+				"label": "%sqldeveloper.table.storage.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.table.table",
+				"label": "%sqldeveloper.table.table.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.table.trigger",
+				"label": "%sqldeveloper.table.trigger.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.type.body.order.members.by",
+				"label": "%sqldeveloper.type.body.order.members.by.submenu.label%"
+			},
+			{
+				"id": "sqldeveloper.view.privileges",
+				"label": "%sqldeveloper.view.privileges.submenu.label%"
+			}
+		],
+		"snippets": [
+			{
+				"language": "oracle-sql",
+				"path": "./snippets/snippets.json"
+			}
+		],
+		"walkthroughs": [
+			{
+				"id": "sqldeveloper.walkthroughs.connections",
+				"title": "Get started with Oracle SQL Developer Extension for VS Code",
+				"description": "Start by creating a new database connection",
+				"steps": [
+					{
+						"id": "sqldeveloper.walkthroughs.connections.navigateToExtension",
+						"title": "Navigate to SQL Developer extension",
+						"description": "Click on the extension icon in the sidebar to get started.",
+						"media": {
+							"image": "walkthroughs/images/navigate_to_sqldeveloper_extension.png",
+							"altText": "navigate to SQL Developer"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.connections.create",
+						"title": "Create new database connection",
+						"description": "Create a new database connection by expanding the **CONNECTIONS** dropdown, and click Create Connection.\n[Create Connection](command:sqldeveloper.walkthroughs.createConnection)",
+						"media": {
+							"image": "walkthroughs/images/create_new_connection.png",
+							"altText": "create new connection"
+						},
+						"completionEvents": [
+							"onCommand:sqldeveloper.walkthroughs.createConnection"
+						]
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.connections.save",
+						"title": "Test, connect, and save connection",
+						"description": "Once you fill in the credentials, use connection actions to test, connect and save your connection.",
+						"media": {
+							"image": "walkthroughs/images/connection_dialog_actions.png",
+							"altText": "Test, connect and save connection"
+						}
+					},
+					{
+						"id": "sqldeveloper.connections.nextSteps",
+						"title": "Next Steps",
+						"description": "The SQL Worksheet allows you to run queries and scripts, and offers code insight, snippets, drag and drop support to help speed up writing SQL.\n[Discover SQL Worksheet](command:workbench.action.openWalkthrough?%22Oracle.sql-developer%23sqldeveloper.walkthroughs.worksheet%22)",
+						"media": {
+							"image": "walkthroughs/images/sql-worksheet.png",
+							"altText": "discover sql worksheet"
+						},
+						"completionEvents": [
+							"onCommand:workbench.action.openWalkthrough?%22Oracle.sql-developer%23sqldeveloper.walkthroughs.worksheet%22"
+						]
+					}
+				]
+			},
+			{
+				"id": "sqldeveloper.walkthroughs.worksheet",
+				"title": "Get started with Oracle SQL Developer Extension for VS Code",
+				"description": "Discover the SQL Worksheet",
+				"steps": [
+					{
+						"id": "sqldeveloper.walkthroughs.worksheet.open",
+						"title": "Open a SQL worksheet",
+						"description": "You can open a worksheet using **Open SQL Worksheet** icon in your active connection.\n[Open SQL Worksheet](command:sqldeveloper.walkthroughs.openWorksheet)",
+						"media": {
+							"image": "walkthroughs/images/icon_open_sql_worksheet.png",
+							"altText": "open sql worksheet"
+						},
+						"completionEvents": [
+							"onCommand:sqldeveloper.walkthroughs.openWorksheet"
+						]
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.worksheet.attacheDetachConnection",
+						"title": "Attach/Detach Connection",
+						"description": "Associate or de-associate a connection to a worksheet by clicking the fifth icon in the top right of your worksheet or the status bar item in the bottom right.",
+						"media": {
+							"image": "walkthroughs/images/attach-detach.png",
+							"altText": "attach or detach a connection"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.worksheet.runStatement",
+						"title": "Run Statement",
+						"description": "Once the worksheet opened you can execute easily your SQL statements by clicking the first icon in the top right of your worksheet.",
+						"media": {
+							"image": "walkthroughs/images/run-statement.png",
+							"altText": "run statement"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.worksheet.runScript",
+						"title": "Run Script",
+						"description": "Run your SQL statements and get the output as script by clicking the second icon in the top right of your worksheet.",
+						"media": {
+							"image": "walkthroughs/images/run-script.png",
+							"altText": "run script"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.worksheet.runInSQLcl",
+						"title": "Run in SQLcl",
+						"description": "Run your SQL statements in SQLcl using the the third icon in the toolbar or by using the associated keyboard shortcut.",
+						"media": {
+							"image": "walkthroughs/images/run-in-sqlcl.png",
+							"altText": "run in sqlcl"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.worksheet.explainPlan",
+						"title": "Explain plan",
+						"description": "Displays an execution plan for a SQL statement by clicking the forth icon in the top right of your worksheet.",
+						"media": {
+							"image": "walkthroughs/images/explain-plan.png",
+							"altText": "explain plan"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.worksheet.sqlHistory",
+						"title": "Review your executed statements",
+						"description": "At any time, you can click on the **SQL HISTORY** tab of bottom panel, to review a history of the statements you have executed.\n\n💡 You can drag and drop or double-click any statement and it will be inserted into the worksheet.",
+						"media": {
+							"image": "walkthroughs/images/sql-history.png",
+							"altText": "sql history preview"
+						}
+					},
+					{
+						"id": "sqldeveloper.databaseObjects.nextSteps",
+						"title": "Next Steps",
+						"description": "Start working with your data by leveraging our database object features.\n[Explore database object features](command:workbench.action.openWalkthrough?%22Oracle.sql-developer%23sqldeveloper.walkthroughs.databaseObjects%22)",
+						"media": {
+							"image": "walkthroughs/images/database-object-support.png",
+							"altText": "explore database object features"
+						},
+						"completionEvents": [
+							"onCommand:workbench.action.openWalkthrough?%22Oracle.sql-developer%23sqldeveloper.walkthroughs.databaseObjects%22"
+						]
+					}
+				]
+			},
+			{
+				"id": "sqldeveloper.walkthroughs.databaseObjects",
+				"title": "Get started with Oracle SQL Developer Extension for VS Code",
+				"description": "Start working with database objects",
+				"steps": [
+					{
+						"id": "sqldeveloper.walkthroughs.databaseObjects.createTable",
+						"title": "Create a new table",
+						"description": "You can create a table by executing CREATE statements in the SQL worksheet.",
+						"media": {
+							"image": "walkthroughs/images/create-table.png",
+							"altText": "visually inspecting new tables under connections dropdown"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.databaseObjects.accessTable",
+						"title": "Access and manipulate your data",
+						"description": "You can visually inspect your tables by navigating to **CONNECTIONS**, choosing the appropriate connection, and navigating to Tables.\nThen you can add data to your table by utilizing the Insert button.\nWhen it comes to updating data, a quick click on a row enables easy editing, and then you can commit your changes.",
+						"media": {
+							"image": "walkthroughs/images/insert-into-table.png",
+							"altText": "access and Manipulate data"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.databaseObjects.createPlsqlObjects",
+						"title": "Create PL/SQL objects",
+						"description": "Similar to tables you can create your PL/SQL objects by executing a PL/SQL code in the SQL worksheet.",
+						"media": {
+							"image": "walkthroughs/images/create-plsql-object.png",
+							"altText": "create plsql objects"
+						}
+					},
+					{
+						"id": "sqldeveloper.walkthroughs.databaseObjects.executePlsqlObject",
+						"title": "Execute PL/SQL",
+						"description": "You can execute your PL/SQL objects by clicking on Run button and you will see that your PL/SQL objects are successfully completed.",
+						"media": {
+							"image": "walkthroughs/images/run-plsql.png",
+							"altText": "execute pl/sql objects"
+						}
+					}
+				]
+			}
+		],
+		"configurationDefaults": {
+			"[oracle-sql]": {
+				"editor.snippetSuggestions": "bottom"
+			}
+		},
+		"languages": [
+			{
+				"id": "oracle-sql",
+				"aliases": [
+					"PL/SQL"
+				],
+				"extensions": [
+					".sql",
+					".plsql",
+					".klr",
+					".pkb",
+					".pkh",
+					".pks",
+					".plb",
+					".pls"
+				],
+				"configuration": "./syntaxes/language-configuration.json",
+				"icon": {
+					"light": "media/images/light/db.svg",
+					"dark": "media/images/dark/db.svg"
+				}
+			},
+			{
+				"id": "sqldeveloper-log",
+				"configuration": "./syntaxes/log-conf.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "oracle-sql",
+				"scopeName": "source.oracle-sql",
+				"path": "./syntaxes/oracle-sql.tmLanguage.plist"
+			},
+			{
+				"language": "sqldeveloper-log",
+				"scopeName": "source.log",
+				"path": "./syntaxes/log.tmLanguage.json"
+			}
+		]
+	},
+	"license": "SEE LICENSE IN LICENSE.txt",
+	"files": [
+		"THIRD_PARTY_LICENSES.txt"
+	],
+	"scripts": {
+		"GenOpenapiClientAPI": "openapi --input ../../../../dbtools-server-product/dbtools-server/etc/specifications/dbtools-server-api.yaml --output ./src/generated --name DBToolsService --exportSchemas true --indent 2 --request ./generation/overrides/core/request.ts && ./generation/patchGenerated.sh;",
+		"GenNoPatchOpenapiClientAPI": "openapi --input ../../../../dbtools-server-product/dbtools-server/etc/specifications/dbtools-server-api.yaml --output ./src/generated --name DBToolsService --exportSchemas true --indent 2 --request ./generation/overrides/core/request.ts",
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch",
+		"test-compile": "tsc -p ./",
+		"Xvscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint --config ./.eslintrc.cjs --ext .ts,.tsx --format ./eslint-formatter.js",
+		"lint:all": "yarn run lint src",
+		"lint:files": "yarn run lint --quiet",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile --yarn",
+		"test": "npm run test:ui && npm run test:unit",
+		"test:ui": "jest",
+		"test:coverage": "jest --coverage",
+		"test:unit": "yarn run pretest && node ./out/test/unit/runTest.js",
+		"package": "vsce package --yarn",
+		"kill-5005": "npx kill-port 5005"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.11.4",
+		"@emotion/styled": "^11.11.0",
+		"@mui/material": "^5.15.12",
+		"@mui/x-date-pickers": "^6.19.6",
+		"@vscode/codicons": "^0.0.35",
+		"@vscode/l10n": "^0.0.18",
+		"@vscode/webview-ui-toolkit": "^1.4.0",
+		"ag-grid-community": "^31.1.1",
+		"ag-grid-react": "^31.1.1",
+		"cross-fetch": "^4.0.0",
+		"dayjs": "^1.11.10",
+		"jszip": "^3.10.1",
+		"monaco-editor": "^0.47.0",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-tabs": "^6.0.2",
+		"react-window": "^1.8.10",
+		"vscode-languageclient": "^9.0.1",
+		"winston": "^3.11.0",
+		"ws": "^8.14.2",
+		"xml2js": "^0.6.2",
+		"@joint/plus": "https://artifacthub-phx.oci.oraclecorp.com/artifactory/dbtools-adhoc-artifact/oracle/dbtools/sqldevnext/npm/jointpluslib/4.0.0/joint-plus.tgz"
+	},
+	"babel": {
+		"presets": [
+			"@babel/preset-react",
+			"@babel/preset-env",
+			"@babel/preset-typescript"
+		]
+	},
+	"devDependencies": {
+		"@babel/core": "^7.24.0",
+		"@babel/preset-env": "^7.24.0",
+		"@babel/preset-react": "^7.23.3",
+		"@babel/preset-typescript": "^7.23.3",
+		"@babel/standalone": "^7.24.0",
+		"@testing-library/react": "^14.2.1",
+		"@testing-library/react-hooks": "^8.0.1",
+		"@testing-library/jest-dom": "^6.4.2",
+		"@testing-library/user-event": "^14.5.2",
+		"@types/glob": "^8.1.0",
+		"@types/jest": "^29.5.12",
+		"@types/lodash": "^4.14.196",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "^16.17.1",
+		"@types/react": "^18.2.17",
+		"@types/react-dom": "^18.2.7",
+		"@types/react-window": "^1.8.5",
+		"@types/vscode": "^1.75.0",
+		"@types/vscode-webview": "^1.57.1",
+		"@types/ws": "^8.5.5",
+		"@typescript-eslint/eslint-plugin": "^5.60.1",
+		"@typescript-eslint/parser": "^5.60.1",
+		"@vscode/test-electron": "^2.3.3",
+		"copy-webpack-plugin": "11.0.0",
+		"@types/xml2js": "^0.4.14",
+		"css-loader": "^6.8.1",
+		"eslint": "^8.46.0",
+		"eslint-plugin-react": "^7.34.1",
+		"eslint-plugin-react-hooks": "^4.6.2",
+		"glob": "^10.3.3",
+		"jest": "^29.7.0",
+		"jest-css-modules-transform": "^4.4.2",
+		"jest-environment-jsdom": "^29.7.0",
+		"mocha": "^10.2.0",
+		"openapi-typescript-codegen": "^0.24.0",
+		"style-loader": "^3.3.3",
+		"ts-jest": "^29.1.2",
+		"ts-loader": "^9.4.3",
+		"typescript": "^5.1.3",
+		"webpack": "^5.88.2",
+		"webpack-cli": "^5.1.4"
+	},
+	"__metadata": {
+		"id": "eda67f84-8e4d-41b2-81c3-f2eeeed47af3",
+		"publisherId": "387b4c2f-44a8-4cb0-9a04-6fa0832e5c5e",
+		"publisherDisplayName": "Oracle Corporation",
+		"targetPlatform": "win32-x64",
+		"isApplicationScoped": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1726772852307,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery"
+	}
+}
