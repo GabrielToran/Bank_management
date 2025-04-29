@@ -12,7 +12,7 @@ import java.util.List;
 
 @WebServlet("/transactions/*")
 public class TransactionServlet extends HttpServlet {
-    private Bank bank = Bank.getInstance();
+    private final Bank bank = Bank.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -84,6 +84,6 @@ public class TransactionServlet extends HttpServlet {
         }
     } else {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required parameters");
+        }
     }
-}
 }

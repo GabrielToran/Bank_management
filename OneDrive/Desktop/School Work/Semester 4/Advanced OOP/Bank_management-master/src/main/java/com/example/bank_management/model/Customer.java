@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
+    //FIELDS:
     private int customerId;
     private String firstName;
     private String lastName;
@@ -11,9 +12,21 @@ public class Customer {
     private String address;
     private List<Account> accounts;
 
+    //CONSTRUCTORS:
     public Customer() {
         this.accounts = new ArrayList<>();
     }
+
+    public Customer(String firstName, String lastName, String email, String phone, String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.accounts = new ArrayList<>();
+    }
+
+
     public Customer(int customerId, String firstName, String lastName, String email, String phone, String address) {
         this.customerId = customerId;
         this.firstName = firstName;
@@ -23,6 +36,8 @@ public class Customer {
         this.address = address;
         this.accounts = new ArrayList<>();
     }
+    //METHODS:
+
     // Getters and Setters
     public int getCustomerId() { return customerId; }
     public void setCustomerId(int customerId) { this.customerId = customerId; }

@@ -1,5 +1,6 @@
 <!-- webapp/WEB-INF/views/customer/list.jsp -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html>
@@ -12,8 +13,8 @@
     <h1>Customer List</h1>
 
     <div class="mb-3">
-        <a href="<url value='/dashboard'/>" class="btn btn-secondary">Back to Dashboard</a>
-        <a href="<url value='/customers/new'/>" class="btn btn-success">Add New Customer</a>
+        <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+        <a href="${pageContext.request.contextPath}/customers/new" class="btn btn-success">Add New Customer</a>
     </div>
 
     <table class="table table-striped">
@@ -27,20 +28,20 @@
         </tr>
         </thead>
         <tbody>
-        <forEach var="customer" items="${customers}">
+        <c:forEach var="customer" items="${customers}">
             <tr>
                 <td>${customer.customerId}</td>
                 <td>${customer.firstName} ${customer.lastName}</td>
                 <td>${customer.email}</td>
                 <td>${customer.phone}</td>
                 <td>
-                    <a href="<url value='/customers/${customer.customerId}'/>" class="btn btn-sm btn-info">View</a>
-                    <a href="<url value='/accounts?customerId=${customer.customerId}'/>" class="btn btn-sm btn-primary">Accounts</a>
-                    <a href="<url value='/customers/edit/${customer.customerId}'/>" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="${pageContext.request.contextPath}/customers/${customer.customerId}" class="btn btn-sm btn-info">View</a>
+                    <a href="${pageContext.request.contextPath}/accounts/customerId=${customer.customerId}" class="btn btn-sm btn-primary">Accounts</a>
+                    <a href="${pageContext.request.contextPath}/customers/edit/${customer.customerId}" class="btn btn-sm btn-warning">Edit</a>
                     <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${customer.customerId})">Delete</button>
                 </td>
             </tr>
-        </forEach>
+        </c:forEach>
         </tbody>
     </table>
 </div>

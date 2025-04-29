@@ -2,33 +2,50 @@ package com.example.bank_management.controller;
 
 import com.example.bank_management.model.Bank;
 import com.example.bank_management.model.Customer;
+import com.example.bank_management.model.CustomerDAO;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 @WebServlet("/customers/*")
 public class CustomerServlet extends HttpServlet {
     private Bank bank = Bank.getInstance();
 
+
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
 
+        // Create an instance of CustomerDAO
+        CustomerDAO customerDAO = new CustomerDAO();
+
         if (pathInfo == null || pathInfo.equals("/")) {
-            // Get all customers
-            List<Customer> customers = bank.getAllCustomers();
+            // Handle the /customers route (showing the customer list)
+            List<Customer> customers = customerDAO.getAllCustomers(); // <-- Use DAO
             request.setAttribute("customers", customers);
             request.getRequestDispatcher("/WEB-INF/views/customer/list.jsp").forward(request, response);
+
+        } else if (pathInfo.equals("/new")) {
+            System.out.println("Reached /new path handler with customerId: " + request.getParameter("customerId"));
+            String customerId = request.getParameter("customerId");
+            if (customerId != null) {
+                request.setAttribute("customerId", customerId);
+                request.getRequestDispatcher("/WEB-INF/views/account/new.jsp").forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Customer ID is required");
+            }
         } else {
             try {
-                // Get specific customer
+                // Handle /customers/{id} (viewing a specific customer)
                 int customerId = Integer.parseInt(pathInfo.substring(1));
-                Customer customer = bank.getCustomer(customerId);
+                Customer customer = customerDAO.getCustomerById(customerId); // <-- Use DAO
 
                 if (customer != null) {
                     request.setAttribute("customer", customer);
@@ -42,19 +59,39 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // For adding a new customer
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
+        try {
+            String firstName = request.getParameter("firstName");
+            String lastName = request.getParameter("lastName");
+            String email = request.getParameter("email");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
 
-        Customer customer = bank.createCustomer(firstName, lastName, email, phone, address);
+            System.out.println("Creating customer: " + firstName + " " + lastName); // Debug log
 
-        response.sendRedirect(request.getContextPath() + "/customers/" + customer.getCustomerId());
+            // Create and save the customer
+            Customer customer = new CustomerDAO().createAndSaveCustomer(firstName, lastName, email, phone, address);
+
+            if (customer == null) {
+                System.out.println("Customer creation returned null"); // Debug log
+                request.setAttribute("error", "Failed to create customer");
+                request.getRequestDispatcher("/WEB-INF/views/customer/customerNew.jsp").forward(request, response);
+                return;
+            }
+
+            System.out.println("Customer created with ID: " + customer.getCustomerId()); // Debug log
+            response.sendRedirect(request.getContextPath() + "/customers/" + customer.getCustomerId());
+        } catch (Exception e) {
+            System.out.println("Exception in doPost: " + e.getMessage()); // Debug log
+            e.printStackTrace();
+            request.setAttribute("error", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/customer/customerNew.jsp").forward(request, response);
+        }
     }
+
+
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

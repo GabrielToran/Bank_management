@@ -1,6 +1,6 @@
 <!-- webapp/WEB-INF/views/account/list.jsp -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html>
@@ -14,7 +14,7 @@
 
     <div class="mb-3">
         <a href="<c:url value='/customers/${customer.customerId}'/>" class="btn btn-secondary">Back to Customer</a>
-        <a href="<c:url value='/accounts/new?customerId=${customer.customerId}'/>" class="btn btn-success">Create New Account</a>
+        <a href="<c:url value='/accounts/?customerId=${customer.customerId}'/>" class="btn btn-success">Create New Account</a>
     </div>
 
     <c:if test="${empty accounts}">
@@ -39,17 +39,17 @@
                 <tr>
                     <td>${account.accountNumber}</td>
                     <td>
-                        <choose>
+                        <c:choose>
                             <c:when test="${account['class'].simpleName == 'SavingsAccount'}">Savings</c:when>
-                            <when test="${account['class'].simpleName == 'CheckingAccount'}">Checking</when>
-                            <otherwise>Unknown</otherwise>
-                        </choose>
+                            <c:when test="${account['class'].simpleName == 'CheckingAccount'}">Checking</c:when>
+                            <c:otherwise>Unknown</c:otherwise>
+                        </c:choose>
                     </td>
                     <td>$${account.balance}</td>
                     <td>${account.openDate}</td>
                     <td>
                         <a href="<c:url value='/accounts/${account.accountId}'/>" class="btn btn-sm btn-info">View</a>
-                        <a href="<c:url value='/transactions?accountId=${account.accountId}'/>" class="btn btn-sm btn-primary">Transactions</a>
+                        <a href="<c:url value='/transactions/?accountId=${account.accountId}'/>" class="btn btn-sm btn-primary">Transactions</a>
                         <button class="btn btn-sm btn-danger" onclick="deleteAccount(${account.accountId})">Close</button>
                     </td>
                 </tr>

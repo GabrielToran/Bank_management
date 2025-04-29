@@ -3,9 +3,9 @@ import java.sql.*;
 import java.util.*;
 
 public class CustomerDAO {
-    private static final String INSERT_CUSTOMER_SQL = "INSERT INTO customers (first_name, last_name, email, phone, address) VALUES (?, ?, ?, ?, ?)";
-    private static final String SELECT_CUSTOMER_BY_ID = "SELECT * FROM customers WHERE customer_id = ?";
-    private static final String SELECT_ALL_CUSTOMERS = "SELECT * FROM customers";
+    private static final String INSERT_CUSTOMER_SQL = "INSERT INTO CUSTOMER (first_name, last_name, email, phone, address) VALUES (?, ?, ?, ?, ?)";
+    private static final String SELECT_CUSTOMER_BY_ID = "SELECT * FROM CUSTOMER WHERE customer_id = ?";
+    private static final String SELECT_ALL_CUSTOMERS = "SELECT * FROM CUSTOMER";
 
     // Method to save a customer to the database
     public boolean saveCustomer(Customer customer) {
@@ -25,6 +25,40 @@ public class CustomerDAO {
             return false;
         }
     }
+
+    public Customer createAndSaveCustomer(String firstName, String lastName, String email, String phone, String address) {
+        // Create customer object without customerId
+        Customer customer = new Customer(firstName, lastName, email, phone, address);
+
+        // Insert customer into the database and retrieve the auto-generated ID
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CUSTOMER_SQL,
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+            preparedStatement.setString(1, customer.getFirstName());
+            preparedStatement.setString(2, customer.getLastName());
+            preparedStatement.setString(3, customer.getEmail());
+            preparedStatement.setString(4, customer.getPhone());
+            preparedStatement.setString(5, customer.getAddress());
+
+            int result = preparedStatement.executeUpdate();
+
+            if (result > 0) {
+                // Retrieve the auto-generated customer ID
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        customer.setCustomerId(generatedKeys.getInt(1)); // Set the generated customer ID
+                    }
+                }
+            }
+
+            return result > 0 ? customer : null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     // Method to get a customer by their ID
     public Customer getCustomerById(int customerId) {

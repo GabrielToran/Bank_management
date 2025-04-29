@@ -2,6 +2,7 @@ package com.example.bank_management.controller;
 import com.example.bank_management.model.Bank;
 import com.example.bank_management.model.Customer;
 
+import com.example.bank_management.model.DatabaseConnection;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,7 +17,8 @@ public class DashboardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Customer> customers = bank.getAllCustomers();
+        List<Customer> customers = DatabaseConnection.getAllCustomers();
+
         request.setAttribute("customers", customers);
         request.setAttribute("customerCount", customers.size());
 

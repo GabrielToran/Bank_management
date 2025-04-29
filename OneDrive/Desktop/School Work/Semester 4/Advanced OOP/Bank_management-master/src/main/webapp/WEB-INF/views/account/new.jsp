@@ -1,5 +1,6 @@
 <!-- webapp/WEB-INF/views/account/new.jsp -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -12,15 +13,26 @@
     <h1>Create New Account</h1>
 
     <div class="mb-3">
-        <a href="<url value='/accounts?customerId=${param.customerId}'/>" class="btn btn-secondary">Back to Accounts</a>
+        <a href="<c:url value='/accounts/?customerId=${param.customerId}'/>" class="btn btn-secondary">Back to Accounts</a>
     </div>
 
     <div class="card">
         <div class="card-header">
             <h5>Account Information</h5>
         </div>
+        <div style="background: #eee; padding: 5px; margin-bottom: 10px;">
+            Context Path: ${pageContext.request.contextPath}<br>
+            Form will submit to: ${pageContext.request.contextPath}/accounts
+        </div>
+        <form action="${pageContext.request.contextPath}/accounts" method="post" style="border: 2px solid red; padding: 10px; margin: 20px 0;">
+            <input type="hidden" name="action" value="create">
+            <input type="hidden" name="customerId" value="${param.customerId}">
+            <input type="hidden" name="accountType" value="checking">
+            <input type="hidden" name="initialDeposit" value="100">
+            <button type="submit">TEST SUBMIT</button>
+        </form>
         <div class="card-body">
-            <form action="<url value='/accounts'/>" method="post">
+            <form action="${pageContext.request.contextPath}/accounts" method="post">
                 <input type="hidden" name="action" value="create">
                 <input type="hidden" name="customerId" value="${param.customerId}">
 
@@ -52,9 +64,20 @@
                         <input type="number" class="form-control" id="overdraftLimit" name="overdraftLimit" min="0" step="0.01" value="100.0">
                     </div>
                 </div>
-
                 <button type="submit" class="btn btn-primary">Create Account</button>
             </form>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.querySelector('form').addEventListener('submit', function(e) {
+                        console.log('Form submitted to: ' + this.action);
+                        // For debugging, let's also log the form data
+                        const formData = new FormData(this);
+                        for (const [key, value] of formData.entries()) {
+                            console.log(key + ': ' + value);
+                        }
+                    });
+                });
+            </script>
         </div>
     </div>
 </div>

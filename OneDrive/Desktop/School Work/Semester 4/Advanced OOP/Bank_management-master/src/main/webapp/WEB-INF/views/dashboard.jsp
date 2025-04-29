@@ -1,5 +1,7 @@
 <!-- webapp/WEB-INF/views/dashboard.jsp -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 
 <!DOCTYPE html>
 <html>
@@ -27,8 +29,8 @@
                     <h5>Quick Actions</h5>
                 </div>
                 <div class="card-body">
-                    <a href="<url value='/customers'/>" class="btn btn-primary">View All Customers</a>
-                    <a href="<url value='/customers/new'/>" class="btn btn-success">Add New Customer</a>
+                    <a href="<%= request.getContextPath() + "/customers/" %>" class="btn btn-primary">View All Customers</a>
+                    <a href="<%= request.getContextPath() + "/customers/new" %>" class="btn btn-success">Add New Customer</a>
                 </div>
             </div>
         </div>
@@ -46,17 +48,20 @@
             </tr>
             </thead>
             <tbody>
-            <forEach var="customer" items="${customers}" end="4">
-                <tr>
-                    <td>${customer.customerId}</td>
-                    <td>${customer.firstName} ${customer.lastName}</td>
-                    <td>${customer.email}</td>
-                    <td>
-                        <a href="<url value='/customers/${customer.customerId}'/>" class="btn btn-sm btn-info">View</a>
-                        <a href="<url value='/accounts?customerId=${customer.customerId}'/>" class="btn btn-sm btn-primary">Accounts</a>
-                    </td>
-                </tr>
-            </forEach>
+            <c:forEach var="customer" items="${customers}" varStatus="status">
+                <c:if test="${status.count <= 5}">
+                    <tr>
+                        <td>${customer.customerId}</td>
+                        <td>${customer.firstName} ${customer.lastName}</td>
+                        <td>${customer.email}</td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/customers/${customer.customerId}" class="btn btn-sm btn-info">View</a>
+                            <a href="${pageContext.request.contextPath}/accounts?customerId=${customer.customerId}" class="btn btn-sm btn-primary">Accounts</a>
+
+                        </td>
+                    </tr>
+                </c:if>
+            </c:forEach>
             </tbody>
         </table>
     </div>
