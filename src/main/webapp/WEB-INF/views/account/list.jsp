@@ -1,81 +1,73 @@
-<!-- webapp/WEB-INF/views/account/list.jsp -->
+<!-- WEB-INF/views/account/list.jsp -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bank Management System - Account List</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Accounts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/navbar.jsp" />
 <div class="container mt-4">
-    <h1>Account List for ${customer.firstName} ${customer.lastName}</h1>
-
-    <div class="mb-3">
-        <a href="<c:url value='/customers/${customer.customerId}'/>" class="btn btn-secondary">Back to Customer</a>
-        <a href="<c:url value='/accounts/new?customerId=${customer.customerId}'/>" class="btn btn-success">Create New Account</a>
-    </div>
-
-    <c:if test="${empty accounts}">
-        <div class="alert alert-info" role="alert">
-            No accounts found for this customer.
+    <!-- Alerts -->
+    <c:if test="${not empty sessionScope.successMessage}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                ${sessionScope.successMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        <c:remove var="successMessage" scope="session" />
+    </c:if>
+    <c:if test="${not empty sessionScope.errorMessage}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${sessionScope.errorMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <c:remove var="errorMessage" scope="session" />
     </c:if>
 
-    <c:if test="${not empty accounts}">
-        <table class="table table-striped">
-            <thead>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Accounts for ${customer.firstName} ${customer.lastName}</h1>
+        <a href="${pageContext.request.contextPath}/accounts/create?customerId=${customer.customerId}" class="btn btn-primary">Add Account</a>
+    </div>
+    <table class="table table-hover">
+        <thead><tr><th>ID</th><th>Type</th><th>Balance</th><th>Actions</th></tr></thead>
+        <tbody>
+        <c:forEach var="a" items="${accounts}">
             <tr>
-                <th>Account Number</th>
-                <th>Type</th>
-                <th>Balance</th>
-                <th>Open Date</th>
-                <th>Actions</th>
+                <td>${a.accountId}</td>
+                <td>${a.class.simpleName}</td>
+                <td>$${a.balance}</td>
+                <td>
+                    <a href="${pageContext.request.contextPath}/accounts/${a.accountId}" class="btn btn-sm btn-info">View</a>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAcct${a.accountId}">Delete</button>
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteAcct${a.accountId}" tabindex="-1">
+                        <div class="modal-dialog"><div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                Delete account #${a.accountId}?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form method="post" action="${pageContext.request.contextPath}/accounts/${a.accountId}" style="display:inline;">
+                                    <input type="hidden" name="_method" value="delete" />
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div></div>
+                    </div>
+                </td>
             </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="account" items="${accounts}">
-                <tr>
-                    <td>${account.accountNumber}</td>
-                    <td>
-                        <choose>
-                            <c:when test="${account['class'].simpleName == 'SavingsAccount'}">Savings</c:when>
-                            <when test="${account['class'].simpleName == 'CheckingAccount'}">Checking</when>
-                            <otherwise>Unknown</otherwise>
-                        </choose>
-                    </td>
-                    <td>$${account.balance}</td>
-                    <td>${account.openDate}</td>
-                    <td>
-                        <a href="<c:url value='/accounts/${account.accountId}'/>" class="btn btn-sm btn-info">View</a>
-                        <a href="<c:url value='/transactions?accountId=${account.accountId}'/>" class="btn btn-sm btn-primary">Transactions</a>
-                        <button class="btn btn-sm btn-danger" onclick="deleteAccount(${account.accountId})">Close</button>
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </c:if>
+        </c:forEach>
+        </tbody>
+    </table>
 </div>
-
-<script>
-    function deleteAccount(accountId) {
-        if (confirm('Are you sure you want to close this account?')) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('DELETE', '${pageContext.request.contextPath}/accounts/' + accountId);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    alert('Account closed successfully');
-                    window.location.reload();
-                } else {
-                    alert('Failed to close account');
-                }
-            };
-            xhr.send();
-        }
-    }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

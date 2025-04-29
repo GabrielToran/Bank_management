@@ -1,77 +1,72 @@
-<!-- webapp/WEB-INF/views/dashboard.jsp -->
+<!-- WEB-INF/views/dashboard.jsp -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bank Management System - Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-4">
-    <h1>Bank Management System</h1>
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Quick Stats</h5>
-                </div>
-                <div class="card-body">
-                    <p>Total Customers: ${customerCount}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Quick Actions</h5>
-                </div>
-                <div class="card-body">
-                    <a href="<url value='/customers'/>" class="btn btn-primary">View All Customers</a>
-                    <a href="<url value='/customers/new'/>" class="btn btn-success">Add New Customer</a>
-                </div>
-            </div>
-        </div>
-    </div>
+<jsp:include page="/WEB-INF/views/common/navbar.jsp" />
 
-    <div class="mt-4">
-        <h3>Recent Customers</h3>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <forEach var="customer" items="${customers}" end="4">
-                <tr>
-                    <td>${customer.customerId}</td>
-                    <td>${customer.firstName} ${customer.lastName}</td>
-                    <td>${customer.email}</td>
-                    <td>
-                        <a href="<url value='/customers/${customer.customerId}'/>" class="btn btn-sm btn-info">View</a>
-                        <a href="<url value='/accounts?customerId=${customer.customerId}'/>" class="btn btn-sm btn-primary">Accounts</a>
-                    </td>
-                </tr>
-            </forEach>
-            </tbody>
-        </table>
+<div class="container mt-4">
+    <!-- Success/Error Alert -->
+    <c:if test="${not empty sessionScope.successMessage}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                ${sessionScope.successMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <c:remove var="successMessage" scope="session" />
+    </c:if>
+    <c:if test="${not empty sessionScope.errorMessage}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${sessionScope.errorMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <c:remove var="errorMessage" scope="session" />
+    </c:if>
+
+    <h1 class="mb-4">Dashboard</h1>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Customers</h5>
+                    <p class="card-text display-6">${customerCount}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Accounts</h5>
+                    <p class="card-text display-6">${accountCount}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Balance</h5>
+                    <p class="card-text display-6">$${totalBalance}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Transactions</h5>
+                    <p class="card-text display-6">${transactionCount}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-

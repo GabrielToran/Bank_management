@@ -1,10 +1,8 @@
 package com.example.bank_management.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import java.util.stream.Collectors;
 public class Bank {
     private static Bank instance;
     private Map<Integer, Customer> customers;
@@ -26,6 +24,71 @@ public class Bank {
         }
         return instance;
     }
+    /** Deposit money into an account and record the transaction. */
+    public boolean deposit(int accountId, double amount) {
+        Account acct = accounts.get(accountId);
+        if (acct == null || amount <= 0) return false;
+
+        // 1) Update balance
+        acct.setBalance(acct.getBalance() + amount);
+
+        // 2) Create and store transaction
+        int txId = nextTransactionId();
+        Transaction t = new Transaction(
+                txId,
+                accountId,
+                "deposit",
+                amount,
+                new Date()
+        );
+        transactions.put(txId, t);
+        return true;
+    }
+
+    /** Withdraw money (respecting overdraft on checking) and record the transaction. */
+    public boolean withdraw(int accountId, double amount) {
+        Account acct = accounts.get(accountId);
+        if (acct == null || amount <= 0) return false;
+
+        // determine allowed funds
+        double allowed = acct.getBalance();
+        if (acct instanceof CheckingAccount) {
+            allowed += ((CheckingAccount)acct).getOverdraftLimit();
+        }
+        if (amount > allowed) return false;
+
+        // 1) Update balance
+        acct.setBalance(acct.getBalance() - amount);
+
+        // 2) Create and store transaction
+        int txId = nextTransactionId();
+        Transaction t = new Transaction(
+                txId,
+                accountId,
+                "withdraw",
+                amount,
+                new Date()
+        );
+        transactions.put(txId, t);
+        return true;
+    }
+
+    /** Return all transactions for a given account. */
+    public List<Transaction> getAccountTransactions(int accountId) {
+        return transactions.values().stream()
+                .filter(t -> t.getAccountId() == accountId)
+
+                .collect(Collectors.toList());
+    }
+
+    /** Helper: find the next unique transaction ID. */
+    private int nextTransactionId() {
+        return transactions.keySet().stream()
+                .mapToInt(Integer::intValue)
+                .max()
+                .orElse(0) + 1;
+    }
+
 
     // Customer methods
     public Customer createCustomer(String firstName, String lastName, String email, String phone, String address) {
@@ -166,13 +229,14 @@ public class Bank {
         return transactions.get(transactionId);
     }
 
-    public List<Transaction> getAccountTransactions(int accountId) {
-        List<Transaction> accountTransactions = new ArrayList<>();
-        for (Transaction transaction : transactions.values()) {
-            if (transaction.getAccountId() == accountId) {
-                accountTransactions.add(transaction);
-            }
-        }
-        return accountTransactions;
+    public List<Account> getAllAccounts() {
+        // Return a fresh list so callers can’t mutate your internal map
+        return new ArrayList<>(accounts.values());
     }
+    public List<Transaction> getAllTransactions() {
+        // Same idea—wrap the values in a new list
+        return new ArrayList<>(transactions.values());
+    }
+
+
 }
