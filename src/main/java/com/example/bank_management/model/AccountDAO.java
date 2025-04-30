@@ -275,16 +275,12 @@ public class AccountDAO {
         }
 
 
-
+        return null;
     } // Get total balance method to support Bank class
     public BigDecimal getTotalBalanceAsBigDecimal() {
         return new BigDecimal(getTotalBalance());
     }
 
-    // Added for Bank.java compatibility
-    public BigDecimal getTotalBalance() throws SQLException {
-        return new BigDecimal(getTotalBalance());
-    }
 
 
     // Get account count
