@@ -101,18 +101,34 @@ public class CustomerServlet extends HttpServlet {
 
         // Regular POST - Create a new customer
         if (pathInfo == null) {
-            Customer customer = new Customer();
-            customer.setFirstName(request.getParameter("firstName"));
-            customer.setLastName(request.getParameter("lastName"));
-            customer.setEmail(request.getParameter("email"));
-            customer.setPhone(request.getParameter("phone"));
-            customer.setAddress(request.getParameter("address"));
+            try {
+                Customer customer = new Customer();
+                customer.setFirstName(request.getParameter("firstName"));
+                customer.setLastName(request.getParameter("lastName"));
+                customer.setEmail(request.getParameter("email"));
+                customer.setPhone(request.getParameter("phone"));
+                customer.setAddress(request.getParameter("address"));
 
-            if (customerDAO.createCustomer(customer)) {
-                session.setAttribute("successMessage", "Customer created successfully!");
-                response.sendRedirect(request.getContextPath() + "/customers");
-            } else {
-                request.setAttribute("errorMessage", "Failed to create customer");
+                // Validate required fields
+                if (customer.getFirstName() == null || customer.getFirstName().trim().isEmpty() ||
+                    customer.getLastName() == null || customer.getLastName().trim().isEmpty() ||
+                    customer.getEmail() == null || customer.getEmail().trim().isEmpty()) {
+                    session.setAttribute("errorMessage", "First name, last name, and email are required fields");
+                    request.setAttribute("customer", customer);
+                    request.getRequestDispatcher("/WEB-INF/views/customer/create.jsp").forward(request, response);
+                    return;
+                }
+
+                if (customerDAO.createCustomer(customer)) {
+                    session.setAttribute("successMessage", "Customer created successfully!");
+                    response.sendRedirect(request.getContextPath() + "/customers");
+                } else {
+                    session.setAttribute("errorMessage", "Failed to create customer. The email might already be in use.");
+                    request.setAttribute("customer", customer);
+                    request.getRequestDispatcher("/WEB-INF/views/customer/create.jsp").forward(request, response);
+                }
+            } catch (Exception e) {
+                session.setAttribute("errorMessage", "An error occurred while creating the customer: " + e.getMessage());
                 request.getRequestDispatcher("/WEB-INF/views/customer/create.jsp").forward(request, response);
             }
         } else {

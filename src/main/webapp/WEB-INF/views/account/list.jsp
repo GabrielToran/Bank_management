@@ -1,5 +1,6 @@
 <!-- WEB-INF/views/account/list.jsp -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +39,7 @@
         <c:forEach var="a" items="${accounts}">
             <tr>
                 <td>${a.accountId}</td>
-                <td>${a.class.simpleName}</td>
+                <td>${requestScope['accountType_' += a.accountId]}</td>
                 <td>$${a.balance}</td>
                 <td>
                     <a href="${pageContext.request.contextPath}/accounts/${a.accountId}" class="btn btn-sm btn-info">View</a>
