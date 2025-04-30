@@ -46,7 +46,7 @@ public class Bank {
      */
     public BigDecimal getTotalBalance() throws SQLException {
         // Use the new method that returns BigDecimal
-        return new BigDecimal(accountDAO.getTotalBalance());
+        return accountDAO.getTotalBalance();
     }
 
     /**

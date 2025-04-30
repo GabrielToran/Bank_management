@@ -45,10 +45,19 @@ public abstract class Account {
             throw new IllegalArgumentException("Deposit amount must be positive");
         }
         this.balance += amount;
-        return false;
+        return true;
     }
 
-    public abstract void withdraw(double amount);
+    public boolean withdraw(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive");
+        }
+        if (amount > this.balance) {
+            return false;
+        }
+        this.balance -= amount;
+        return true;
+    }
 
     // Helper method for JSP
     public boolean hasProperty(String propertyName) {

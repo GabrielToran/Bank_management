@@ -278,7 +278,7 @@ public class AccountDAO {
         return null;
     } // Get total balance method to support Bank class
     public BigDecimal getTotalBalanceAsBigDecimal() {
-        return new BigDecimal(getTotalBalance());
+        return getTotalBalance();
     }
 
 

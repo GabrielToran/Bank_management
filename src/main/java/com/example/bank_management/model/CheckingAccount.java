@@ -25,15 +25,16 @@ public class CheckingAccount extends Account {
     }
 
     @Override
-    public void withdraw(double amount) {
+    public boolean withdraw(double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Withdrawal amount must be positive");
         }
 
         if (getBalance() + overdraftLimit < amount) {
-            throw new IllegalStateException("Insufficient funds and overdraft limit exceeded");
+            return false;
         }
 
         setBalance(getBalance() - amount);
+        return true;
     }
 }

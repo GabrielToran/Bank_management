@@ -23,16 +23,17 @@ public class SavingsAccount extends Account {
     }
 
     @Override
-    public void withdraw(double amount) {
+    public boolean withdraw(double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Withdrawal amount must be positive");
         }
 
         if (getBalance() < amount) {
-            throw new IllegalStateException("Insufficient funds");
+            return false;
         }
 
         setBalance(getBalance() - amount);
+        return true;
     }
 
     // Apply interest
