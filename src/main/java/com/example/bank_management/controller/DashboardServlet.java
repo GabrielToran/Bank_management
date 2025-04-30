@@ -1,50 +1,75 @@
 package com.example.bank_management.controller;
-
-import com.example.bank_management.model.Account;
-import com.example.bank_management.model.Bank;
-import com.example.bank_management.model.Customer;
-import com.example.bank_management.model.Transaction;
+import com.example.bank_management.model.*;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
+import java.math.BigDecimal;
+import java.sql.SQLException;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
-    private Bank bank = Bank.getInstance();
+    private static final long serialVersionUID = 1L;
+
+    private CustomerDAO customerDAO;
+    private AccountDAO accountDAO;
+    private TransactionDAO transactionDAO;
+    private Bank bank;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Fetch all customers
-        List<Customer> customers = bank.getAllCustomers();
-        int customerCount = customers.size();
+    public void init() {
+        this.customerDAO = new CustomerDAO();
+        this.accountDAO = new AccountDAO();
+        this.transactionDAO = new TransactionDAO();
+        this.bank = new Bank(customerDAO, accountDAO, transactionDAO);
+    }
 
-        // Fetch all accounts
-        List<Account> accounts = bank.getAllAccounts();  // assumes Bank provides this
-        int accountCount = accounts.size();
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Get counts and totals for dashboard
+            int customerCount = bank.getCustomerCount();
+            int accountCount = bank.getAccountCount();
+            BigDecimal totalBalance = bank.getTotalBalance();
+            int transactionCount = bank.getTransactionCount();
 
-        // Sum up total balance
-        double totalBalance = accounts.stream()
-                .mapToDouble(Account::getBalance)
-                .sum();
+            // Set attributes for the dashboard view
+            request.setAttribute("customerCount", customerCount);
+            request.setAttribute("accountCount", accountCount);
+            request.setAttribute("totalBalance", totalBalance);
+            request.setAttribute("transactionCount", transactionCount);
 
-        // Fetch all transactions
-        List<Transaction> transactions = bank.getAllTransactions();  // assumes Bank provides this
-        int transactionCount = transactions.size();
+            // Forward to the dashboard view
+            request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
 
-        // Put metrics into request
-        request.setAttribute("customerCount", customerCount);
-        request.setAttribute("accountCount", accountCount);
-        request.setAttribute("totalBalance", totalBalance);
-        request.setAttribute("transactionCount", transactionCount);
+        } catch (SQLException e) {
+            handleError(request, response, e);
+        }
+    }
 
-        // Forward to JSP
-        request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp")
-                .forward(request, response);
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Dashboard typically doesn't handle POST requests
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
+
+    private void handleError(HttpServletRequest request, HttpServletResponse response, Exception e)
+            throws ServletException, IOException {
+        e.printStackTrace();
+        setErrorMessage(request, "An error occurred: " + e.getMessage());
+        response.sendRedirect(request.getContextPath() + "/dashboard");
+    }
+
+    private void setErrorMessage(HttpServletRequest request, String message) {
+        HttpSession session = request.getSession();
+        session.setAttribute("errorMessage", message);
     }
 }

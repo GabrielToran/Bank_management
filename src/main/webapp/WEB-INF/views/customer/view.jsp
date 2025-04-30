@@ -1,84 +1,32 @@
-<!-- webapp/WEB-INF/views/customer/view.jsp -->
+<!-- WEB-INF/views/customer/view.jsp -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bank Management System - Customer Details</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>View Customer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/navbar.jsp" />
 <div class="container mt-4">
     <h1>Customer Details</h1>
-
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt><dd class="col-sm-9">${customer.customerId}</dd>
+        <dt class="col-sm-3">Name</dt><dd class="col-sm-9">${customer.firstName} ${customer.lastName}</dd>
+        <dt class="col-sm-3">Email</dt><dd class="col-sm-9">${customer.email}</dd>
+        <dt class="col-sm-3">Phone</dt><dd class="col-sm-9">${customer.phone}</dd>
+        <dt class="col-sm-3">Address</dt><dd class="col-sm-9">${customer.address}</dd>
+    </dl>
     <div class="mb-3">
-        <a href="<c:url value='/customers'/>" class="btn btn-secondary">Back to Customers</a>
-        <a href="<c:url value='/customers/edit/${customer.customerId}'/>" class="btn btn-warning">Edit Customer</a>
-        <a href="<c:url value='/accounts?customerId=${customer.customerId}'/>" class="btn btn-primary">View Accounts</a>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h5>Personal Information</h5>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Customer ID:</strong> ${customer.customerId}</p>
-                    <p><strong>First Name:</strong> ${customer.firstName}</p>
-                    <p><strong>Last Name:</strong> ${customer.lastName}</p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>Email:</strong> ${customer.email}</p>
-                    <p><strong>Phone:</strong> ${customer.phone}</p>
-                    <p><strong>Address:</strong> ${customer.address}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="mt-4">
-        <h3>Accounts</h3>
-        <c:if test="${empty customer.accounts}">
-            <p>No accounts found for this customer.</p>
-            <a href="<c:url value='/accounts/new?customerId=${customer.customerId}'/>" class="btn btn-success">Create New Account</a>
-        </c:if>
-
-        <if test="${not empty customer.accounts}">
-            <a href="<c:url value='/accounts/new?customerId=${customer.customerId}'/>" class="btn btn-success mb-3">Create New Account</a>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Account Number</th>
-                    <th>Type</th>
-                    <th>Balance</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <forEach var="account" items="${customer.accounts}">
-                    <tr>
-                        <td>${account.accountNumber}</td>
-                        <td>
-                            <choose>
-                                <c:when test="${account['class'].simpleName == 'SavingsAccount'}">Savings</c:when>
-                                <c:when test="${account['class'].simpleName == 'CheckingAccount'}">Checking</c:when>
-                                <c:otherwise>Unknown</c:otherwise>
-                            </choose>
-                        </td>
-                        <td>$${account.balance}</td>
-                        <td>
-                            <a href="<url value='/accounts/${account.accountId}'/>" class="btn btn-sm btn-info">View</a>
-                            <a href="<url value='/transactions?accountId=${account.accountId}'/>" class="btn btn-sm btn-primary">Transactions</a>
-                        </td>
-                    </tr>
-                </forEach>
-                </tbody>
-            </table>
-        </if>
+        <a href="${pageContext.request.contextPath}/accounts?customerId=${customer.customerId}" class="btn btn-primary">View Accounts</a>
+        <a href="${pageContext.request.contextPath}/customers/${customer.customerId}/edit" class="btn btn-warning">Edit</a>
+        <a href="${pageContext.request.contextPath}/customers" class="btn btn-secondary">Back to List</a>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

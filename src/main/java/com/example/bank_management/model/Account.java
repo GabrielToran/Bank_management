@@ -1,71 +1,62 @@
 package com.example.bank_management.model;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public abstract class Account {
-    protected int accountId;
-    protected String accountNumber;
-    protected double balance;
-    protected Date openDate;
-    protected int customerId;
-    protected List<Transaction> transactions;
+    private int accountId;
+    private int customerId;
+    private double balance;
 
-    public Account() {
-        this.transactions = new ArrayList<>();
-        this.openDate = new Date();
-    }
+    // Constructor
+    public Account() {}
 
-    public Account(int accountId, String accountNumber, double balance, int customerId) {
+    public Account(int accountId, int customerId, double balance) {
         this.accountId = accountId;
-        this.accountNumber = accountNumber;
-        this.balance = balance;
         this.customerId = customerId;
-        this.openDate = new Date();
-        this.transactions = new ArrayList<>();
-    }
-
-    // Common methods
-    public boolean deposit(double amount) {
-        if (amount > 0) {
-            this.balance += amount;
-            Transaction transaction = new Transaction(0, this.accountId, "DEPOSIT", amount, new Date());
-            this.transactions.add(transaction);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean withdraw(double amount) {
-        if (amount > 0 && amount <= this.balance) {
-            this.balance -= amount;
-            Transaction transaction = new Transaction(0, this.accountId, "WITHDRAWAL", amount, new Date());
-            this.transactions.add(transaction);
-            return true;
-        }
-        return false;
+        this.balance = balance;
     }
 
     // Getters and Setters
-    public int getAccountId() { return accountId; }
-    public void setAccountId(int accountId) { this.accountId = accountId; }
+    public int getAccountId() {
+        return accountId;
+    }
 
-    public String getAccountNumber() { return accountNumber; }
-    public void setAccountNumber(String accountNumber) { this.accountNumber = accountNumber; }
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
 
-    public double getBalance() { return balance; }
-    public void setBalance(double balance) { this.balance = balance; }
+    public int getCustomerId() {
+        return customerId;
+    }
 
-    public Date getOpenDate() { return openDate; }
-    public void setOpenDate(Date openDate) { this.openDate = openDate; }
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
 
-    public int getCustomerId() { return customerId; }
-    public void setCustomerId(int customerId) { this.customerId = customerId; }
+    public double getBalance() {
+        return balance;
+    }
 
-    public List<Transaction> getTransactions() { return transactions; }
-    public void setTransactions(List<Transaction> transactions) { this.transactions = transactions; }
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 
-    public void addTransaction(Transaction transaction) {
-        this.transactions.add(transaction);
+    // Business methods
+    public boolean deposit(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be positive");
+        }
+        this.balance += amount;
+        return false;
+    }
+
+    public abstract void withdraw(double amount);
+
+    // Helper method for JSP
+    public boolean hasProperty(String propertyName) {
+        try {
+            this.getClass().getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+            return true;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
     }
 }

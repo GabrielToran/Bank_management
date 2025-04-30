@@ -1,45 +1,43 @@
 package com.example.bank_management.model;
 import java.util.Date;
-public class SavingsAccount extends Account  {
+public class SavingsAccount extends Account {
     private double interestRate;
-    private Date lastInterestDate;
 
+    // Constructors
     public SavingsAccount() {
         super();
-        this.interestRate = 0.01; // 1% default interest rate
-        this.lastInterestDate = new Date();
     }
 
-    public SavingsAccount(int accountId, String accountNumber, double balance, int customerId, double interestRate) {
-        super(accountId, accountNumber, balance, customerId);
+    public SavingsAccount(int accountId, int customerId, double balance, double interestRate) {
+        super(accountId, customerId, balance);
         this.interestRate = interestRate;
-        this.lastInterestDate = new Date();
-    }
-
-    public void applyInterest() {
-        double interest = this.balance * this.interestRate;
-        this.balance += interest;
-        this.lastInterestDate = new Date();
-
-        Transaction transaction = new Transaction(0, this.accountId, "INTEREST", interest, new Date());
-        this.transactions.add(transaction);
     }
 
     // Getters and Setters
-    public double getInterestRate() { return interestRate; }
-    public void setInterestRate(double interestRate) { this.interestRate = interestRate; }
+    public double getInterestRate() {
+        return interestRate;
+    }
 
-    public Date getLastInterestDate() { return lastInterestDate; }
-    public void setLastInterestDate(Date lastInterestDate) { this.lastInterestDate = lastInterestDate; }
+    public void setInterestRate(double interestRate) {
+        this.interestRate = interestRate;
+    }
 
     @Override
-    public String toString() {
-        return "SavingsAccount{" +
-                "accountId=" + accountId +
-                ", accountNumber='" + accountNumber + '\'' +
-                ", balance=" + balance +
-                ", openDate=" + openDate +
-                ", interestRate=" + interestRate +
-                '}';
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive");
+        }
+
+        if (getBalance() < amount) {
+            throw new IllegalStateException("Insufficient funds");
+        }
+
+        setBalance(getBalance() - amount);
+    }
+
+    // Apply interest
+    public void applyInterest() {
+        double interest = getBalance() * interestRate;
+        deposit(interest);
     }
 }

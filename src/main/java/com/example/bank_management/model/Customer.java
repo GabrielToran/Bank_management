@@ -23,6 +23,9 @@ public class Customer {
         this.address = address;
         this.accounts = new ArrayList<>();
     }
+
+
+
     // Getters and Setters
     public int getCustomerId() { return customerId; }
     public void setCustomerId(int customerId) { this.customerId = customerId; }

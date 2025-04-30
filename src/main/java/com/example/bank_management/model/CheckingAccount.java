@@ -5,39 +5,35 @@ import java.util.Date;
 public class CheckingAccount extends Account {
     private double overdraftLimit;
 
+    // Constructors
     public CheckingAccount() {
         super();
-        this.overdraftLimit = 100.0; // Default overdraft limit
     }
 
-    public CheckingAccount(int accountId, String accountNumber, double balance, int customerId, double overdraftLimit) {
-        super(accountId, accountNumber, balance, customerId);
+    public CheckingAccount(int accountId, int customerId, double balance, double overdraftLimit) {
+        super(accountId, customerId, balance);
+        this.overdraftLimit = overdraftLimit;
+    }
+
+    // Getters and Setters
+    public double getOverdraftLimit() {
+        return overdraftLimit;
+    }
+
+    public void setOverdraftLimit(double overdraftLimit) {
         this.overdraftLimit = overdraftLimit;
     }
 
     @Override
-    public boolean withdraw(double amount) {
-        if (amount > 0 && (balance - amount) >= -overdraftLimit) {
-            this.balance -= amount;
-            Transaction transaction = new Transaction(0, this.accountId, "WITHDRAWAL", amount, new Date());
-            this.transactions.add(transaction);
-            return true;
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive");
         }
-        return false;
-    }
 
-    // Getters and Setters
-    public double getOverdraftLimit() { return overdraftLimit; }
-    public void setOverdraftLimit(double overdraftLimit) { this.overdraftLimit = overdraftLimit; }
+        if (getBalance() + overdraftLimit < amount) {
+            throw new IllegalStateException("Insufficient funds and overdraft limit exceeded");
+        }
 
-    @Override
-    public String toString() {
-        return "CheckingAccount{" +
-                "accountId=" + accountId +
-                ", accountNumber='" + accountNumber + '\'' +
-                ", balance=" + balance +
-                ", openDate=" + openDate +
-                ", overdraftLimit=" + overdraftLimit +
-                '}';
+        setBalance(getBalance() - amount);
     }
 }

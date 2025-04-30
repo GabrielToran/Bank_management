@@ -2,147 +2,173 @@ package com.example.bank_management.controller;
 
 import com.example.bank_management.model.Bank;
 import com.example.bank_management.model.Customer;
+import com.example.bank_management.model.CustomerDAO;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
-@WebServlet("/customers/*")
+@WebServlet(urlPatterns = {"/customers", "/customers/*"})
 public class CustomerServlet extends HttpServlet {
-    private Bank bank = Bank.getInstance();
+
+    private CustomerDAO customerDAO;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String pathInfo = request.getPathInfo();
+    public void init() {
+        customerDAO = new CustomerDAO();
+    }
 
-        if (pathInfo == null || pathInfo.equals("/")) {
-            // Check if it's a search
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String pathInfo = request.getPathInfo();
+        String servletPath = request.getServletPath();
+
+        if (pathInfo == null && "/customers".equals(servletPath)) {
+            // List all customers or search
             String searchQuery = request.getParameter("search");
-            List<Customer> customers = bank.getAllCustomers();
+            List<Customer> customers;
 
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-                String query = searchQuery.trim().toLowerCase();
-                customers = customers.stream()
-                        .filter(c -> c.getFirstName().toLowerCase().contains(query) ||
-                                c.getLastName().toLowerCase().contains(query) ||
-                                c.getEmail().toLowerCase().contains(query))
-                        .collect(Collectors.toList());
+                customers = customerDAO.searchCustomers(searchQuery);
                 request.setAttribute("searchQuery", searchQuery);
+            } else {
+                customers = customerDAO.getAllCustomers();
             }
 
             request.setAttribute("customers", customers);
             request.getRequestDispatcher("/WEB-INF/views/customer/list.jsp").forward(request, response);
 
-        } else {
-            // View a specific customer
-            try {
-                int customerId = parseId(pathInfo);
-                Customer customer = bank.getCustomer(customerId);
+        } else if (pathInfo != null && pathInfo.matches("/\\d+")) {
+            // View specific customer
+            int customerId = Integer.parseInt(pathInfo.substring(1));
+            Customer customer = customerDAO.getCustomerById(customerId);
 
-                if (customer != null) {
-                    request.setAttribute("customer", customer);
-                    request.getRequestDispatcher("/WEB-INF/views/customer/view.jsp").forward(request, response);
-                } else {
-                    request.setAttribute("errorMessage", "Customer not found.");
-                    request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-                }
-            } catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid customer ID.");
+            if (customer != null) {
+                request.setAttribute("customer", customer);
+                request.getRequestDispatcher("/WEB-INF/views/customer/view.jsp").forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Customer not found");
             }
-        }
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Handle creating a new customer
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-
-        if (isEmpty(firstName) || isEmpty(lastName) || isEmpty(email)) {
-            request.setAttribute("errorMessage", "First name, last name, and email are required.");
+        } else if (pathInfo != null && pathInfo.equals("/create")) {
+            // Show create form
             request.getRequestDispatcher("/WEB-INF/views/customer/create.jsp").forward(request, response);
-            return;
-        }
 
-        Customer customer = bank.createCustomer(firstName, lastName, email, phone, address);
+        } else if (pathInfo != null && pathInfo.matches("/\\d+/edit")) {
+            // Show edit form
+            int customerId = Integer.parseInt(pathInfo.substring(1, pathInfo.indexOf("/edit")));
+            Customer customer = customerDAO.getCustomerById(customerId);
 
-        request.getSession().setAttribute("successMessage", "Customer created successfully!");
-        response.sendRedirect(request.getContextPath() + "/customers/" + customer.getCustomerId());
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Handle updating a customer
-        String pathInfo = request.getPathInfo();
-
-        if (pathInfo != null && !pathInfo.equals("/")) {
-            try {
-                int customerId = parseId(pathInfo);
-                Customer customer = bank.getCustomer(customerId);
-
-                if (customer != null) {
-                    String firstName = request.getParameter("firstName");
-                    String lastName = request.getParameter("lastName");
-                    String email = request.getParameter("email");
-                    String phone = request.getParameter("phone");
-                    String address = request.getParameter("address");
-
-                    customer.setFirstName(firstName);
-                    customer.setLastName(lastName);
-                    customer.setEmail(email);
-                    customer.setPhone(phone);
-                    customer.setAddress(address);
-
-                    bank.updateCustomer(customer);
-                    response.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Customer not found.");
-                }
-            } catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid customer ID.");
+            if (customer != null) {
+                request.setAttribute("customer", customer);
+                request.getRequestDispatcher("/WEB-INF/views/customer/edit.jsp").forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Customer not found");
             }
+
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path.");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Handle deleting a customer
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         String pathInfo = request.getPathInfo();
+        HttpSession session = request.getSession();
 
-        if (pathInfo != null && !pathInfo.equals("/")) {
-            try {
-                int customerId = parseId(pathInfo);
-                boolean deleted = bank.deleteCustomer(customerId);
+        // Check for HTTP method override (for PUT and DELETE)
+        String methodParam = request.getParameter("_method");
+        if (methodParam != null) {
+            if ("put".equalsIgnoreCase(methodParam)) {
+                doPut(request, response);
+                return;
+            } else if ("delete".equalsIgnoreCase(methodParam)) {
+                doDelete(request, response);
+                return;
+            }
+        }
 
-                if (deleted) {
-                    response.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Customer not found.");
-                }
-            } catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid customer ID.");
+        // Regular POST - Create a new customer
+        if (pathInfo == null) {
+            Customer customer = new Customer();
+            customer.setFirstName(request.getParameter("firstName"));
+            customer.setLastName(request.getParameter("lastName"));
+            customer.setEmail(request.getParameter("email"));
+            customer.setPhone(request.getParameter("phone"));
+            customer.setAddress(request.getParameter("address"));
+
+            if (customerDAO.createCustomer(customer)) {
+                session.setAttribute("successMessage", "Customer created successfully!");
+                response.sendRedirect(request.getContextPath() + "/customers");
+            } else {
+                request.setAttribute("errorMessage", "Failed to create customer");
+                request.getRequestDispatcher("/WEB-INF/views/customer/create.jsp").forward(request, response);
             }
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path.");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    private int parseId(String pathInfo) {
-        return Integer.parseInt(pathInfo.substring(1));
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String pathInfo = request.getPathInfo();
+        HttpSession session = request.getSession();
+
+        if (pathInfo != null && pathInfo.matches("/\\d+")) {
+            int customerId = Integer.parseInt(pathInfo.substring(1));
+            Customer customer = new Customer();
+            customer.setCustomerId(customerId);
+            customer.setFirstName(request.getParameter("firstName"));
+            customer.setLastName(request.getParameter("lastName"));
+            customer.setEmail(request.getParameter("email"));
+            customer.setPhone(request.getParameter("phone"));
+            customer.setAddress(request.getParameter("address"));
+
+            if (customerDAO.updateCustomer(customer)) {
+                session.setAttribute("successMessage", "Customer updated successfully!");
+                response.sendRedirect(request.getContextPath() + "/customers/" + customerId);
+            } else {
+                request.setAttribute("errorMessage", "Failed to update customer");
+                request.setAttribute("customer", customer);
+                request.getRequestDispatcher("/WEB-INF/views/customer/edit.jsp").forward(request, response);
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
-    private boolean isEmpty(String s) {
-        return s == null || s.trim().isEmpty();
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String pathInfo = request.getPathInfo();
+        HttpSession session = request.getSession();
+
+        if (pathInfo != null && pathInfo.matches("/\\d+")) {
+            int customerId = Integer.parseInt(pathInfo.substring(1));
+
+            if (customerDAO.deleteCustomer(customerId)) {
+                session.setAttribute("successMessage", "Customer deleted successfully!");
+            } else {
+                session.setAttribute("errorMessage", "Failed to delete customer. They may have associated accounts.");
+            }
+
+            response.sendRedirect(request.getContextPath() + "/customers");
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 }

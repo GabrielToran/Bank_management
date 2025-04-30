@@ -1,116 +1,141 @@
 package com.example.bank_management.controller;
 
+import com.example.bank_management.model.AccountDAO;
 import com.example.bank_management.model.Account;
-import com.example.bank_management.model.Bank;
-import com.example.bank_management.model.Transaction;
 
+
+import com.example.bank_management.model.Transaction;
+import com.example.bank_management.model.TransactionDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet("/transactions/*")
+@WebServlet(urlPatterns = {"/transactions", "/transactions/*"})
 public class TransactionServlet extends HttpServlet {
-    private Bank bank = Bank.getInstance();
+    private static final long serialVersionUID = 1L;
+    private TransactionDAO transactionDAO;
+    private AccountDAO accountDAO;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void init() {
+        this.transactionDAO = new TransactionDAO();
+        this.accountDAO = new AccountDAO();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
+        String servletPath = request.getServletPath();
 
-        if (pathInfo == null || pathInfo.equals("/")) {
-            // List all transactions for a specific account
-            String accountIdParam = request.getParameter("accountId");
-            String typeFilter = request.getParameter("type"); // deposit, withdraw
-            String dateFilter = request.getParameter("date"); // (optional future expansion)
-
-            if (accountIdParam != null) {
-                try {
-                    int accountId = Integer.parseInt(accountIdParam);
-                    Account account = bank.getAccount(accountId);
-
-                    if (account != null) {
-                        List<Transaction> transactions = bank.getAccountTransactions(accountId);
-
-                        if (typeFilter != null && !typeFilter.isEmpty()) {
-                            transactions = transactions.stream()
-                                    .filter(t -> t.getType().equalsIgnoreCase(typeFilter))
-                                    .collect(Collectors.toList());
-                        }
-
-                        request.setAttribute("account", account);
-                        request.setAttribute("transactions", transactions);
-                        request.setAttribute("typeFilter", typeFilter);
-
-                        request.getRequestDispatcher("/WEB-INF/views/transaction/list.jsp").forward(request, response);
-                    } else {
-                        request.setAttribute("errorMessage", "Account not found.");
-                        request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-                    }
-                } catch (NumberFormatException e) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Account ID");
-                }
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Account ID is required");
-            }
-        } else {
-            try {
+        try {
+            if (pathInfo == null && "/transactions".equals(servletPath)) {
+                // List transactions for an account
+                listTransactions(request, response);
+            } else if (pathInfo != null && pathInfo.matches("/\\d+")) {
                 // View a specific transaction
-                int transactionId = parseId(pathInfo);
-                Transaction transaction = bank.getTransaction(transactionId);
-
-                if (transaction != null) {
-                    request.setAttribute("transaction", transaction);
-                    request.getRequestDispatcher("/WEB-INF/views/transaction/view.jsp").forward(request, response);
-                } else {
-                    request.setAttribute("errorMessage", "Transaction not found.");
-                    request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-                }
-            } catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Transaction ID");
+                viewTransaction(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
+        } catch (SQLException e) {
+            handleError(request, response, e);
+        }
+    }
+
+    private void listTransactions(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        // Get account ID from request parameter
+        String accountIdParam = request.getParameter("accountId");
+        String typeFilter = request.getParameter("type");
+
+        if (accountIdParam == null || accountIdParam.isEmpty() || "0".equals(accountIdParam)) {
+            response.sendRedirect(request.getContextPath() + "/dashboard");
+            return;
+        }
+
+        try {
+            long accountId = Long.parseLong(accountIdParam);
+            Account account = accountDAO.getAccountById((int) accountId);
+
+            if (account == null) {
+                setErrorMessage(request, "Account not found");
+                response.sendRedirect(request.getContextPath() + "/dashboard");
+                return;
+            }
+
+            List<Transaction> transactions;
+            if (typeFilter != null && !typeFilter.isEmpty()) {
+                transactions = transactionDAO.getTransactionsByAccountId((int) accountId, typeFilter);
+                request.setAttribute("typeFilter", typeFilter);
+            } else {
+                transactions = transactionDAO.findByAccountId(accountId);
+            }
+
+            request.setAttribute("account", account);
+            request.setAttribute("transactions", transactions);
+            request.getRequestDispatcher("/WEB-INF/views/transaction/list.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            setErrorMessage(request, "Invalid account ID");
+            response.sendRedirect(request.getContextPath() + "/dashboard");
+        }
+    }
+
+    private void viewTransaction(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        // Extract transaction ID from path
+        String pathInfo = request.getPathInfo();
+        String transactionIdStr = pathInfo.substring(1);
+
+        try {
+            long transactionId = Long.parseLong(transactionIdStr);
+            Transaction transaction = transactionDAO.getTransactionById((int) transactionId);
+
+            if (transaction == null) {
+                setErrorMessage(request, "Transaction not found");
+                response.sendRedirect(request.getContextPath() + "/transactions?accountId=0");
+                return;
+            }
+
+            request.setAttribute("transaction", transaction);
+            request.getRequestDispatcher("/WEB-INF/views/transaction/view.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            setErrorMessage(request, "Invalid transaction ID");
+            response.sendRedirect(request.getContextPath() + "/dashboard");
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Create a new transaction
-        String accountIdParam = request.getParameter("accountId");
-        String type = request.getParameter("type");
-        String amountParam = request.getParameter("amount");
-        String description = request.getParameter("description");
-
-        if (accountIdParam != null && type != null && amountParam != null) {
-            try {
-                int accountId = Integer.parseInt(accountIdParam);
-                double amount = Double.parseDouble(amountParam);
-
-                if (amount <= 0) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Amount must be positive.");
-                    return;
-                }
-
-                Transaction transaction = bank.createTransaction(accountId, type, amount, description);
-
-                if (transaction != null) {
-                    request.getSession().setAttribute("successMessage", "Transaction created successfully!");
-                    response.sendRedirect(request.getContextPath() + "/transactions?accountId=" + accountId);
-                } else {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Failed to create transaction");
-                }
-            } catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid number provided");
-            }
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required parameters");
-        }
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Process form submissions for transactions
+        // Note: Transaction creation is typically handled by the AccountServlet
+        // when processing deposits and withdrawals
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     }
 
-    private int parseId(String pathInfo) {
-        return Integer.parseInt(pathInfo.substring(1));
+    private void handleError(HttpServletRequest request, HttpServletResponse response, Exception e)
+            throws ServletException, IOException {
+        e.printStackTrace();
+        setErrorMessage(request, "An error occurred: " + e.getMessage());
+        response.sendRedirect(request.getContextPath() + "/dashboard");
+    }
+
+    private void setErrorMessage(HttpServletRequest request, String message) {
+        HttpSession session = request.getSession();
+        session.setAttribute("errorMessage", message);
+    }
+
+    private void setSuccessMessage(HttpServletRequest request, String message) {
+        HttpSession session = request.getSession();
+        session.setAttribute("successMessage", message);
     }
 }
