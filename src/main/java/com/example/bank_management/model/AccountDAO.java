@@ -258,9 +258,8 @@ public class AccountDAO {
     public boolean delete(long accountId) {
         return deleteAccount((int) accountId);
     }
-
     // Get total balance of all accounts
-    public double getTotalBalance() {
+    public BigDecimal getTotalBalance() {
         String sql = "SELECT SUM(balance) FROM accounts";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -268,20 +267,25 @@ public class AccountDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             if (rs.next()) {
-                return rs.getDouble(1);
+                return rs.getBigDecimal(1);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return 0.0;
-    }
 
-    // Get total balance method to support Bank class
+
+    } // Get total balance method to support Bank class
     public BigDecimal getTotalBalanceAsBigDecimal() {
         return new BigDecimal(getTotalBalance());
     }
+
+    // Added for Bank.java compatibility
+    public BigDecimal getTotalBalance() throws SQLException {
+        return new BigDecimal(getTotalBalance());
+    }
+
 
     // Get account count
     public int getAccountCount() {
@@ -375,5 +379,4 @@ public class AccountDAO {
 
         return account;
     }
-
 }

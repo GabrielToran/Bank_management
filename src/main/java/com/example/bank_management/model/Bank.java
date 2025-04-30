@@ -2,6 +2,7 @@ package com.example.bank_management.model;
 import java.util.*;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class Bank {
      * Gets the total number of customers in the bank
      */
     public int getCustomerCount() throws SQLException {
-        return customerDAO.getCount();
+        return customerDAO.getCustomerCount();
     }
 
     /**
@@ -44,23 +45,24 @@ public class Bank {
      * Gets the total balance of all accounts in the bank
      */
     public BigDecimal getTotalBalance() throws SQLException {
-        return accountDAO.getTotalBalance();
+        // Use the new method that returns BigDecimal
+        return new BigDecimal(accountDAO.getTotalBalance());
     }
 
     /**
      * Gets the total number of transactions in the bank
      */
     public int getTransactionCount() throws SQLException {
-        return transactionDAO.getCount();
+        return transactionDAO.getTransactionCount();
     }
 
     /**
      * Creates a new account for a customer
      */
-    public Account createAccount(long customerId, String accountType, BigDecimal initialDeposit,
-                                 BigDecimal interestRate, BigDecimal overdraftLimit) throws SQLException {
+    public Account createAccount(long customerId, String accountType, double initialDeposit,
+                                 double interestRate, double overdraftLimit) throws SQLException {
         // Verify the customer exists
-        Customer customer = customerDAO.findById(customerId);
+        Customer customer = customerDAO.getCustomerById((int)customerId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found");
         }
@@ -78,14 +80,14 @@ public class Bank {
         }
 
         // Set account properties
-        account.setCustomerId(customerId);
-        account.setBalance(BigDecimal.ZERO);
+        account.setCustomerId((int)customerId);
+        account.setBalance(0);
 
         // Save the account
         account = accountDAO.save(account);
 
         // Make initial deposit if specified
-        if (initialDeposit != null && initialDeposit.compareTo(BigDecimal.ZERO) > 0) {
+        if (initialDeposit > 0) {
             deposit(account.getAccountId(), initialDeposit, "Initial deposit");
         }
 
@@ -95,8 +97,8 @@ public class Bank {
     /**
      * Makes a deposit to an account
      */
-    public Transaction deposit(long accountId, BigDecimal amount, String description) throws SQLException {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+    public Transaction deposit(long accountId, double amount, String description) throws SQLException {
+        if (amount <= 0) {
             throw new IllegalArgumentException("Deposit amount must be positive");
         }
 
@@ -106,7 +108,7 @@ public class Bank {
         }
 
         // Update the account balance
-        BigDecimal newBalance = account.getBalance().add(amount);
+        double newBalance = account.getBalance() + amount;
         account.setBalance(newBalance);
         accountDAO.update(account);
 
@@ -115,7 +117,7 @@ public class Bank {
         transaction.setAccountId((int) accountId);
         transaction.setType("deposit");
         transaction.setAmount(amount);
-        transaction.setDate(LocalDateTime.now());
+        transaction.setDate(LocalDate.now());
         transaction.setDescription(description);
 
         return transactionDAO.save(transaction);
@@ -124,8 +126,8 @@ public class Bank {
     /**
      * Makes a withdrawal from an account
      */
-    public Transaction withdraw(long accountId, BigDecimal amount, String description) throws SQLException {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+    public Transaction withdraw(long accountId, double amount, String description) throws SQLException {
+        if (amount <= 0) {
             throw new IllegalArgumentException("Withdrawal amount must be positive");
         }
 
@@ -134,20 +136,20 @@ public class Bank {
             throw new IllegalArgumentException("Account not found");
         }
 
-        BigDecimal newBalance = account.getBalance().subtract(amount);
+        double newBalance = account.getBalance() - amount;
 
         // Check if withdrawal is allowed
         if (account instanceof CheckingAccount) {
             CheckingAccount checkingAccount = (CheckingAccount) account;
-            BigDecimal overdraftLimit = checkingAccount.getOverdraftLimit();
+            double overdraftLimit = checkingAccount.getOverdraftLimit();
 
             // Check if withdrawal would exceed overdraft limit
-            if (newBalance.compareTo(overdraftLimit.negate()) < 0) {
+            if (newBalance < -overdraftLimit) {
                 throw new IllegalArgumentException("Withdrawal would exceed overdraft limit");
             }
         } else {
             // For savings accounts, don't allow negative balance
-            if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            if (newBalance < 0) {
                 throw new IllegalArgumentException("Insufficient funds");
             }
         }
@@ -158,10 +160,10 @@ public class Bank {
 
         // Create and save the transaction
         Transaction transaction = new Transaction();
-        transaction.setAccountId(accountId);
+        transaction.setAccountId((int) accountId);
         transaction.setType("withdraw");
         transaction.setAmount(amount);
-        transaction.setDate(LocalDateTime.now());
+        transaction.setDate(LocalDate.now());
         transaction.setDescription(description);
 
         return transactionDAO.save(transaction);
@@ -170,7 +172,7 @@ public class Bank {
     /**
      * Transfers money between accounts
      */
-    public void transfer(long fromAccountId, long toAccountId, BigDecimal amount, String description)
+    public void transfer(long fromAccountId, long toAccountId, double amount, String description)
             throws SQLException {
         // Start a transaction
         withdraw(fromAccountId, amount, "Transfer to account #" + toAccountId + ": " + description);
@@ -184,11 +186,9 @@ public class Bank {
         List<SavingsAccount> savingsAccounts = accountDAO.findAllSavingsAccounts();
 
         for (SavingsAccount account : savingsAccounts) {
-            BigDecimal interestAmount = account.getBalance()
-                    .multiply(account.getInterestRate())
-                    .divide(new BigDecimal("12")); // Monthly interest
+            double interestAmount = account.getBalance() * account.getInterestRate() / 12.0; // Monthly interest
 
-            if (interestAmount.compareTo(BigDecimal.ZERO) > 0) {
+            if (interestAmount > 0) {
                 deposit(account.getAccountId(), interestAmount, "Monthly interest");
             }
         }
@@ -203,7 +203,7 @@ public class Bank {
             throw new IllegalArgumentException("Account not found");
         }
 
-        if (account.getBalance().compareTo(BigDecimal.ZERO) != 0) {
+        if (account.getBalance() != 0) {
             throw new IllegalArgumentException("Cannot delete account with non-zero balance");
         }
 

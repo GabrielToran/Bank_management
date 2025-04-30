@@ -2,10 +2,10 @@ package com.example.bank_management.model;
 import com.example.bank_management.model.Transaction;
 import com.example.bank_management.model.DatabaseConnection;
 
-
-
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 public class TransactionDAO {
@@ -19,7 +19,14 @@ public class TransactionDAO {
             stmt.setInt(1, transaction.getAccountId());
             stmt.setString(2, transaction.getType());
             stmt.setDouble(3, transaction.getAmount());
-            stmt.setDate(4, java.sql.Date.valueOf(transaction.getDate()));
+
+            // Handle both LocalDate and LocalDateTime
+            if (transaction.getDate() instanceof LocalDate) {
+                stmt.setDate(4, java.sql.Date.valueOf(((LocalDate)transaction.getDate())));
+            } else {
+                stmt.setDate(4, java.sql.Date.valueOf((LocalDate)transaction.getDate()));
+            }
+
             stmt.setString(5, transaction.getDescription());
 
             int affectedRows = stmt.executeUpdate();
@@ -148,8 +155,13 @@ public class TransactionDAO {
         return null;
     }
 
+    // Added for Bank.java compatibility
+    public int getCount() throws SQLException {
+        return getTransactionCount();
+    }
+
     private Transaction extractTransactionFromResultSet(ResultSet rs) throws SQLException {
-        return new Transaction(
+        Transaction transaction = new Transaction(
                 rs.getInt("transaction_id"),
                 rs.getInt("account_id"),
                 rs.getString("type"),
@@ -157,5 +169,6 @@ public class TransactionDAO {
                 rs.getDate("date").toLocalDate(),
                 rs.getString("description")
         );
+        return transaction;
     }
 }
