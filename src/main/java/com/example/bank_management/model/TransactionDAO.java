@@ -55,6 +55,26 @@ public class TransactionDAO {
         return null;
     }
 
+    // Added missing findByAccountId method used in TransactionServlet
+    public List<Transaction> findByAccountId(long accountId) {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE account_id = ? ORDER BY date DESC, transaction_id DESC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, accountId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    transactions.add(extractTransactionFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+
     public List<Transaction> getTransactionsByAccountId(int accountId, String typeFilter) {
         List<Transaction> transactions = new ArrayList<>();
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM transactions WHERE account_id = ?");
@@ -113,6 +133,19 @@ public class TransactionDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    // Added method to support the Bank class
+    public boolean deleteByAccountId(long accountId) {
+        return deleteTransactionsByAccountId((int) accountId);
+    }
+
+    // Added method to support the Bank class
+    public Transaction save(Transaction transaction) {
+        if (createTransaction(transaction)) {
+            return transaction;
+        }
+        return null;
     }
 
     private Transaction extractTransactionFromResultSet(ResultSet rs) throws SQLException {

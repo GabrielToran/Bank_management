@@ -1,5 +1,6 @@
 package com.example.bank_management.model;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,7 +165,7 @@ public class AccountDAO {
     }
 
     // Update account balance
-    public boolean updateAccountBalance(int accountId , double balance) {
+    public boolean updateAccountBalance(int accountId, double balance) {
         String sql = "UPDATE accounts SET balance = ? WHERE account_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -179,6 +180,16 @@ public class AccountDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // Update full account - method to support Bank class
+    public boolean updateAccount(Account account) {
+        return updateAccountBalance(account.getAccountId(), account.getBalance());
+    }
+
+    // Update method to support the Bank class
+    public boolean update(Account account) {
+        return updateAccount(account);
     }
 
     // Delete account
@@ -243,6 +254,11 @@ public class AccountDAO {
         }
     }
 
+    // Delete method to support the Bank class
+    public boolean delete(long accountId) {
+        return deleteAccount((int) accountId);
+    }
+
     // Get total balance of all accounts
     public double getTotalBalance() {
         String sql = "SELECT SUM(balance) FROM accounts";
@@ -262,6 +278,11 @@ public class AccountDAO {
         return 0.0;
     }
 
+    // Get total balance method to support Bank class
+    public BigDecimal getTotalBalanceAsBigDecimal() {
+        return new BigDecimal(getTotalBalance());
+    }
+
     // Get account count
     public int getAccountCount() {
         String sql = "SELECT COUNT(*) FROM accounts";
@@ -279,6 +300,61 @@ public class AccountDAO {
         }
 
         return 0;
+    }
+
+    // Get count method to support Bank class
+    public int getCount() {
+        return getAccountCount();
+    }
+
+    // Find by id method to support Bank class
+    public Account findById(long accountId) {
+        return getAccountById((int) accountId);
+    }
+
+    // Method to support Bank class
+    public Account save(Account account) {
+        if (account.getAccountId() == 0) {
+            String accountType = account instanceof CheckingAccount ? "checking" : "savings";
+            if (createAccount(account, accountType)) {
+                return account;
+            }
+        } else {
+            if (updateAccount(account)) {
+                return account;
+            }
+        }
+        return null;
+    }
+
+    // Method to support Bank class
+    public List<SavingsAccount> findAllSavingsAccounts() {
+        List<SavingsAccount> savingsAccounts = new ArrayList<>();
+        String sql = "SELECT a.*, s.interest_rate " +
+                "FROM accounts a " +
+                "JOIN savings_accounts s ON a.account_id = s.account_id " +
+                "WHERE a.account_type = 'savings' " +
+                "ORDER BY a.account_id";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                SavingsAccount account = new SavingsAccount(
+                        rs.getInt("account_id"),
+                        rs.getInt("customer_id"),
+                        rs.getDouble("balance"),
+                        rs.getDouble("interest_rate")
+                );
+                savingsAccounts.add(account);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return savingsAccounts;
     }
 
     // Helper method to map ResultSet to Account object

@@ -118,7 +118,8 @@ public class AccountServlet extends HttpServlet {
             if (account != null) {
                 boolean success = account.deposit(amount);
                 if (success) {
-                    accountDAO.updateAccount(account);
+                    // Update account in database
+                    accountDAO.updateAccountBalance(accountId, account.getBalance());
 
                     // Create deposit transaction
                     Transaction transaction = new Transaction(0, accountId, "deposit", amount,
@@ -143,8 +144,8 @@ public class AccountServlet extends HttpServlet {
             if (account != null) {
                 boolean success = account.withdraw(amount);
                 if (success) {
-
-                    accountDAO.updateAccountBalance(accountId,balance);
+                    // Fixed: Update account in database with the new balance
+                    accountDAO.updateAccountBalance(accountId, account.getBalance());
 
                     // Create withdrawal transaction
                     Transaction transaction = new Transaction(0, accountId, "withdraw", amount,
